@@ -23,7 +23,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
   /* Versão do projeto (veja CHANGELOG.md). Aparece na página de geração e nos arquivos gerados. */
-  var VERSAO = "5.4 (2026-11-05)";
+  var VERSAO = "5.6 (2026-11-11)";
 
   /* =================================================================== */
   /* 1. LEITURA DOS ARQUIVOS "campo: valor"                               */
@@ -1343,11 +1343,46 @@
     "alvos.forEach(function(td){td.setAttribute('data-rv','');io.observe(td);});})();";
   /* Estilo e script que esta função injeta (para trocar, sem duplicar, numa página que já os tem). */
   var INJETADO_CSS = /<style\b[^>]*>\s*\/\* Ampliar peças[\s\S]*?<\/style>\s*/g, INJETADO_JS = /<script\b[^>]*>[^<]*box\.id='amp'[\s\S]*?<\/script>\s*/g;
+  /* Funil vivo (5.5), só na página do navegador e só quando a página tem funil: os degraus entram um a um, ganham a
+     forma de funil (cada degrau afina até a largura do de baixo), os números contam até o valor, e passar o mouse (ou
+     o Tab) num degrau destaca ele e apaga um pouco os outros. No e-mail o funil fica como é (estático). Com "reduzir
+     movimento" no computador, só o destaque ao passar o mouse. */
+  var FUNIL_CSS = "html[data-funil-vivo] table[data-funil] tr[data-item]>td{filter:drop-shadow(0 6px 9px rgba(0,0,0,.2));}" +
+    "html[data-funil-vivo] table[data-funil] table[data-degrau]{border-radius:0 !important;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease;transform-origin:50% 50%;}" +
+    "html[data-funil-vivo] table[data-degraus]:hover table[data-degrau]{opacity:.55;}" +
+    "html[data-funil-vivo] table[data-degraus] tr[data-item]:hover table[data-degrau],html[data-funil-vivo] table[data-degraus] tr[data-item]:focus table[data-degrau]{opacity:1;transform:scale(1.04);}" +
+    "html[data-funil-vivo] table[data-funil] tr[data-item]{outline:none;cursor:default;}html[data-funil-vivo] table[data-funil] tr[data-item]:focus-visible table[data-degrau]{outline:3px solid #FFFFFF;outline-offset:4px;}" +
+    "html[data-funil-vivo] [data-item=funil-total]{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1);}" +
+    "html[data-funil-mov] table[data-funil]:not([data-funil-on]) table[data-degrau]{opacity:0;transform:translateY(16px) scaleX(.72);}" +
+    "html[data-funil-mov] table[data-funil]:not([data-funil-on]) [data-item=funil-total]{opacity:0;transform:translateX(-14px);}" +
+    "@media print{html[data-funil-mov] table[data-funil] table[data-degrau],html[data-funil-mov] table[data-funil] [data-item=funil-total]{opacity:1 !important;transform:none !important;}}";
+  var FUNIL_JS = "(function(){var d=document,w=window,fs=d.querySelectorAll('table[data-funil]');if(!fs.length)return;var raiz=d.documentElement;raiz.setAttribute('data-funil-vivo','');" +
+    "var calmo=w.matchMedia&&w.matchMedia('(prefers-reduced-motion: reduce)').matches;" +
+    /* forma de funil: cada degrau afina (embaixo) até a largura do degrau de baixo; o último afina o mesmo tanto */
+    "function forma(f){var ts=f.querySelectorAll('table[data-degrau]'),ws=[];for(var i=0;i<ts.length;i++)ws.push(ts[i].getBoundingClientRect().width);" +
+    "for(var j=0;j<ts.length;j++){var a=ws[j],b=j+1<ws.length?ws[j+1]:a-(ws.length>1?ws[0]-ws[1]:a*.12),c=Math.max(0,Math.min(28,(a-b)/2));" +
+    "ts[j].style.clipPath='polygon(0 0,100% 0,calc(100% - '+c+'px) 100%,'+c+'px 100%)';var td=ts[j].querySelector('td');if(td){td.style.paddingLeft=td.style.paddingRight=Math.round(12+c)+'px';}}}" +
+    /* os números contam até o valor (os que o movimento da página já conta ficam com ele) */
+    "var NUM=/^([^\\d]*?)(\\d{1,3}(?:\\.\\d{3})+|\\d+)(?:,(\\d+))?([^\\d]*)$/;" +
+    "function jaConta(el,m,alvo){return /^[\\s+\\-\\u2212]*(R\\$\\s?)?$/.test(m[1])&&/^\\s*(%|x|p\\.p\\.|mil)?\\s*$/i.test(m[4])&&parseFloat(w.getComputedStyle(el).fontSize)>=22&&!(alvo<10&&!m[1].trim()&&!m[4].trim());}" +
+    "function conta(el,atraso){var orig=el.textContent,m=NUM.exec(orig.replace(/\\u00a0/g,' ').trim());if(!m)return;var alvo=parseFloat(m[2].replace(/\\./g,'')+'.'+(m[3]||'0'));if(jaConta(el,m,alvo))return;" +
+    "var casas=(m[3]||'').length,mil=m[2].indexOf('.')>=0,t0=null,dur=1100;function fmt(v){var s=v.toFixed(casas).split('.'),i=s[0];if(mil)i=i.replace(/\\B(?=(\\d{3})+(?!\\d))/g,'.');return m[1]+i+(casas?','+s[1]:'')+m[4];}" +
+    "el.setAttribute('data-conta','');el.textContent=fmt(0);setTimeout(function(){function p(ts){if(t0===null)t0=ts;var q=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-q,3);el.textContent=q<1?fmt(alvo*e):orig;if(q<1)w.requestAnimationFrame(p);else el.setAttribute('data-conta','ok');}w.requestAnimationFrame(p);},atraso);}" +
+    "function entra(f){if(f.hasAttribute('data-funil-on'))return;var ts=f.querySelectorAll('table[data-degrau]');for(var i=0;i<ts.length;i++)ts[i].style.transitionDelay=(i*140)+'ms';" +
+    "var tt=f.querySelector('[data-item=funil-total]');if(tt)tt.style.transitionDelay=(ts.length*140+120)+'ms';f.setAttribute('data-funil-on','');" +
+    "setTimeout(function(){for(var k=0;k<ts.length;k++)ts[k].style.transitionDelay='';if(tt)tt.style.transitionDelay='';},ts.length*140+1400);" +
+    "if(calmo)return;var vs=f.querySelectorAll('[data-campo$=\".valor\"],[data-campo=\"funil.total\"]');for(var v=0;v<vs.length;v++)conta(vs[v],v<ts.length?v*140+200:ts.length*140+320);}" +
+    "Array.prototype.forEach.call(fs,function(f){forma(f);Array.prototype.forEach.call(f.querySelectorAll('tr[data-item]'),function(tr){tr.setAttribute('tabindex','0');});});" +
+    "var rt=0;w.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){Array.prototype.forEach.call(fs,forma);},150);});" +
+    "if(calmo||!('IntersectionObserver' in w)){Array.prototype.forEach.call(fs,function(f){f.setAttribute('data-funil-on','');});return;}" +
+    "raiz.setAttribute('data-funil-mov','');var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);entra(en.target);}});},{threshold:.35});" +
+    "Array.prototype.forEach.call(fs,function(f){io.observe(f);});})();";
   function paraNavegador(html) {
     html = html.replace(INJETADO_CSS, "").replace(INJETADO_JS, "");
     if (html.indexOf("data-ampliar=") < 0 && html.indexOf("data-video=") < 0 && html.indexOf("data-anexo=") < 0 && html.indexOf("<!--secao:") < 0) return html;
-    return html.replace("</head>", "<style>\n/* Ampliar peças e movimento (só na página do navegador) */\n" + AMPLIAR_CSS + MOVIMENTO_CSS + "\n</style>\n</head>")
-      .replace(/<\/body>(?![\s\S]*<\/body>)/, "<script>\n" + AMPLIAR_JS + "\n" + MOVIMENTO_JS + "\n</script>\n</body>");
+    var funil = html.indexOf("data-funil=") >= 0;
+    return html.replace("</head>", "<style>\n/* Ampliar peças e movimento (só na página do navegador) */\n" + AMPLIAR_CSS + MOVIMENTO_CSS + (funil ? FUNIL_CSS : "") + "\n</style>\n</head>")
+      .replace(/<\/body>(?![\s\S]*<\/body>)/, "<script>\n" + AMPLIAR_JS + "\n" + MOVIMENTO_JS + (funil ? "\n" + FUNIL_JS : "") + "\n</script>\n</body>");
   }
 
   /* =================================================================== */

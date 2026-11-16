@@ -187,7 +187,6 @@ function medir(d, celular) {
   await ferramenta('[data-item="aprendizado-1"] [data-campo$=".titulo"]', "+ Link"); await auditar("+ Link num aprendizado");
   await ferramenta('[data-item="aprendizado-1"] a.cta', "Tirar link"); await auditar("tirar o link");
   /* seções: ocultar cada uma e mostrar de volta */
-  await p.$eval("#secoesRep", function (e) { e.closest("details").open = true; });
   var ids = await p.$$eval("#secoesRep input[type=checkbox]", function (l) { return l.map(function (x) { return x.value; }); });
   for (var s = 0; s < ids.length; s++) {
     await p.uncheck('#secoesRep input[value="' + ids[s] + '"]'); await auditar("seção " + ids[s] + " oculta");

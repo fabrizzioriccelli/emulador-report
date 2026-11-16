@@ -11,47 +11,30 @@ module.exports = function (G) {
   var KIT = { pf: "emulador-report.html", pj: "emulador-report-pj.html", coringaPF: "report-coringa.html", coringaPJ: "report-coringa-pj.html", exemploPF: "report-exemplo.html", exemploPJ: "report-exemplo-pj.html" };
   function irPara(sec) { return { slide: G.INICIO[sec] || 2 }; }
 
-  /* ================= CAPA ================= */
+  /* ================= CAPA (página 7 do modelo: foto, título, data, a chama grande e o botão "Começa agora") ================= */
   G.pagina("capa", null, function (sl) {
-    sl.background = { color: C.lisboa };
-    cx(sl, 65, 65, 600, 680, { fill: C.vm, r: 40 });
-    T(sl, "Guia operacional · versão " + G.VERSAO.split(" ")[0], { x: 105, y: 112, w: 520, h: 26, s: 19.5, f: "fx", b: false, c: C.br });
-    T(sl, "Como atualizar e enviar o report mensal", { x: 105, y: 160, w: 530, h: 260, s: 58, c: C.br, ls: 0.98 });
-    T(sl, "Um guia para os dois emuladores: Report PF (Creative Strategy PF) e Report PJ (Santander Empresas). Os mesmos passos, cada um com a sua identidade.", { x: 105, y: 440, w: 520, h: 120, s: 21, f: "fx", b: false, c: C.br, ls: 1.25 });
-    G.pilula(sl, "Começa agora  →", 105, 640, 230, 48, { fill: C.br, c: C.vm, s: 19, link: { slide: 2, tooltip: "Índice" } });
-    /* as duas telas, reais */
-    var caps = [["pf-report", 712, "PF"], ["pj-report", 1052, "PJ"]];
-    caps.forEach(function (c) {
-      var m = G.META[c[0]], w = 310, h = 590;
-      cx(sl, c[1], 95, w + 24, h + 24, { fill: C.br, r: 28 });
-      var esc = Math.min(w / m.w, h / m.h);
-      sl.addImage({ path: path.join(G.CAP, m.arquivo), x: G.I(c[1] + 12 + (w - m.w * esc) / 2), y: G.I(107), w: G.I(m.w * esc), h: G.I(m.h * esc), altText: "Captura real do report " + c[2] + " (dados fictícios)" });
-      G.tags(sl, [c[2]], c[1] + 12, 720);
-      T(sl, c[2] === "PF" ? "Report PF · exemplo fictício" : "Report PJ · exemplo fictício", { x: c[1] + 66, y: 721, w: 250, h: 24, s: 13, c: C.cinza, f: "fx", b: false });
-    });
-    T(sl, "Todas as telas são capturas reais dos emuladores com conteúdo fictício de treinamento (Janeiro 2099).", { x: 712, y: 760, w: 660, h: 18, s: 11.5, f: "fx", b: false, c: C.cinza });
-  });
+    G.clique(sl, 767, 701, 178, 41, { slide: 2, tooltip: "Índice" });
+    T(sl, "Todas as telas deste guia são capturas reais dos emuladores, com conteúdo fictício de treinamento (Janeiro 2099).", { x: 767, y: 648, w: 400, h: 36, s: 11.5, f: "fx", b: false, c: C.cinza });
+  }, { base: 7, manter: ["Group 19", "Group 4", "Group 6"], escala: { "Group 19": 0.955 }, cores: { "Group 11": "CC0000", "TextBox 18": "333333" }, textos: {
+    "Group 8": ["Guia operacional"], "TextBox 18": ["Como atualizar e enviar o report mensal, no PF e no PJ"],
+    "Group 11": ["Versão " + G.VERSAO.split(" ")[0] + " · 11-11-2026"], "Group 15": ["Para"], "TextBox 14": ["Creative Strategy PF e Santander Empresas"] } });
 
   /* ================= ÍNDICE ================= */
-  G.pagina("indice", null, function (sl, n) {
-    sl.background = { color: C.br };
-    cx(sl, 65, 65, 430, 680, { fill: C.vm, r: 34 });
-    T(sl, "Índice", { x: 105, y: 100, w: 360, h: 100, s: 80, c: C.br });
-    T(sl, "O passo a passo do mês, do primeiro clique ao e-mail no Outlook. Os procedimentos iguais aparecem uma vez; o que muda no PJ vem marcado.", { x: 105, y: 232, w: 360, h: 200, s: 19, f: "fx", b: false, c: C.br, ls: 1.25 });
-    G.tags(sl, ["PF"], 105, 470); T(sl, "Creative Strategy PF", { x: 160, y: 471, w: 300, h: 24, s: 15, f: "fx", b: false, c: C.br });
-    G.tags(sl, ["PJ"], 105, 506); T(sl, "Santander Empresas", { x: 160, y: 507, w: 300, h: 24, s: 15, f: "fx", b: false, c: C.br });
-    T(sl, "Clique em uma seção para ir até ela. No alto de cada página, as pílulas levam de volta ao índice ou a outra seção.", { x: 105, y: 600, w: 360, h: 90, s: 17, c: C.br, ls: 1.15 });
-    var cols = [530, 960], hh = 86, gap = 10;
+  G.pagina("indice", null, function (sl) {
+    G.titulo(sl, "Índice", "O passo a passo do mês, do primeiro clique ao e-mail no Outlook. Clique numa seção para ir até ela.");
+    G.tags(sl, ["PF"], 1040, 76); T(sl, "Creative Strategy PF", { x: 1092, y: 79, w: 160, h: 22, s: 12.5, f: "fx", b: false, c: C.pt });
+    G.tags(sl, ["PJ"], 1236, 76); T(sl, "Empresas", { x: 1288, y: 79, w: 90, h: 22, s: 12.5, f: "fx", b: false, c: C.pt });
+    var hh = 68, gap = 10, w = 648;
     G.SECOES.forEach(function (s, i) {
-      var col = i % 2, lin = Math.floor(i / 2), x = cols[col], y = 65 + lin * (hh + gap), w = 417, alvo = G.INICIO[s[1]];
-      cx(sl, x, y, w, hh, { fill: C.lisboa, r: 18, link: { slide: alvo, tooltip: s[0] } });
-      T(sl, [{ text: (i < 9 ? "0" : "") + (i + 1), options: { hyperlink: { slide: alvo } } }], { x: x + 22, y: y + 22, w: 60, h: 44, s: 34, c: C.vm });
-      T(sl, [{ text: s[0], options: { hyperlink: { slide: alvo } } }], { x: x + 92, y: y + 20, w: 262, h: 24, s: 17, c: C.pt });
-      T(sl, "p. " + String(alvo).padStart(2, "0"), { x: x + 92, y: y + 50, w: 120, h: 20, s: 13.5, f: "fx", b: false, c: C.cinza });
-      G.seta(sl, x + w - 58, y + 22, 40, C.vm, C.br, { slide: alvo, tooltip: s[0] });
+      var col = Math.floor(i / 7), lin = i % 7, x = 64 + col * (w + 16), y = 190 + lin * (hh + gap), alvo = G.INICIO[s[1]];
+      cx(sl, x, y, w, hh, { fill: C.cartao, r: 16, link: { slide: alvo, tooltip: s[0] } });
+      T(sl, [{ text: (i < 9 ? "0" : "") + (i + 1), options: { hyperlink: { slide: alvo } } }], { x: x + 24, y: y + 14, w: 60, h: 40, s: 30, b: false, c: C.vm });
+      T(sl, [{ text: s[0], options: { hyperlink: { slide: alvo } } }], { x: x + 96, y: y + 13, w: 420, h: 24, s: 18, c: C.boston });
+      T(sl, "página " + String(alvo).padStart(2, "0"), { x: x + 96, y: y + 40, w: 200, h: 18, s: 12.5, f: "fx", b: false, c: C.cinza });
+      G.seta(sl, x + w - 56, y + 16, 36, C.vm, C.br, { slide: alvo, tooltip: s[0] });
     });
-    T(sl, String(n).padStart(2, "0"), { x: 1290, y: 755, w: 40, h: 22, s: 15, c: C.pt, al: "right" });
-  });
+    T(sl, "No alto de cada página, as pílulas levam de volta a este índice ou a outra seção.", { x: 102, y: 757, w: 900, h: 18, s: 11.5, f: "fx", b: false, c: C.cinza });
+  }, { base: 14 });
 
   /* ================= 01 · CONHECENDO ================= */
   G.divisor("conhecendo", "O emulador é a ferramenta do mês: abre o report, deixa editar na própria página, salva o HTML completo e monta o e-mail-resumo para o Outlook. Tudo no Chrome ou no Edge, sem instalar nada.", "Um report completo e um e-mail-resumo saem da mesma página.", "O que é", "pj-editor");
@@ -84,9 +67,9 @@ module.exports = function (G) {
       ["E-mail-resumo", "Até 4 destaques e o botão; baixar o .eml.", "resumo"], ["Enviar", "Pelo Outlook: primeiro para você, depois para a área.", "eml"]];
     P.forEach(function (p, i) {
       var col = i % 4, lin = Math.floor(i / 4), x = 65 + col * 333, y = 215 + lin * 260, alvo = { slide: G.INICIO[p[2]] };
-      cx(sl, x, y, 313, 240, { fill: i === 6 ? C.vm : C.br, r: 22, link: alvo });
-      T(sl, String(i + 1), { x: x + 24, y: y + 20, w: 60, h: 50, s: 40, c: i === 6 ? C.br : C.vm });
-      T(sl, [{ text: p[0], options: { hyperlink: alvo } }], { x: x + 24, y: y + 88, w: 270, h: 30, s: 22, c: i === 6 ? C.br : C.pt });
+      cx(sl, x, y, 313, 240, { fill: i === 6 ? C.vm : C.cartao, r: 22, link: alvo });
+      T(sl, String(i + 1), { x: x + 24, y: y + 20, w: 60, h: 50, s: 40, b: false, c: i === 6 ? C.br : C.vm });
+      T(sl, [{ text: p[0], options: { hyperlink: alvo } }], { x: x + 24, y: y + 88, w: 270, h: 30, s: 22, c: i === 6 ? C.br : C.boston });
       T(sl, p[1], { x: x + 24, y: y + 126, w: 265, h: 90, s: 15.5, f: "fx", b: false, c: i === 6 ? C.br : C.txt });
     });
   });
@@ -99,8 +82,8 @@ module.exports = function (G) {
       ["pj", "Emulador Report PJ", "Santander Empresas. Report em Rio sobre fundo branco, painéis brancos, títulos em Preto com Santander Condensed, balões e o ícone Santander + PJ.", KIT.pj, KIT.coringaPJ, "PJ"]].forEach(function (e, i) {
       var x = 65 + i * 666;
       G.captura(sl, e[0] + "-inicio", x, 205, 646, 360, [{ i: 0, n: 1 }, { i: 1, n: 2 }], { rot: "TELA INICIAL", seg: e[5] });
-      cx(sl, x, 590, 646, 145, { fill: C.br, r: 20 });
-      T(sl, e[1], { x: x + 24, y: 606, w: 400, h: 28, s: 21, c: C.pt });
+      cx(sl, x, 590, 646, 145, { fill: C.cartao, r: 18 });
+      T(sl, e[1], { x: x + 24, y: 606, w: 400, h: 28, s: 21, c: C.boston });
       T(sl, e[2], { x: x + 24, y: 640, w: 600, h: 44, s: 14, f: "fx", b: false, c: C.txt });
       G.pilula(sl, "Abrir " + e[3] + "  →", x + 24, 692, 290, 32, { fill: C.vm, c: C.br, s: 13, link: { url: e[3], tooltip: "Abre o arquivo do kit" } });
       G.pilula(sl, "Modelo em branco", x + 326, 692, 180, 32, { line: C.vm, c: C.vm, s: 13, link: { url: e[4], tooltip: "Abre o modelo em branco do kit" } });
@@ -158,13 +141,14 @@ module.exports = function (G) {
     G.captura(sl, "pf-inicio", 685, 205, 692, 530, [{ i: 1, n: 3 }, { i: 2, n: 4 }], { rot: "TELA INICIAL", seg: "PF" });
   });
   G.conteudo("primeiros", function (sl) {
-    G.titulo(sl, "A tela de edição", "Barra de ferramentas em cima, a página do mês embaixo", ["PF", "PJ"]);
-    G.captura(sl, "pj-editor", 65, 200, 830, 535, [{ i: 0, n: 1 }, { i: 1, n: 2 }, { i: 2, n: 3 }, { i: 3, n: 4 }, { i: 4, n: 5 }, { i: 5, n: 6 }], { rot: "TELA DE EDIÇÃO", seg: "PJ" });
+    G.titulo(sl, "A tela de edição", "Barra de ferramentas em cima, o painel ao lado e a página do mês no meio", ["PF", "PJ"]);
+    G.captura(sl, "pj-editor", 65, 200, 830, 535, [{ i: 0, n: 1 }, { i: 1, n: 2 }, { i: 2, n: 3 }, { i: 3, n: 4 }, { i: 4, n: 5 }, { i: 5, n: 6 }, { i: 8, n: 7 }], { rot: "TELA DE EDIÇÃO", seg: "PJ" });
     G.passos(sl, 915, 200, 462, 535, [
       ["Salvar report (.html):", "grava o report do mês."], ["Importar conteúdo (Copilot):", "cola os textos organizados pelo Copilot."],
-      ["+ Adicionar item:", "assistente para incluir um número, card, texto ou destaque."], ["+ Novo tópico:", "uma seção nova (ex.: Testes), com o layout que você escolhe."],
-      ["Desfazer:", "volta a última mudança."], ["Computador · Celular:", "a largura da edição (o mesmo vale para a prévia)."]
-    ], { s: 14.5 });
+      ["Seções do report (ao lado):", "a ordem das seções e o que sai ou volta para o report."], ["+ Novo tópico:", "uma seção nova (ex.: Testes)."],
+      ["Desfazer · Refazer:", "volta a última mudança, ou refaz o que foi desfeito."], ["Computador · Celular:", "a largura da edição."],
+      ["E-mail-resumo ↓:", "desce até o link e o e-mail-resumo."]
+    ], { s: 14 });
   });
 
   /* ================= 04 · ATUALIZANDO ================= */
@@ -223,6 +207,15 @@ module.exports = function (G) {
     G.captura(sl, "pj-imagem", 645, 205, 732, 530, [{ i: 0, n: 1 }, { i: 1, n: 2 }], { rot: "TROCAR IMAGEM", seg: "PJ" });
   });
   G.conteudo("imagens", function (sl) {
+    G.titulo(sl, "Peça da visão geral embaixo do texto", "Para a peça horizontal (ex.: o KV com o selo da campanha)", ["PF", "PJ"]);
+    G.passos(sl, 65, 205, 560, 400, [
+      ["Passe o mouse na peça", "da visão geral (o retângulo ao lado do texto)."], ["Clique em Imagem embaixo.", "A peça desce para baixo do texto, na largura do report (1)."],
+      ["Clique em Trocar imagem", "e escolha a peça horizontal: ela entra inteira, sem recorte."], ["Imagem ao lado", "volta ao retângulo vertical."]
+    ], { s: 14.5 });
+    G.confirmar(sl, 65, 625, 560, 110, "A peça aparece inteira, embaixo do texto. No celular, ela ocupa a largura da tela.");
+    G.captura(sl, "pj-imagem-embaixo", 645, 205, 732, 530, [{ i: 0, n: 1 }], { rot: "PEÇA EMBAIXO", seg: "PJ" });
+  });
+  G.conteudo("imagens", function (sl) {
     G.titulo(sl, "Vídeo e capa de vídeo", "Na página o vídeo toca; no e-mail vai a capa com ▶", ["PF", "PJ"]);
     G.passos(sl, 65, 205, 560, 420, [
       ["Passe o mouse na peça:", "a barra mostra Colocar vídeo (ou Trocar vídeo) (1)."], ["Escolha o arquivo", ".mp4 ou .webm no Explorador; o emulador otimiza ao colocar."],
@@ -242,21 +235,63 @@ module.exports = function (G) {
   });
 
   /* ================= 06 · ADICIONAR E ORGANIZAR ================= */
-  G.divisor("organizar", "Itens entram e saem com a grade refeita no computador e no celular. Seções mudam de lugar, saem e voltam. Tudo com Desfazer.", "A grade se ajusta sozinha: nada de mexer em tabela.", "Na prática", "pf-alca");
+  G.divisor("organizar", "Tudo se põe e se move na própria página: passe o mouse num item e use a barra dele (+ Novo item, ⠿ Arrastar, Mover para outra seção). A grade se refaz sozinha, no computador e no celular. Tudo com Desfazer e Refazer.", "Você escolhe o lugar; o emulador cuida do alinhamento.", "Na prática", "pj-novo-item");
+  G.conteudo("organizar", function (sl) {
+    G.titulo(sl, "+ Novo item: pôr algo novo na página", "Na barra do item, ou no + Adicionar embaixo do grupo", ["PF", "PJ"]);
+    G.captura(sl, "pj-novo-item", 65, 200, 660, 330, [{ i: 0, n: 1 }, { i: 3, n: 2 }], { rot: "BARRA DO ITEM", seg: "PJ" });
+    G.captura(sl, "pj-card-novo", 745, 200, 632, 330, [{ i: 0, n: 3 }], { rot: "O ITEM NOVO", seg: "PJ" });
+    G.passos(sl, 65, 552, 660, 183, [
+      ["Passe o mouse num item", "do grupo e clique em + Novo item (1): um item igual entra logo depois."], ["No fim do grupo:", "o + Adicionar (2), embaixo dele."],
+      ["Troque os textos", "[entre colchetes] (3), clicando neles."]
+    ], { s: 14 });
+    G.confirmar(sl, 745, 552, 632, 183, "O item novo entra piscando em vermelho e a grade se ajusta (no celular, empilha). O grupo chegou ao máximo? O botão avisa \"Máximo de…\". Prefere um formulário? + Adicionar item com formulário, ao lado da página.");
+  });
+  G.conteudo("organizar", function (sl) {
+    G.titulo(sl, "Arrastar para mudar de lugar", "Segure ⠿ Arrastar e solte na linha vermelha", ["PF", "PJ"]);
+    G.passos(sl, 65, 205, 560, 400, [
+      ["Passe o mouse no item:", "aparece a barra do item."], ["Segure ⠿ Arrastar", "(o primeiro botão da barra)."],
+      ["Leve até a linha vermelha", "\"Soltar aqui\" (1): ela só aparece onde o item cabe, no grupo dele ou em outra seção do mesmo tipo."], ["Solte.", "O item vai para lá e a grade se refaz."],
+      ["Sem arrastar:", "← Mover · Mover → (ou ↑ ↓), na mesma barra."]
+    ], { s: 14.5 });
+    G.captura(sl, "pj-arrastar", 645, 205, 732, 330, [{ i: 0, n: 1 }], { rot: "ARRASTAR UM ITEM", seg: "PJ" });
+    G.captura(sl, "pj-desfazer", 645, 560, 732, 85, [{ i: 0 }, { i: 1 }], { rot: "DESFAZER E REFAZER", seg: "PJ" });
+    G.confirmar(sl, 65, 625, 560, 110, "O item fica no lugar novo, com um contorno verde por um instante. Esc durante o arraste cancela. Desfazer volta; Refazer refaz (Ctrl+Z e Ctrl+Y fora de um texto).");
+    T(sl, "Para outra seção, o item vai junto com os textos e números dele: número com número, texto com texto. Assim o report não perde a grade.", { x: 645, y: 670, w: 732, h: 60, s: 14.5, f: "fx", b: false, c: C.txt });
+  });
+  G.conteudo("organizar", function (sl) {
+    G.titulo(sl, "Mover para outra seção", "O conteúdo sai de uma parte do report e entra em outra do mesmo tipo", ["PF", "PJ"]);
+    G.passos(sl, 65, 205, 560, 400, [
+      ["Passe o mouse no item", "e clique em Mover para outra seção (na barra dele)."], ["Escolha a seção (1):", "só aparecem as do mesmo tipo e com lugar livre."],
+      ["Clique em Mover (2).", "O item entra no fim da seção escolhida, com os textos e números dele."], ["O que não existe no lugar novo", "(imagem, link, o que aprendemos) fica de fora: o aviso diz o quê."]
+    ], { s: 14.5 });
+    G.captura(sl, "pj-mover-secao", 645, 205, 732, 400, [{ i: 0, n: 1 }, { i: 1, n: 2 }], { rot: "MOVER PARA OUTRA SEÇÃO", seg: "PJ" });
+    G.confirmar(sl, 65, 625, 560, 110, "O item aparece na seção nova, com um contorno verde, e sai da antiga. Desfazer volta os dois de uma vez. Também dá para arrastar até a outra seção.");
+    G.diferencaPJ(sl, 645, 625, 732, 110, "Os nomes são os do PJ: Campanhas, Análises, Aprendizados, Vem aí. A regra é a mesma do PF.");
+  });
+  G.conteudo("organizar", function (sl) {
+    G.titulo(sl, "Etiqueta verde ou âmbar", "Trocar a cor, tirar a etiqueta e pôr de volta", ["PF", "PJ"]);
+    G.captura(sl, "pf-etiqueta", 65, 200, 820, 400, [{ i: 0, n: 1 }, { i: 1, n: 2 }], { rot: "ETIQUETA", seg: "PF" });
+    G.passos(sl, 905, 200, 472, 400, [
+      ["Clique na etiqueta (1):", "aparecem Cor: verde, Cor: âmbar e Tirar etiqueta (2)."], ["Escreva o texto", "dentro dela (ex.: ▲ +12% ou ● No ar)."],
+      ["Não vale este mês?", "Tirar etiqueta: ela sai e a referência sobe."], ["Para pôr de volta:", "passe o mouse no item e clique em + Etiqueta."]
+    ], { s: 14.5 });
+    G.confirmar(sl, 65, 620, 820, 115, "A etiqueta muda de cor na hora (e no e-mail-resumo também). Saiu sem querer? Desfazer.");
+    G.atencao(sl, 905, 620, 472, 115, "Sem dado no mês: tire a etiqueta (ou o item). Nunca 0 e nunca o número do mês anterior.");
+  });
   G.conteudo("organizar", function (sl) {
     G.titulo(sl, "Barra do item: adicionar, mover e tirar", "Números, cards, aprendizados, agenda e tópicos", ["PF", "PJ"]);
     G.passos(sl, 65, 205, 560, 420, [
-      ["Passe o mouse no item:", "aparece a barra (1)."], ["+ Adicionar depois:", "um item igual entra logo depois, com textos [entre colchetes]."],
-      ["← Antes · Depois →:", "o item troca de lugar com o vizinho."], ["Tirar item:", "o item sai e a grade se refaz."],
+      ["Passe o mouse no item:", "aparece a barra (1)."], ["⠿ Arrastar:", "segure e leve o item para outro lugar do grupo."],
+      ["+ Novo item:", "um item igual entra logo depois, com textos [entre colchetes]."], ["← Mover · Mover →:", "troca de lugar com o vizinho. Mover para outra seção: leva o item. Tirar item: o item sai."],
       ["+ Adicionar (embaixo do grupo):", "um item novo no fim do grupo (2). Chegou no máximo? O botão avisa."]
     ]);
     G.confirmar(sl, 65, 645, 560, 90, "Os itens ficam alinhados na grade. No modo Celular, eles empilham.");
     G.captura(sl, "pf-item", 645, 205, 732, 530, [{ i: 1, n: 1 }, { i: 2, n: 2 }], { rot: "BARRA DO ITEM", seg: "PF" });
   });
   G.conteudo("organizar", function (sl) {
-    G.titulo(sl, "+ Adicionar item (assistente)", "Tipo › onde entra › conteúdo › prévia › confirmar", ["PF", "PJ"]);
+    G.titulo(sl, "Adicionar com formulário (assistente)", "Para preencher os campos antes de pôr na página", ["PF", "PJ"]);
     G.passos(sl, 65, 205, 560, 420, [
-      ["Clique em + Adicionar item", "na barra de ferramentas."], ["Escolha o tipo:", "Indicador, Card, Texto, Destaque, Imagem, Vídeo ou Conteúdo complementar."],
+      ["Clique em + Adicionar item com formulário", "(ao lado da página, embaixo das seções)."], ["Escolha o tipo:", "Indicador, Card, Texto, Destaque, Imagem, Vídeo ou Conteúdo complementar."],
       ["Escolha onde entra:", "o grupo e a posição."], ["Preencha o conteúdo", "e veja a prévia na própria página (o item novo fica destacado)."],
       ["Confirme,", "ou Voltar e ajustar, ou Cancelar (desfaz a prévia inteira)."]
     ]);
@@ -266,22 +301,32 @@ module.exports = function (G) {
   G.conteudo("organizar", function (sl) {
     G.titulo(sl, "+ Novo tópico", "Um assunto novo, que ainda não tem seção própria (ex.: Testes)", ["PF", "PJ"]);
     G.passos(sl, 65, 205, 560, 420, [
-      ["Clique em + Novo tópico.", "Abre a janela do tópico."], ["Escreva o nome", "da seção (1), ex.: Testes."],
-      ["Escolha o layout (2):", "Lista, Colunas, Cartões ou Números."], ["Clique em Criar tópico.", "O tópico entra antes do Foco (PF) ou das Próximas iniciativas (PJ)."]
+      ["Clique em + Novo tópico", "(na barra de cima ou embaixo da lista de seções)."], ["Escreva o nome", "da seção (1), ex.: Testes."],
+      ["Escolha o layout (2):", "Lista, Colunas, Cartões ou Números."], ["Confira \"Onde entra\"", "e clique em Criar tópico."]
     ]);
     G.confirmar(sl, 65, 645, 560, 90, "A seção nova aparece na página, com o nome em maiúsculas e itens [entre colchetes] para trocar.");
     G.captura(sl, "pj-topico", 645, 205, 732, 530, [{ i: 0, n: 1 }, { i: 1, n: 2 }], { rot: "+ NOVO TÓPICO", seg: "PJ" });
   });
   G.conteudo("organizar", function (sl) {
-    G.titulo(sl, "Seções: mover, tirar e mostrar", "Pela alça da seção ou em \"Seções do report\"", ["PF", "PJ"]);
+    G.titulo(sl, "Seções: mover, tirar e mostrar", "Pela alça da seção ou na lista de seções, ao lado da página", ["PF", "PJ"]);
     G.captura(sl, "pj-alca", 65, 200, 650, 300, [{ i: 0, n: 1 }], { rot: "ALÇA DA SEÇÃO", seg: "PJ" });
     G.captura(sl, "pj-secoes", 735, 200, 642, 300, [{ i: 0, n: 2 }, { i: 1 }], { rot: "SEÇÕES DO REPORT", seg: "PJ" });
     G.passos(sl, 65, 530, 870, 205, [
       ["Alça (1):", "passe o mouse no começo da seção: ⠿ Mover seção (arraste) e Tirar seção."],
-      ["Seções do report (2):", "desmarque para tirar, marque para mostrar; ↑ ↓ e Posição… mudam a ordem."],
+      ["Seções do report (2):", "desmarque para tirar, marque para mostrar; ⠿, ↑ ↓ e Posição… mudam a ordem."],
       ["Abertura e encerramento", "não mudam de lugar. A numeração (01, 02…) se ajusta sozinha."]
     ], { s: 14.5 });
-    G.confirmar(sl, 955, 530, 422, 205, "A seção sai (ou muda de lugar) na página, e a caixa dela fica desmarcada em Seções do report. Desfazer traz de volta.");
+    G.confirmar(sl, 955, 530, 422, 205, "A seção sai (ou muda de lugar) na página, e a caixa dela fica desmarcada na lista de seções. Desfazer traz de volta.");
+  });
+  G.conteudo("organizar", function (sl) {
+    G.titulo(sl, "Funil nos principais resultados", "Os números viram os degraus de um funil, com um total ao lado", ["PF", "PJ"]);
+    G.passos(sl, 65, 205, 560, 400, [
+      ["Clique em Ver como funil", "embaixo dos números dos principais resultados."], ["Cada número vira um degrau", "(1), do mais largo ao mais estreito."],
+      ["Troque os textos [entre colchetes]:", "o nome em cima e o total ao lado (3)."], ["Degraus:", "+ Adicionar indicador, Tirar item e arrastar funcionam como nos números."],
+      ["Ver em colunas (2)", "volta ao formato de antes (o nome e o total saem)."]
+    ], { s: 14.5 });
+    G.confirmar(sl, 65, 625, 560, 110, "No navegador, os degraus entram um a um e os números contam. No e-mail, o funil vai parado. O e-mail-resumo continua usando os mesmos números.");
+    G.captura(sl, "pf-funil", 645, 205, 732, 530, [{ i: 0, n: 1 }, { i: 1, n: 2 }, { i: 2, n: 3 }], { rot: "FUNIL", seg: "PF" });
   });
 
   /* ================= 07 · VISUALIZANDO ================= */
@@ -343,6 +388,14 @@ module.exports = function (G) {
     G.captura(sl, "pj-resumo", 645, 205, 732, 188, [{ i: 0, n: 1 }], { rot: "DESTAQUES ESCOLHIDOS", seg: "PJ" });
     G.captura(sl, "pj-resumo-lista", 645, 413, 732, 188, [{ i: 1, n: 2 }, { i: 0, n: 3 }], { rot: "LISTA DO REPORT", seg: "PJ" });
     G.captura(sl, "pj-resumo-botao", 645, 621, 732, 114, [{ i: 0, n: 4 }], { rot: "TEXTO DO BOTÃO", seg: "PJ" });
+  });
+  G.conteudo("resumo", function (sl) {
+    G.titulo(sl, "Os passos do e-mail, com a prévia ao lado", "Botão E-mail-resumo ↓ na barra de ferramentas", ["PF", "PJ"]);
+    G.captura(sl, "pj-email", 65, 200, 830, 535, [{ i: 3, n: 1 }, { i: 2, n: 2 }, { i: 0, n: 3 }], { rot: "PASSOS DO E-MAIL", seg: "PJ" });
+    G.passos(sl, 915, 200, 462, 535, [
+      ["Cole o link (1)", "do report completo (passo 3)."], ["Escolha os destaques", "(passo 4): a prévia (2) muda na hora, ao lado."],
+      ["Baixe o .eml", "(passo 6), quando o status estiver verde."], ["↑ Voltar ao report (3)", "sobe para a edição."]
+    ], { s: 14.5 });
   });
   G.conteudo("resumo", function (sl) {
     G.titulo(sl, "Prévia do e-mail-resumo", "Como chega na caixa de entrada, no computador e no celular", ["PF", "PJ"]);
@@ -429,14 +482,14 @@ module.exports = function (G) {
     var num = parseInt(pr.tit.replace(/\D+/, ""), 10);
     G.conteudo("prompts", function (sl) {
       G.titulo(sl, pr.titCompleto.length > 52 ? pr.tit : pr.titCompleto, pr.campo["Objetivo"] || "", NO_PJ[num] ? ["PF", "PJ"] : ["PF", "PJ"]);
-      cx(sl, 65, 200, 860, 535, { fill: C.br, r: 20 });
+      cx(sl, 65, 200, 860, 535, { fill: C.cartao, r: 18 });
       T(sl, "PROMPT (copie e troque o que está [ENTRE COLCHETES])", { x: 89, y: 216, w: 800, h: 18, s: 11, c: C.cinza, cs: 1.5 });
       var linhas = pr.cod.split("\n").length, tam = linhas > 34 ? 10 : linhas > 28 ? 11 : linhas > 22 ? 12 : 13;
       sl.addText(pr.cod, { x: G.I(89), y: G.I(242), w: G.I(812), h: G.I(478), margin: 0, fontFace: "Courier New", fontSize: tam, color: C.txt, valign: "top", isTextBox: true, lineSpacingMultiple: 1.05 });
       var meta = [["Quando usar", pr.campo["Quando usar"]], ["Entradas", pr.campo["Entradas"]], ["Formato de saída", pr.campo["Formato de saída"]], ["Validação", pr.campo["Validação"]], ["Onde entra no report", pr.campo["Onde entra no report"]]].filter(function (m) { return m[1]; });
       var y = 200, hh = NO_PJ[num] ? 74 : 96;
       meta.forEach(function (m) {
-        cx(sl, 945, y, 432, hh, { fill: C.br, r: 16 });
+        cx(sl, 945, y, 432, hh, { fill: C.cartao, r: 16 });
         T(sl, m[0].toUpperCase(), { x: 965, y: y + 12, w: 400, h: 16, s: 10.5, c: C.boston, cs: 1.2 });
         T(sl, m[1], { x: 965, y: y + 30, w: 396, h: hh - 36, s: 12, f: "fx", b: false, c: C.txt });
         y += hh + 8;
@@ -481,7 +534,7 @@ module.exports = function (G) {
       ["Editar e salvar", ["Período certo (toda a página)", "Frase do mês e campanha", "Indicadores: valor, base, variação e cor", "Sem dado: item tirado (nunca 0)", "Imagens e descrições", "Links com https://", "Nenhum texto [entre colchetes]", "Salvo como report-AAAA-MM.html", "Reaberto e conferido (computador e celular)"]],
       ["E-mail e envio", ["Link do report completo colado", "Até 4 destaques escolhidos e revisados", "Status todo verde", ".eml baixado e aberto no Outlook", "Enviado primeiro para você, testado", "Testado com uma pessoa do time", "Enviado aos destinatários da área"]]].forEach(function (col, i) {
       var x = 65 + i * 444;
-      cx(sl, x, 200, 424, 535, { fill: C.br, r: 20 });
+      cx(sl, x, 200, 424, 535, { fill: C.cartao, r: 18 });
       T(sl, col[0], { x: x + 24, y: 220, w: 380, h: 30, s: 21, c: C.vm });
       col[1].forEach(function (it, j) {
         cx(sl, x + 24, 268 + j * 50, 22, 22, { line: C.vm, lw: 1.5, r: 5 });
@@ -492,16 +545,15 @@ module.exports = function (G) {
 
   /* ================= ENCERRAMENTO ================= */
   G.pagina("fim", null, function (sl) {
-    sl.background = { color: C.vm };
-    T(sl, "Pronto para o próximo mês.", { x: 76, y: 150, w: 760, h: 200, s: 72, c: C.br, ls: 0.98 });
-    T(sl, "Dúvida em algum passo? Volte ao índice e vá direto à seção. Os dois emuladores ficam na mesma pasta deste guia.", { x: 76, y: 380, w: 700, h: 120, s: 24, f: "fx", b: false, c: C.br, ls: 1.25 });
-    G.pilula(sl, "Voltar ao índice  →", 76, 560, 260, 50, { fill: C.br, c: C.vm, s: 19, link: { slide: 2, tooltip: "Índice" } });
-    G.pilula(sl, "Emulador Report PF", 356, 560, 240, 50, { line: C.br, c: C.br, s: 17, link: { url: KIT.pf } });
-    G.pilula(sl, "Emulador Report PJ", 616, 560, 240, 50, { line: C.br, c: C.br, s: 17, link: { url: KIT.pj } });
-    cx(sl, 960, 98, 417, 614, { fill: C.br, r: 34 });
+    T(sl, "Pronto para o próximo mês.", { x: 64, y: 150, w: 820, h: 200, s: 72, b: false, c: C.br, ls: 1.0 });
+    T(sl, "Dúvida em algum passo? Volte ao índice e vá direto à seção. Os dois emuladores ficam na mesma pasta deste guia.", { x: 64, y: 380, w: 760, h: 120, s: 24, f: "fx", b: false, c: C.br, ls: 1.25 });
+    G.pilula(sl, "Voltar ao índice  →", 64, 560, 260, 50, { fill: C.br, c: C.vm, s: 19, link: { slide: 2, tooltip: "Índice" } });
+    G.pilula(sl, "Emulador Report PF", 344, 560, 240, 50, { line: C.br, c: C.br, s: 17, link: { url: KIT.pf } });
+    G.pilula(sl, "Emulador Report PJ", 604, 560, 240, 50, { line: C.br, c: C.br, s: 17, link: { url: KIT.pj } });
+    cx(sl, 960, 98, 417, 614, { fill: C.br, r: 30 });
     var m = G.META["pj-report-celular"], esc = Math.min(377 / m.w, 574 / m.h);
     sl.addImage({ path: path.join(G.CAP, m.arquivo), x: G.I(960 + (417 - m.w * esc) / 2), y: G.I(118), w: G.I(m.w * esc), h: G.I(m.h * esc), altText: "Captura real do report PJ no celular (dados fictícios)" });
-    sl.addImage({ path: G.CHAMA_BR, x: G.I(76), y: G.I(700), w: G.I(40), h: G.I(37.7) });
-    T(sl, "Versão " + G.VERSAO + " · conteúdo das telas: fictício (Janeiro 2099)", { x: 130, y: 708, w: 700, h: 22, s: 13.5, f: "fx", b: false, c: C.br });
-  });
+    sl.addImage({ path: G.CHAMA_BR, x: G.I(52), y: G.I(744), w: G.I(39), h: G.I(36.8) });
+    T(sl, "Versão " + G.VERSAO + " · conteúdo das telas: fictício (Janeiro 2099)", { x: 102, y: 757, w: 700, h: 18, s: 11.5, f: "fx", b: false, c: C.br });
+  }, { base: 12, semChama: true });
 };

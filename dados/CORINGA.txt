@@ -117,39 +117,6 @@ enquadramento: centro
 tipo: peca
 link: [INSERIR LINK]
 
-[LANCAMENTO 4]
-status: [Status]
-status_cor: ambar
-nome: [Nome do lançamento 4]
-texto: [Texto curto do lançamento.]
-imagem: coringa-lancamento.png
-descricao_imagem: [Descrição da imagem]
-enquadramento: centro
-tipo: peca
-link: [INSERIR LINK]
-
-[LANCAMENTO 5]
-status: [Status]
-status_cor: ambar
-nome: [Nome do lançamento 5]
-texto: [Texto curto do lançamento.]
-imagem: coringa-lancamento.png
-descricao_imagem: [Descrição da imagem]
-enquadramento: centro
-tipo: peca
-link: [INSERIR LINK]
-
-[LANCAMENTO 6]
-status: [Status]
-status_cor: ambar
-nome: [Nome do lançamento 6]
-texto: [Texto curto do lançamento.]
-imagem: coringa-lancamento.png
-descricao_imagem: [Descrição da imagem]
-enquadramento: centro
-tipo: peca
-link: [INSERIR LINK]
-
 [CREATIVE X]
 subtitulo: [Score criativo · período]
 anterior: X%
@@ -390,17 +357,3 @@ data: [Data]
 titulo: [Item da agenda 3]
 detalhe: [Detalhe]
 
-[AGENDA 4]
-data: [Data]
-titulo: [Item da agenda 4]
-detalhe: [Detalhe]
-
-[AGENDA 5]
-data: [Data]
-titulo: [Item da agenda 5]
-detalhe: [Detalhe]
-
-[AGENDA 6]
-data: [Data]
-titulo: [Item da agenda 6]
-detalhe: [Detalhe]

@@ -158,8 +158,8 @@ function salvarComo() {
   await noQuadro(p, function (d) { d.querySelector('[data-item="numero-1"]').scrollIntoView({ block: "center" }); });
   await p.mouse.move(2, 2); await f.hover('[data-item="numero-1"]', { position: { x: 30, y: 60 } }); await p.waitForTimeout(200);
   var bm = await noQuadro(p, function (d) { return Array.prototype.map.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent; }); });
-  confere(bm.indexOf("Depois →") >= 0 && bm.indexOf("← Antes") < 0, "barra do 1º indicador: Depois → (sem ← Antes) · " + bm.join(","));
-  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Depois →"; })[0].click(); });
+  confere(bm.indexOf("Mover →") >= 0 && bm.indexOf("← Mover") < 0, "barra do 1º indicador: Mover → (sem ← Mover) · " + bm.join(","));
+  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Mover →"; })[0].click(); });
   var n1 = await textos(p, "numero"), cor = await noQuadro(p, function (d) { return [d.querySelector('[data-campo="numero-1.valor"]').style.color, d.querySelector('[data-campo="numero-2.valor"]').style.color]; });
   confere(n1[0].split("=")[1] === n0[1].split("=")[1] && n1[1].split("=")[1] === n0[0].split("=")[1] && /236, 0, 0|#EC0000/i.test(cor[0]) && !/236, 0, 0|#EC0000/i.test(cor[1]), "Depois →: troca com o vizinho; o 1º continua em vermelho (grade refeita) · " + n1.slice(0, 2).join(" | "));
   await p.click("#bDesfazer"); await p.waitForTimeout(150);
@@ -167,13 +167,12 @@ function salvarComo() {
   var l0 = await textos(p, "lancamento");
   await noQuadro(p, function (d) { d.querySelector('[data-item="lancamento-3"]').scrollIntoView({ block: "center" }); });
   await p.mouse.move(2, 2); await f.hover('[data-item="lancamento-3"] [data-campo="lancamento-3.nome"]', { position: { x: 3, y: 3 } }); await p.waitForTimeout(200);
-  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Depois →"; })[0].click(); });
+  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Mover →"; })[0].click(); });
   var l1 = await textos(p, "lancamento"), linhas = await noQuadro(p, function (d) { return Array.prototype.map.call(d.querySelectorAll('[data-item^="lancamento-"]'), function (x) { return x.parentNode.rowIndex + ":" + x.getAttribute("width"); }); });
   confere(l1[3].split("=")[1] === l0[2].split("=")[1] && linhas.every(function (x) { return /:184$/.test(x); }), "lançamento muda de linha (3º → 4º): cartões de 184 px, 3 por linha · " + linhas.join(" "));
 
   /* ================= 3. ordem das seções ================= */
   fase = "seções";
-  await p.click("#secEditar details summary");
   var o0 = await ordem(p), linhasPainel = await p.$$eval(".secaoRep", function (l) { return l.map(function (x) { return x.getAttribute("data-id"); }); });
   confere(linhasPainel.indexOf("capa") < 0 && linhasPainel.indexOf("rodape") < 0 && linhasPainel[0] === "visao", "painel: só as seções que mudam de lugar (capa e encerramento fixos) · " + linhasPainel.join(","));
   await p.click('.secaoRep[data-id="lancamos"] button[data-a="desce"]'); await p.waitForTimeout(200);

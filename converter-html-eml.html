@@ -130,6 +130,39 @@
   .estado{font-size:13px;color:var(--gray)}
   .estado.sujo{color:var(--warn);font-weight:600}.estado.salvo{color:var(--ok);font-weight:600}
   .ajuda{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;margin:10px 0 12px;font-size:13px;color:var(--gray)}
+  /* Área de edição (5.5): painel lateral (Elementos e Seções) + página em edição */
+  .ajudaCurta{margin:8px 0 4px;font-size:14px;color:var(--gray)}.ajudaCurta b{color:var(--ink)}
+  .dicas{margin:0 0 6px}.dicas summary{font-size:13px}.dicas .ajuda{margin-top:8px}
+  .areaEdicao{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:12px;align-items:start}
+  .lateral{border:1px solid var(--rule);border-radius:12px;background:#fff;padding:12px;min-width:0}
+  @media (min-width:1100px){
+    .areaEdicao{grid-template-columns:316px minmax(0,1fr)}
+    #abaSecoes .secaoRep .check{overflow-wrap:normal}
+    .lateral{position:sticky;top:var(--topoFerr,76px);max-height:calc(100vh - var(--topoFerr,76px) - 12px);overflow:auto}
+  }
+  .tituloLateral{margin:0 0 4px;font-size:15px}
+  /* arrastando (item ou seção): a página do emulador em volta não seleciona texto quando o ponteiro sai do report */
+  .ed-movendo-fora,.ed-movendo-fora *{user-select:none !important;-webkit-user-select:none !important;cursor:grabbing !important}
+  .dicaLateral{font-size:12px;margin:0 0 10px}
+  .comoPor{display:grid;gap:3px;margin:14px 0 10px;padding:10px 12px;border-radius:10px;background:#FFF7F5;border:1px solid #F5D2CB;font-size:12px;line-height:1.35}
+  .comoPor b{font-size:12px;margin-top:4px}.comoPor b:first-child{margin-top:0}.comoPor span b{margin:0}
+  #abaSecoes .lista{display:block}#abaSecoes .secaoRep{flex-wrap:nowrap;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--rule);border-radius:0;gap:6px}
+  #abaSecoes .secaoRep .check{flex:1;min-width:0;font-size:13px;line-height:1.25}
+  #abaSecoes .acoesRep{display:flex;gap:3px;flex:none}#abaSecoes .acoesRep button{padding:3px 6px;font-size:12px;min-width:0}
+  #abaSecoes .novoTopico{margin-top:10px;width:100%}
+  .assistBtn{width:100%}
+  /* passos do e-mail com a prévia ao lado (5.5) */
+  .etapaEmail{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0}
+  .colEmail{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0;align-content:start}
+  .colPrev{min-width:0}
+  .voltaEdicao{float:right;font-size:13px;padding:6px 10px}
+  @media (min-width:1360px){
+    main{max-width:1400px}
+    .etapaEmail{grid-template-columns:minmax(0,1fr) 724px;align-items:start}
+    .colPrev{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;border-radius:12px}
+  }
+  .irResumo{margin-left:auto}
+  #secEditar .ferramentas{gap:8px}#secEditar .ferramentas button{padding:9px 13px}
   .ajuda b{color:var(--ink)}
   #painelImportar{border:1px solid var(--rule);border-radius:10px;padding:14px;margin:10px 0;background:var(--lisboa)}
   #painelImportar textarea{width:100%;min-height:180px;font:12.5px/1.5 Consolas,Menlo,monospace;border:1px solid #CFC9C4;border-radius:8px;padding:10px}
@@ -213,26 +246,31 @@
   <!-- 2 · EDITAR E SALVAR -->
   <section aria-labelledby="s2" id="secEditar" hidden>
     <h2 id="s2"><b>2</b>Edite e salve o report</h2>
+    <p class="ajudaCurta"><b>Clique num texto</b> para escrever. <b>Passe o mouse</b> num item ou imagem para ver as opções: <b>+ Novo item</b>, arrastar, mover para outra seção, trocar, tirar. As seções ficam ao lado da página.</p>
+    <details class="dicas"><summary>Mais dicas de edição</summary>
     <div class="ajuda">
       <span><b>Texto ou número:</b> clique e escreva. Enter confirma; Shift+Enter quebra a linha.</span>
       <span><b>Imagem ou vídeo:</b> passe o mouse e use "Trocar imagem" (ou "Trocar vídeo").</span>
       <span><b>Link:</b> passe o mouse em um link vermelho e use "Trocar link".</span>
       <span><b>Mais links ou imagens:</b> passe o mouse no item (projeto, lançamento, destaque…) e use "+ Link" ou "+ Imagem" (até 3 por item).</span>
       <span><b>Item que não vale este mês:</b> passe o mouse e use "Tirar item" (o último de um grupo fica: para tirar tudo, oculte a seção).</span>
-      <span><b>Item novo:</b> <b>+ Adicionar item</b>: escolha o tipo (indicador, card, texto, destaque, imagem, vídeo ou conteúdo complementar), onde entra, preencha e confira a prévia antes de confirmar.</span>
-      <span><b>Mudar de lugar:</b> item: passe o mouse e use ← Antes / Depois →. Seção: arraste a alça "⠿ Mover seção" (ou ↑ ↓ Posição…), aqui ou em Seções do report.</span>
+      <span><b>Item novo:</b> passe o mouse num item e use <b>+ Novo item</b> (entra logo depois dele), ou o <b>+ Adicionar</b> embaixo do grupo. Prefere um formulário? <b>+ Adicionar item com formulário</b>, ao lado da página.</span>
+      <span><b>Mudar de lugar:</b> item: segure <b>⠿ Arrastar</b> e solte na linha vermelha (no grupo ou em outra seção do mesmo tipo), ou use ← Mover / Mover → e <b>Mover para outra seção</b>. Seção: arraste a alça "⠿ Mover seção" (ou ↑ ↓ Posição…), aqui ou na lista ao lado.</span>
+      <span><b>Etiqueta (▲ +12%, ● No ar):</b> clique nela para trocar a cor ou <b>Tirar etiqueta</b>; para pôr de volta, <b>+ Etiqueta</b> na barra do item.</span>
       <span><b>Assunto novo (ex.: Testes):</b> <b>+ Novo tópico</b>: escreva o nome, escolha o layout (lista, colunas, cartões ou números) e onde entra. Até 4.</span>
     </div>
+    </details>
     <div class="ferramentas">
       <button type="button" class="pri" id="bSalvar">Salvar report (.html)</button>
       <button type="button" id="bImportar">Importar conteúdo (Copilot)</button>
-      <button type="button" id="bAdicionarItem">+ Adicionar item</button>
       <button type="button" id="bNovoTopico">+ Novo tópico</button>
-      <button type="button" id="bDesfazer" disabled>Desfazer</button>
+      <button type="button" id="bDesfazer" disabled title="Desfazer a última mudança (Ctrl+Z fora de um texto)">&#8630; Desfazer</button>
+      <button type="button" id="bRefazer" disabled title="Refazer o que foi desfeito (Ctrl+Y)">&#8631; Refazer</button>
       <span class="tabs" role="group" aria-label="Tamanho da edição">
         <button type="button" data-ew="100%" aria-pressed="true">Computador</button>
         <button type="button" data-ew="390px" aria-pressed="false">Celular</button>
       </span>
+      <button type="button" id="bIrResumo" class="irResumo" title="Descer até o link e o e-mail-resumo">E-mail-resumo &#8595;</button>
       <span class="estado" id="estado" role="status" aria-live="polite"></span>
     </div>
     <div id="painelImportar" hidden>
@@ -240,16 +278,32 @@
       <textarea id="txtImportar" spellcheck="false" aria-label="Conteúdo do Copilot para importar" placeholder="[EDICAO]&#10;mes: Novembro&#10;ano: 2026&#10;&#10;[NUMERO 1]&#10;valor: 12,5%&#10;titulo: Taxa de clique&#10;detalhe: Outras peças: 10%"></textarea>
       <div class="row"><button type="button" class="pri" id="bAplicar">Aplicar na página</button><button type="button" id="bFecharImportar">Fechar</button><span class="muted" id="importarInfo"></span></div>
     </div>
-    <details>
-      <summary>Seções do report (ordem, mostrar, tirar ou criar um tópico novo)</summary>
-      <div class="lista" id="secoesRep"></div>
-    </details>
     <div class="previaItem" id="previaItem" role="status" aria-live="polite" hidden><span id="previaTxt"></span><span class="botoes"><button type="button" class="pri" id="previaOk">Confirmar</button><button type="button" id="previaAjustar">Voltar e ajustar</button><button type="button" id="previaCancela">Cancelar</button></span></div>
-    <div class="frame" style="margin-top:4px"><iframe id="edFrame" title="Report em edição" sandbox="allow-same-origin"></iframe></div>
+    <!-- Área de edição (5.6): as seções ao lado da página e a página em edição (tudo se põe e se move na própria página) -->
+    <div class="areaEdicao">
+      <aside class="lateral" id="lateral" aria-label="Seções do report">
+        <h3 class="tituloLateral">Seções do report</h3>
+        <p class="muted dicaLateral">Arraste a alça &#10303; ou use &#8593; &#8595; para mudar a ordem. Desmarque para tirar a seção do report (Desfazer traz de volta).</p>
+        <div id="abaSecoes"><div class="lista" id="secoesRep"></div></div>
+        <div class="comoPor" id="comoPor">
+          <b>Para pôr algo novo</b>
+          <span>Passe o mouse num item e clique em <b>+ Novo item</b>, ou use o <b>+ Adicionar</b> que fica embaixo de cada grupo.</span>
+          <b>Para mudar de lugar</b>
+          <span>Segure <b>&#10303; Arrastar</b> e solte na linha vermelha: no mesmo grupo ou em outra seção do mesmo tipo. Ou use <b>Mover para outra seção</b>.</span>
+          <b>Etiqueta verde ou âmbar</b>
+          <span>Clique nela: troque a cor ou <b>Tirar etiqueta</b>. Sem etiqueta? <b>+ Etiqueta</b>, na barra do item.</span>
+        </div>
+        <button type="button" id="bAdicionarItem" class="assistBtn">+ Adicionar item com formulário</button>
+      </aside>
+      <div class="frame"><iframe id="edFrame" title="Report em edição" sandbox="allow-same-origin"></iframe></div>
+    </div>
   </section>
 
+  <!-- 3 a 6 (5.5): os passos do e-mail à esquerda e a prévia do e-mail ao lado, sempre à vista (telas largas) -->
+  <div class="etapaEmail"><div class="colEmail">
   <!-- 3 · LINK -->
   <section aria-labelledby="s3" id="secLink" hidden>
+    <button type="button" class="voltaEdicao" id="bVoltaEdicao">&#8593; Voltar ao report</button>
     <h2 id="s3"><b>3</b>Link do report completo</h2>
     <p class="muted">O botão do e-mail-resumo leva quem lê ao report completo (o arquivo salvo no passo 2). Vale <b>qualquer link</b>: o <b>caminho do arquivo</b> (<code>C:\…</code>, como a pasta do OneDrive no computador, <code>\\servidor\…</code> ou <code>file:///…</code>) ou o link de compartilhamento (<code>https://…</code>; só <code>empresa.sharepoint.com/…</code> também vale e ganha o <code>https://</code>). Para quem recebe, use o <b>link do OneDrive</b> (botão direito no arquivo › Compartilhar › Copiar link): no e-mail recebido, o Outlook para Windows bloqueia link para arquivo ("O Outlook bloqueou o acesso a links para os arquivos de zona da Internet"), um caminho <code>C:\…</code> só existe no seu computador, e o Outlook na Web, o novo Outlook e o celular não abrem link de arquivo. Só endereço que executa código (<code>javascript:</code>) é recusado. Sem link, o e-mail-resumo não sai (nada de botão vazio).</p>
     <div class="campo">
@@ -326,6 +380,7 @@
     </details>
   </section>
 
+  </div><div class="colPrev">
   <section aria-labelledby="s7" id="secPrev" hidden>
     <h2 id="s7">Prévia do e-mail</h2>
     <p class="muted">É o que vai dentro do .eml: estático, sem vídeo nem animação (e-mail não roda script). No e-mail-resumo, cantos retos e botão de texto são de propósito: é assim que ele chega depois que o Outlook envia.</p>
@@ -339,6 +394,7 @@
     </div>
     <div class="frame" style="margin-top:12px"><iframe id="prev" title="Prévia do e-mail"></iframe></div>
   </section>
+  </div></div>
 </main>
 
 <div class="modal" id="modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="modalTit">
@@ -385,6 +441,8 @@
       $("#modal").hidden = false; $("#modalOk").focus();
       function fim(v) { $("#modal").hidden = true; $("#modalOk").onclick = $("#modalCancela").onclick = null; res(v); }
       $("#modalOk").onclick = function () { fim(true); }; $("#modalCancela").onclick = function () { fim(false); };
+      /* Esc fecha (5.5): com "Cancelar", cancela; sem ele, é o mesmo que o único botão */
+      $("#modal").onkeydown = function (e) { if (e.key === "Escape") { e.preventDefault(); fim(!cancela); } };
     });
   }
 
@@ -490,6 +548,9 @@
     ".ed-arrastando{opacity:.3}.ed-movendo,.ed-movendo *{cursor:grabbing !important;user-select:none !important}.ed-movendo [data-item]:hover,.ed-movendo [data-ed-bloco]:hover{box-shadow:none}" +
     "tr.ed-movida>td{animation:ed-luz 1.6s ease-out}@keyframes ed-luz{0%{box-shadow:inset 0 0 0 3px #EC0000;background-color:rgba(255,225,185,.55)}100%{box-shadow:inset 0 0 0 3px rgba(236,0,0,0)}}" +
     ".ed-novo{outline:3px solid #EC0000 !important;outline-offset:4px;border-radius:6px;animation:ed-pulso 1.1s ease-in-out 3}@keyframes ed-pulso{50%{outline-color:rgba(236,0,0,.25)}}" +
+    /* 5.5: a linha de encaixe ao arrastar um item (5.6: também para outra seção do mesmo tipo) */
+    "#ed-vaga{position:absolute;z-index:42;background:#EC0000;border-radius:3px;pointer-events:none;box-shadow:0 0 0 3px rgba(236,0,0,.2)}#ed-vaga span{position:absolute;white-space:nowrap;background:#EC0000;color:#fff;font:700 12px/1 Arial,Helvetica,sans-serif;border-radius:999px;padding:6px 10px;left:50%;top:50%;transform:translate(-50%,-50%)}#ed-vaga.mesmo,#ed-vaga.mesmo span{background:#767676}" +
+    ".ed-itemMovido{outline:3px solid #21634F !important;outline-offset:3px;border-radius:6px}" +
     ".show-m{}";
   /* msg: o que acabou de acontecer (fica na linha de estado, antes do lembrete de salvar). */
   function marcarSujo(msg) {
@@ -517,7 +578,7 @@
     if (minha !== ED.abertura) return;
     if ($("#link").dataset.auto === "1") { $("#link").value = ""; $("#linkInfo").textContent = ""; }
     $("#link").dataset.mexeu = "";
-    ED.nome = nome; ED.origem = origem; ED.desfazer = []; ED.vistas = null; ED.ocultas = {}; ED.alterados = {}; ED.sujo = false; ED.nomeSalvo = ""; CIENTES = {};
+    ED.nome = nome; ED.origem = origem; ED.desfazer = []; ED.refazer = []; atualizarRefazer(); ED.vistas = null; ED.ocultas = {}; ED.alterados = {}; ED.sujo = false; ED.nomeSalvo = ""; CIENTES = {};
     $("#bDesfazer").disabled = true;
     var fr = $("#edFrame");
     fr.onload = function () {
@@ -542,7 +603,7 @@
       ED.periodoInicial = periodoInicial !== undefined ? periodoInicial : periodoAtual();
       $("#secEditar").hidden = false; $("#secLink").hidden = false; $("#secResumo").hidden = false; $("#secStatus").hidden = false;
       $("#estado").className = "estado"; $("#estado").textContent = "Aberto: " + nome + ". Clique num texto para editar.";
-      montarSecoes(); reconverter(true);
+      montarSecoes(); reconverter(true); topoFerramentas();
       /* avisos de quando o report de antes muda ao abrir: juntos, numa mensagem só (um não apaga o outro) */
       var mudou = [];
       if (resumo) mudou.push("A seção \"Resumo das campanhas\" saiu do report");
@@ -661,8 +722,10 @@
       var chip = el.matches("[data-tom]") ? el : el.querySelector("[data-tom]");
       if (chip) barraEtiqueta(el, chip);
     });
+    d.addEventListener("keydown", atalhos);
     d.addEventListener("input", function (e) {
       var el = e.target.closest && e.target.closest("[data-ed-campo]"); if (!el) return;
+      if (ED.refazer.length) limparRefazer();
       el.setAttribute("data-ed-alterado", "");
       var chave = el.getAttribute("data-campo"); ED.alterados[chave] = true;
       /* o período aparece em vários lugares: muda em todos */
@@ -678,6 +741,11 @@
       if (!e.target.closest || !e.target.closest("[data-ed-campo]")) return;
       e.preventDefault(); d.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text/plain").replace(/\s*\n\s*/g, " "));
     });
+    /* 5.6: nada se arrasta pelo jeito do navegador (uma imagem solta dentro de um texto ia junto com ele):
+       mudar de lugar é só pelo ⠿ Arrastar e pelas setas */
+    d.addEventListener("dragstart", function (e) { e.preventDefault(); }, true);
+    d.addEventListener("dragover", function (e) { e.preventDefault(); }, true);
+    d.addEventListener("drop", function (e) { e.preventDefault(); $("#estado").textContent = "Para mudar algo de lugar, use ⠿ Arrastar (na barra do item). Para trocar uma imagem: Trocar imagem."; }, true);
     /* links não navegam durante a edição */
     d.addEventListener("click", function (e) {
       if (!e.target.closest) return;
@@ -714,8 +782,12 @@
       var bi = numeros ? [] : [["+ Link", function () { adicionarLink(item); }]];
       if (!numeros) bi.push(["+ Imagem", function () { escolher("#fImagem", function (f) { adicionarImagem(item, f); }); }]);
       if (item.hasAttribute("data-item")) {
-        if (gi && itensDo(gi).length < GRUPOS[gi].max) bi.unshift(["+ Adicionar depois", function () { adicionarItem(gi, item); }]);
-        if (gi && itensDo(gi).length > 1) botoesMover(item, gi, bi);
+        if (gi && itensDo(gi).length < GRUPOS[gi].max) bi.unshift(["+ Novo item", function () { adicionarItem(gi, item); }]);
+        if (gi && itensDo(gi).length > 1) { botoesMover(item, gi, bi); bi.unshift(["⠿ Arrastar", function () { $("#estado").textContent = "Para mudar o item de lugar: segure \"⠿ Arrastar\" e solte na linha vermelha (no grupo ou em outra seção do mesmo tipo), ou use as setas."; }, "", function (e) { arrastarItem(item, gi, e); }]); }
+        /* 5.6: levar o item para outra seção do mesmo tipo (números com números, textos com textos) */
+        if (gi && itensDo(gi).length > 1 && destinosDe(item).length) bi.push(["Mover para outra seção", function () { escolherDestino(item); }, "cinza"]);
+        /* 5.6: a etiqueta (▲ +12%, ● No ar) que saiu pode voltar */
+        if (gi && !etiquetaDe(item) && modeloEtiqueta(gi)) bi.push(["+ Etiqueta", function () { porEtiqueta(item); }, "cinza"]);
         /* o último item de um grupo fica (a seção não fica vazia): para tirar o grupo todo, oculte a seção */
         if (!gi || itensDo(gi).length > 1) bi.push([item.getAttribute("data-item") === "cx-trimestre" ? "Tirar trimestral" : "Tirar item", function () { ocultarItem(item); }, "cinza"]);
       }
@@ -815,7 +887,13 @@
     var d = ED.doc, barra = d.getElementById("ed-barra"), r = alvo.getBoundingClientRect(), w = d.defaultView;
     barra.textContent = ""; barra.dono = alvo; barra.style.left = barra.style.top = "0px";
     var alca = d.getElementById("ed-secao"); if (alca) alca.hidden = true;
-    botoes.forEach(function (b) { var x = d.createElement("button"); x.type = "button"; x.textContent = b[0]; if (b[2]) x.className = b[2]; x.addEventListener("mousedown", function (e) { e.preventDefault(); }); x.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); b[1](); }); barra.appendChild(x); });
+    botoes.forEach(function (b) {
+      var x = d.createElement("button"); x.type = "button"; x.textContent = b[0]; if (b[2]) x.className = b[2];
+      x.addEventListener("mousedown", function (e) { e.preventDefault(); }); x.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); b[1](); });
+      /* botão de arrastar (5.5): segurar e arrastar começa na hora */
+      if (typeof b[3] === "function") { x.classList.add("pegaItem"); x.title = "Segure e arraste até a linha vermelha"; x.addEventListener("pointerdown", function (e) { if (e.button) return; e.preventDefault(); e.stopPropagation(); b[3](e); }); }
+      barra.appendChild(x);
+    });
     barra.hidden = false;
     /* "acima": a barra inteira fica em cima, mesmo quando quebra em duas linhas (não cobre a imagem do cartão) */
     var top = r.top + w.scrollY + (onde === "acima" ? -barra.offsetHeight - 7 : onde === "direita" ? 4 : onde === "abaixo" ? r.height + 4 : 8);
@@ -830,7 +908,7 @@
     barra.style.top = Math.max(w.scrollY + 4, top) + "px"; barra.style.left = left + "px";
   }
   function barraEtiqueta(campo, chip) {
-    mostrarBarra(campo, [["Cor: verde", function () { tom(chip, "verde"); }, "verde"], ["Cor: âmbar", function () { tom(chip, "ambar"); }, "ambar"]], "acima");
+    mostrarBarra(campo, [["Cor: verde", function () { tom(chip, "verde"); }, "verde"], ["Cor: âmbar", function () { tom(chip, "ambar"); }, "ambar"], ["Tirar etiqueta", function () { tirarEtiqueta(campo); }, "cinza"]], "acima");
   }
   var TONS = { verde: ["#A3E0CE", "#21634F"], ambar: ["#FFE1B9", "#945400"] };
   /* Cor da etiqueta direto no texto do estilo, em #RRGGBB: pelo .style, o navegador regrava o estilo inteiro em rgb(), que o
@@ -856,14 +934,60 @@
     ED.desfazer.push(fn);
     if (ED.desfazer.length > LIMITE_DESFAZER) soltarSemUso(ED.desfazer.shift().midias);
     $("#bDesfazer").disabled = false;
+    /* uma mudança nova apaga o que dava para refazer (como em qualquer editor) */
+    if (!ED.refazendo) limparRefazer();
   }
-  $("#bDesfazer").addEventListener("click", function () {
+  /* ---------- Refazer (5.5) ----------
+     Desfazer guarda uma cópia da página como ela estava antes de desfazer; Refazer põe essa cópia no lugar e guarda
+     a página de agora (os mesmos elementos, intactos), que volta com o Desfazer. Assim os passos mais antigos do
+     Desfazer continuam valendo depois de um Refazer. Digitar ou fazer outra mudança apaga o que dava para refazer. */
+  ED.refazer = [];
+  function nosDoReport() { return Array.prototype.filter.call(ED.doc.body.childNodes, function (n) { return !(n.nodeType === 1 && n.hasAttribute("data-editor")); }); }
+  function porNoReport(nos) { var b = ED.doc.body, ref = Array.prototype.filter.call(b.children, function (n) { return n.hasAttribute("data-editor"); })[0] || null; nos.forEach(function (n) { b.insertBefore(n, ref); }); }
+  function limparRefazer() { if (ED.refazer && ED.refazer.length) { var m = []; ED.refazer.forEach(function (r) { m = m.concat(r.midias); }); ED.refazer = []; soltarSemUso(m); } atualizarRefazer(); }
+  function atualizarRefazer() { var b = $("#bRefazer"); if (b) b.disabled = !(ED.refazer && ED.refazer.length); }
+  /* depois de trocar a página inteira: refaz os índices do emulador (grupos, seções ocultas, botões + Adicionar) */
+  function reindexar() {
+    SECOES_CACHE = null;
+    Array.prototype.forEach.call(ED.doc.querySelectorAll(".ed-mais, #ed-zonas"), function (x) { x.remove(); });
+    ED.ocultas = {};
+    secoesMoveis().forEach(function (id) { var nos = nosDaSecao(id).filter(function (n) { return n.nodeType === 1 && n.hasAttribute("data-ed-oculta"); }); if (nos.length) ED.ocultas[id] = nos; });
+    registrarTopicos(); localizarGrupos(); renumerarPilulas(); montarSecoes();
+    ["ed-barra", "ed-secao"].forEach(function (id) { var x = ED.doc.getElementById(id); if (x) x.hidden = true; });
+  }
+  function desfazerAcao() {
     var f = ED.desfazer.pop();
-    if (f) { var antes = ED.vistas; f(); ED.vistas = midiasNaPagina(); soltarSemUso(Array.from(antes || []).filter(function (u) { return !ED.vistas.has(u); })); marcarSujo("Desfeito."); }
+    if (f) {
+      var copia = nosDoReport().map(function (n) { return n.cloneNode(true); }), html = copia.map(function (n) { return n.outerHTML || ""; }).join("");
+      var antes = ED.vistas; f(); ED.vistas = midiasNaPagina();
+      ED.refazer.push({ nos: copia, midias: html.match(RE_BLOB) || [] }); atualizarRefazer();
+      soltarSemUso(Array.from(antes || []).filter(function (u) { return !ED.vistas.has(u); })); marcarSujo("Desfeito.");
+    }
     $("#bDesfazer").disabled = !ED.desfazer.length;
-  });
+  }
+  function refazerAcao() {
+    var r = ED.refazer.pop(); if (!r || !ED.doc) { atualizarRefazer(); return; }
+    var vivos = nosDoReport();
+    vivos.forEach(function (n) { n.remove(); }); porNoReport(r.nos); reindexar();
+    ED.refazendo = true;
+    pilha(function () { nosDoReport().forEach(function (n) { n.remove(); }); porNoReport(vivos); reindexar(); });
+    ED.refazendo = false;
+    atualizarRefazer(); marcarSujo("Refeito.");
+  }
+  $("#bDesfazer").addEventListener("click", desfazerAcao);
+  $("#bRefazer").addEventListener("click", refazerAcao);
+  /* atalhos fora de um texto: Ctrl+Z desfaz, Ctrl+Y ou Ctrl+Shift+Z refaz (dentro de um texto, valem os do próprio texto) */
+  function atalhos(e) {
+    if (!ED.doc || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+    var t = e.target, emTexto = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if (emTexto) return;
+    var k = e.key.toLowerCase();
+    if (k === "z" && !e.shiftKey) { e.preventDefault(); if (ED.desfazer.length) desfazerAcao(); }
+    else if (k === "y" || (k === "z" && e.shiftKey)) { e.preventDefault(); if (ED.refazer.length) refazerAcao(); }
+  }
+  document.addEventListener("keydown", atalhos);
   function midiasNaPagina() { return new Set(ED.doc && ED.doc.documentElement ? ED.doc.documentElement.outerHTML.match(RE_BLOB) || [] : []); }
-  function emUso(u) { return (ED.vistas && ED.vistas.has(u)) || ED.desfazer.some(function (f) { return f.midias && f.midias.indexOf(u) >= 0; }); }
+  function emUso(u) { return (ED.vistas && ED.vistas.has(u)) || ED.desfazer.some(function (f) { return f.midias && f.midias.indexOf(u) >= 0; }) || (ED.refazer || []).some(function (r) { return r.midias.indexOf(u) >= 0; }); }
   function soltarSemUso(lista) {
     var sai = (lista || []).filter(function (u) { return MIDIA[u] && !MIDIA[u].fixa && !emUso(u); });
     /* espera um pouco: a prévia e o status da última conversão ainda podem estar mostrando a mídia */
@@ -876,7 +1000,7 @@
     var chave = img.getAttribute("data-img"), video = img.hasAttribute("data-video");
     if (video) b.push(["Trocar vídeo", function () { escolher("#fVideo", function (f) { trocarVideo(chave, f, false); }); }], ["Tirar o vídeo", function () { tirarVideo(chave); }, "cinza"]);
     else if (/^(principal|destaque|lancamento-\d+)$/.test(chave)) b.push(["Colocar vídeo", function () { escolher("#fVideo", function (f) { trocarVideo(chave, f, true); }); }, "cinza"]);
-    if (chave === "principal" && PJ) b.splice(1, 0, [imagemEmbaixo() ? "Imagem ao lado" : "Imagem embaixo", function () { moverImagemPrincipal(); }]);
+    if (chave === "principal") b.splice(1, 0, [imagemEmbaixo() ? "Imagem ao lado" : "Imagem embaixo", function () { moverImagemPrincipal(); }]);
     if (/^(selo|transformation-\d+-logo)$|-print-\d+$/.test(chave)) b.push(["Tirar imagem", function () { tirarImagem(chave); }, "cinza"]);
     b.push(["Descrição", function () { var n = prompt("Descrição da imagem (o que ela mostra):", img.alt.replace(/^Vídeo: /, "")); if (n !== null) mesmasImagens(chave).forEach(function (i) { var antes = i.alt; i.alt = (i.hasAttribute("data-video") ? "Vídeo: " : "") + n; i.setAttribute("data-legenda", n); pilha(function () { i.alt = antes; }); }); marcarSujo(); }, "cinza"]);
     return b;
@@ -1664,8 +1788,8 @@
     ED.grupos[g] = { cont: cont, total: total };
     var div = ED.doc.createElement("div"); div.className = "ed-mais"; div.setAttribute("data-editor", ""); div.setAttribute("contenteditable", "false");
     div.innerHTML = '<button type="button" data-grupo="' + g + '"></button>' +
-      /* PJ (5.4): os Principais resultados viram funil (e voltam para colunas); no funil, o total pode sair e voltar */
-      (g === "numero" && PJ ? ' <button type="button" data-acao="funil"></button> <button type="button" data-acao="total" hidden></button>' : "");
+      /* PF e PJ (5.5; no PJ desde a 5.4): os Principais resultados viram funil (e voltam para colunas); no funil, o total pode sair e voltar */
+      (g === "numero" ? ' <button type="button" data-acao="funil"></button> <button type="button" data-acao="total" hidden></button>' : "");
     var tab = cont.closest("table"); tab.parentNode.insertBefore(div, tab.nextSibling);
   }
   function atualizarMais() {
@@ -1805,7 +1929,7 @@
     })).firstElementChild;
     tab.parentNode.replaceChild(novo, tab); if (mais) mais.remove();
     delete ED.grupos.numero; editavel(novo); prepararGrupo("numero"); atualizarMais();
-    pilha(function () { novo.parentNode.replaceChild(tab, novo); if (mais) tab.parentNode.insertBefore(mais, tab.nextSibling); ED.grupos.numero = G; atualizarMais(); });
+    pilha(function () { novo.parentNode.replaceChild(tab, novo); refazerGrupo("numero"); });
     ED.doc.getElementById("ed-barra").hidden = true;
     marcarSujo("Principais resultados em funil: clique nos textos para editar (o nome em cima, cada degrau e o total ao lado). Para voltar: Ver em colunas ou Desfazer");
   }
@@ -1828,9 +1952,14 @@
     var mais = funil.querySelector(".ed-mais");
     funil.parentNode.replaceChild(tab, funil);
     delete ED.grupos.numero; editavel(tab); prepararGrupo("numero"); renumerar("numero"); refazer("numero"); atualizarMais();
-    pilha(function () { var m2 = tab.nextElementSibling; if (m2 && m2.classList.contains("ed-mais")) m2.remove(); tab.parentNode.replaceChild(funil, tab); ED.grupos.numero = G; atualizarMais(); });
+    pilha(function () { tab.parentNode.replaceChild(funil, tab); refazerGrupo("numero"); });
     ED.doc.getElementById("ed-barra").hidden = true;
     marcarSujo("Principais resultados em colunas de novo (o nome e o total do funil saíram). Para voltar: Desfazer");
+  }
+  /* o grupo mudou de forma (colunas ⇄ funil): o botão + Adicionar e o índice do grupo são refeitos */
+  function refazerGrupo(g) {
+    Array.prototype.forEach.call(ED.doc.querySelectorAll('.ed-mais button[data-grupo="' + g + '"]'), function (b) { b.parentNode.remove(); });
+    delete ED.grupos[g]; prepararGrupo(g); atualizarMais();
   }
   function degrauNovo() {
     return deHtml(Motor.blocoFunil({ itens: [{ idx: 1, valor: pend("[Número]"), titulo: pend("[O que ele mede]"), detalhe: pend("[Referência]") }], cor: UI.funil, fonte: fontesDaPagina() })).querySelector("tr[data-item]");
@@ -1905,7 +2034,7 @@
     ED.doc.getElementById("ed-barra").hidden = true;
     marcarSujo("Item tirado: a grade se ajustou. Para voltar: Desfazer.");
   }
-  /* ---------- mover itens: ← Antes / Depois → (ou ↑ / ↓) na barra do item ---------- */
+  /* ---------- mover itens: ← Mover / Mover → (ou ↑ / ↓) na barra do item ---------- */
   /* Grupos em coluna (um embaixo do outro) usam ↑/↓; os outros, ←/→. A grade é refeita como no + Adicionar. */
   function grupoVertical(g) { return g === "transformation" || GRUPOS[g].layout === "lista" || emFunil(g); }
   /* Leva o item para a posição destino (0 = primeiro) do grupo. Um passo no Desfazer. */
@@ -1926,9 +2055,203 @@
       ED.doc.getElementById("ed-barra").hidden = true;
       marcarSujo("Item movido (" + GRUPOS[g].nome + ", agora na posição " + (destino + 1) + " de " + lista.length + "). Para voltar: Desfazer.");
     }
-    if (pos > 0) bi.push([v ? "↑ Subir" : "← Antes", function () { mover(pos - 1); }, "cinza"]);
-    if (pos < lista.length - 1) bi.push([v ? "↓ Descer" : "Depois →", function () { mover(pos + 1); }, "cinza"]);
+    if (pos > 0) bi.push([v ? "↑ Subir" : "← Mover", function () { mover(pos - 1); }, "cinza"]);
+    if (pos < lista.length - 1) bi.push([v ? "↓ Descer" : "Mover →", function () { mover(pos + 1); }, "cinza"]);
   }
+
+  /* =================================================================== */
+  /* 5.6 · ETIQUETA QUE SAI E VOLTA · ITEM QUE MUDA DE SEÇÃO             */
+  /* =================================================================== */
+  /* A etiqueta do item (▲ +12% nos números, ● No ar nos textos): o parágrafo dela, se existir. */
+  function etiquetaDe(item) {
+    var k = item.getAttribute("data-item"); if (!k) return null;
+    return item.querySelector('[data-campo="' + k + '.variacao"], [data-campo="' + k + '.status"]');
+  }
+  /* A etiqueta do modelo em branco para o grupo (para pôr de volta), ou null se o grupo não tem etiqueta. */
+  function modeloEtiqueta(g) { if (emFunil(g)) return null; var m = modeloDoItem(g); return m ? etiquetaDe(m) ? m : null : null; }
+  /* o espaço em cima da referência (3 px com a etiqueta, 0 sem ela), como no motor */
+  function margemReferencia(campo, comEtiqueta) {
+    var ts = campo.nextElementSibling; if (!ts || !ts.classList.contains("ts")) return null;
+    var antes = ts.getAttribute("style"); ts.setAttribute("style", (antes || "").replace(/margin:\s*\d+px 0 0 0/, "margin:" + (comEtiqueta ? "3px" : "0") + " 0 0 0"));
+    return function () { ts.setAttribute("style", antes); };
+  }
+  function tirarEtiqueta(campo) {
+    var pai = campo.parentNode, prox = campo.nextSibling, volta = margemReferencia(campo, false);
+    campo.remove();
+    pilha(function () { pai.insertBefore(campo, prox); if (volta) volta(); });
+    ED.doc.getElementById("ed-barra").hidden = true; if (ED.doc.activeElement && ED.doc.activeElement.blur) ED.doc.activeElement.blur();
+    marcarSujo("Etiqueta tirada. Para pôr de volta: + Etiqueta, na barra do item (ou Desfazer).");
+  }
+  /* Põe a etiqueta do modelo no mesmo lugar em que ela fica no modelo (mesmo caminho dentro do item). */
+  function porEtiqueta(item) {
+    var g = grupoDe(item), m = modeloEtiqueta(g); if (!m) return;
+    var chip = etiquetaDe(m), caminho = [], n = chip;
+    while (n.parentNode && n.parentNode !== m) { caminho.unshift(Array.prototype.indexOf.call(n.parentNode.children, n)); n = n.parentNode; }
+    caminho.unshift(Array.prototype.indexOf.call(m.children, n));
+    var pos = caminho.pop(), pai = item;
+    caminho.forEach(function (i) { if (pai) pai = pai.children[i]; });
+    if (!pai) { $("#estado").textContent = "Não deu para pôr a etiqueta neste item."; return; }
+    var k = item.getAttribute("data-item"), novo = ED.doc.importNode(chip, true);
+    novo.setAttribute("data-campo", k + "." + chip.getAttribute("data-campo").split(".").pop());
+    pai.insertBefore(novo, pai.children[pos] || null);
+    var volta = margemReferencia(novo, true);
+    editavel(item);
+    pilha(function () { novo.remove(); if (volta) volta(); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo("Etiqueta posta: clique nela para escrever (ex.: ▲ +12%) e escolher a cor.");
+    novo.focus();
+  }
+  /* Seções do mesmo tipo: números (valor, título, etiqueta, referência) e textos (nome, texto, status…). Os campos
+     passam pelo significado (nome ↔ título, texto ↔ detalhe); o que o lugar novo não tem fica de fora (avisado). */
+  var FAMILIA = { numero: "num", resultado: "num", cxt: "num", lancamento: "txt", transformation: "txt", aprendizado: "txt", agenda: "txt" };
+  var SENTIDO = { nome: "titulo", titulo: "titulo", texto: "texto", detalhe: "texto", valor: "valor", variacao: "etiqueta", status: "etiqueta", data: "data", resultado: "resultado", levamos: "levamos" };
+  var NOME_CAMPO = { titulo: "título", texto: "texto", valor: "número", etiqueta: "etiqueta", data: "data", resultado: "resultado", levamos: "o que levamos" };
+  function familiaDe(g) { if (!g || !GRUPOS[g]) return ""; if (FAMILIA[g]) return FAMILIA[g]; var lay = GRUPOS[g].layout; return lay === "numeros" ? "num" : lay ? "txt" : ""; }
+  /* Para onde o item pode ir: outro grupo do mesmo tipo, à vista, fora do funil e com lugar. */
+  function destinosDe(item) {
+    var g = grupoDe(item), f = familiaDe(g); if (!f || emFunil(g)) return [];
+    return Object.keys(ED.grupos || {}).filter(function (x) {
+      var it = itensDo(x);
+      return x !== g && familiaDe(x) === f && !emFunil(x) && it.length && it.length < GRUPOS[x].max && !secaoOculta(it[0]);
+    });
+  }
+  function camposDoItem(raiz) {
+    var k = raiz.getAttribute("data-item"), m = {};
+    Array.prototype.forEach.call(raiz.querySelectorAll("[data-campo]"), function (c) {
+      var dc = c.getAttribute("data-campo"); if (dc.indexOf(k + ".") !== 0) return;
+      var nome = dc.slice(k.length + 1), s2 = SENTIDO[nome] || nome; if (!m[s2]) m[s2] = c;
+    });
+    return m;
+  }
+  /* Leva o item para a posição k do grupo destino (os campos vão junto), num passo só do Desfazer. */
+  function moverParaGrupo(item, gd, k) {
+    var go = grupoDe(item), Go = ED.grupos[go], Gd = ED.grupos[gd];
+    if (!Go || !Gd || destinosDe(item).indexOf(gd) < 0) return false;
+    var novo = modeloDoItem(gd); if (!novo) return false;
+    var voltaO = desfazGrupo(Go), voltaD = desfazGrupo(Gd), it = itensDo(gd);
+    k = Math.max(0, Math.min(k === undefined ? it.length : k, it.length));
+    if (k > 0) it[k - 1].parentNode.insertBefore(novo, it[k - 1].nextSibling); else it[0].parentNode.insertBefore(novo, it[0]);
+    var de = camposDoItem(item), para = camposDoItem(novo), fora = [];
+    Object.keys(para).forEach(function (s2) {
+      if (de[s2]) para[s2].innerHTML = de[s2].innerHTML;
+      else if (s2 === "etiqueta") { var vm = margemReferencia(para[s2], false); para[s2].remove(); }
+      else para[s2].innerHTML = "";
+    });
+    Object.keys(de).forEach(function (s2) { if (!para[s2] && de[s2].textContent.trim()) fora.push(NOME_CAMPO[s2] || s2); });
+    if (item.querySelector("img[data-img]")) fora.push("imagem");
+    if (item.querySelector("a.cta[href], a[data-anexo]")) fora.push("link");
+    if (item.querySelector("[data-apr]")) fora.push("o que aprendemos");
+    item.remove();
+    renumerar(go); refazer(go); editavel(novo); renumerar(gd); refazer(gd); ordenarNumeros(ED.doc); atualizarMais();
+    pilha(function () { voltaD(); voltaO(); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    novo.classList.add("ed-itemMovido"); setTimeout(function () { novo.classList.remove("ed-itemMovido"); }, 1800);
+    novo.scrollIntoView({ block: "center" });
+    marcarSujo("Item movido para " + nomeGrupo(gd) + " (posição " + (k + 1) + ")" + (fora.length ? ". Não existe no lugar novo e ficou de fora: " + fora.join(", ") + "." : ".") + " Para voltar: Desfazer.");
+    return true;
+  }
+  /* "Mover para outra seção": a lista das seções do mesmo tipo; o item entra no fim da escolhida. */
+  async function escolherDestino(item) {
+    var ds = destinosDe(item); if (!ds.length) return;
+    ED.doc.getElementById("ed-barra").hidden = true;
+    var h = "<p>O item sai daqui e entra no fim da seção escolhida, com os textos e números dele. Imagem e link não vão junto: para recuperar, use Desfazer.</p>" +
+      '<div class="destinos" role="radiogroup" aria-label="Seção">' + ds.map(function (x, i) {
+        return '<label class="check"><input type="radio" name="destinoItem" value="' + x + '"' + (i ? "" : " checked") + "> " + esc(nomeGrupo(x)) + " <span class=\"muted\">(" + itensDo(x).length + " de " + GRUPOS[x].max + ")</span></label>";
+      }).join("") + "</div>";
+    if (!(await perguntar("Mover para outra seção", h, "Mover", "Cancelar"))) return;
+    var esc2 = document.querySelector('input[name="destinoItem"]:checked'); if (esc2) moverParaGrupo(item, esc2.value);
+  }
+
+  /* =================================================================== */
+  /* 5.5 · ARRASTAR COM ENCAIXE                                          */
+  /* A liberdade fica dentro da grade: um item muda de lugar no grupo dele ou vai para outra seção do mesmo tipo
+     (5.6); a linha vermelha mostra onde entra e a grade é refeita com as regras do motor. Nada fica solto por cima
+     do layout.                                                                                              */
+  /* =================================================================== */
+  /* Acompanha o ponteiro dentro e fora do quadro (quem rola é a janela de fora), com rolagem automática perto da
+     borda. cb.move(x, y) recebe a posição na página do report; cb.fim(soltou) quando solta (true) ou cancela. */
+  function seguirPonteiro(cb) {
+    var d = ED.doc, fr = $("#edFrame"), st = { vx: 0, vy: 0, raf: 0 }, topo = document.querySelector("#secEditar .ferramentas").getBoundingClientRect().bottom;
+    function passo() {
+      st.raf = 0;
+      var lim = Math.max(topo, 0) + 50, vel = st.vy < lim ? -Math.ceil((lim - st.vy) / 4) : st.vy > window.innerHeight - 50 ? Math.ceil((st.vy - window.innerHeight + 50) / 4) : 0;
+      if (vel) window.scrollBy(0, vel);
+      var q = fr.getBoundingClientRect(), w = d.defaultView; cb.move(st.vx - q.left + w.scrollX, st.vy - q.top + w.scrollY);
+      if (vel) st.raf = requestAnimationFrame(passo);
+    }
+    function agenda() { if (!st.raf) st.raf = requestAnimationFrame(passo); }
+    function dentro(e) { var q = fr.getBoundingClientRect(); st.vx = q.left + e.clientX; st.vy = q.top + e.clientY; agenda(); }
+    function fora(e) { st.vx = e.clientX; st.vy = e.clientY; agenda(); }
+    function solta() {
+      d.removeEventListener("pointermove", dentro); d.removeEventListener("pointerup", fim); document.removeEventListener("pointermove", fora); document.removeEventListener("pointerup", fim);
+      d.removeEventListener("keydown", tecla); document.removeEventListener("keydown", tecla); if (st.raf) cancelAnimationFrame(st.raf); d.documentElement.classList.remove("ed-movendo"); document.documentElement.classList.remove("ed-movendo-fora");
+    }
+    function fim(e) { solta(); var q = fr.getBoundingClientRect(), w = d.defaultView; if (e && e.type === "pointerup") cb.move(st.vx - q.left + w.scrollX, st.vy - q.top + w.scrollY); cb.fim(!!(e && e.type === "pointerup")); }
+    function tecla(e) { if (e.key === "Escape") { e.preventDefault(); solta(); cb.fim(false); } }
+    d.addEventListener("pointermove", dentro); d.addEventListener("pointerup", fim); document.addEventListener("pointermove", fora); document.addEventListener("pointerup", fim);
+    d.addEventListener("keydown", tecla); document.addEventListener("keydown", tecla); d.documentElement.classList.add("ed-movendo"); document.documentElement.classList.add("ed-movendo-fora");
+    try { window.getSelection().removeAllRanges(); d.getSelection().removeAllRanges(); } catch (e) {}
+    return { comeco: function (e, noQuadro) { if (noQuadro) dentro(e); else fora(e); } };
+  }
+  function retDe(el) { var r = el.getBoundingClientRect(), w = ED.doc.defaultView; return { l: r.left + w.scrollX, t: r.top + w.scrollY, r: r.right + w.scrollX, b: r.bottom + w.scrollY }; }
+  /* Os lugares entre os itens de um grupo (antes de cada um e depois do último; num grupo em linhas, também no fim de
+     cada linha). k = a posição que o item passa a ter. */
+  function vagasDoGrupo(g) {
+    var it = itensDo(g).filter(function (x) { return x.getBoundingClientRect().width > 0; }), vert = grupoVertical(g), v = [];
+    var R = it.map(retDe);
+    R.forEach(function (r, k) {
+      var prox = R[k + 1];
+      if (vert) { v.push({ k: k, x: r.l, y: r.t - 3, w: r.r - r.l, h: 0, o: "h" }); if (!prox) v.push({ k: k + 1, x: r.l, y: r.b + 3, w: r.r - r.l, h: 0, o: "h" }); }
+      else {
+        v.push({ k: k, x: r.l - 8, y: r.t, w: 0, h: r.b - r.t, o: "v" });
+        if (!prox || prox.t > r.t + 4) v.push({ k: k + 1, x: r.r + 8, y: r.t, w: 0, h: r.b - r.t, o: "v" });
+      }
+    });
+    return v;
+  }
+  function distVaga(z, x, y) {
+    var dx = x < z.x ? z.x - x : x > z.x + z.w ? x - z.x - z.w : 0, dy = y < z.y ? z.y - y : y > z.y + z.h ? y - z.y - z.h : 0;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  function maisPerto(lista, x, y) { var m = null, dm = Infinity; lista.forEach(function (z) { var dd = distVaga(z, x, y); if (dd < dm) { dm = dd; m = z; } }); return m ? { z: m, d: dm } : null; }
+
+  /* ---------- arrastar um item dentro do grupo ---------- */
+  function arrastarItem(item, g, e0) {
+    var d = ED.doc, it = itensDo(g), de = it.indexOf(item); if (de < 0 || it.length < 2) return;
+    d.getElementById("ed-barra").hidden = true;
+    var vagas = vagasDoGrupo(g).map(function (z) { z.g = g; return z; }), ind = d.createElement("div"), atual = null;
+    destinosDe(item).forEach(function (x) { vagasDoGrupo(x).forEach(function (z) { z.g = x; vagas.push(z); }); });
+    ind.id = "ed-vaga"; ind.setAttribute("data-editor", ""); ind.innerHTML = "<span></span>"; ind.hidden = true; d.body.appendChild(ind);
+    item.classList.add("ed-arrastando"); ED.arrastando = true;
+    var seg = seguirPonteiro({
+      move: function (x, y) {
+        var m = maisPerto(vagas, x, y); atual = m && m.z; if (!atual) return;
+        var mesmo = atual.g === g && (atual.k === de || atual.k === de + 1);
+        ind.hidden = false; ind.className = mesmo ? "mesmo" : "";
+        if (atual.o === "h") { ind.style.left = atual.x + "px"; ind.style.top = (atual.y - 2) + "px"; ind.style.width = Math.max(atual.w, 40) + "px"; ind.style.height = "4px"; }
+        else { ind.style.left = (atual.x - 2) + "px"; ind.style.top = atual.y + "px"; ind.style.width = "4px"; ind.style.height = Math.max(atual.h, 40) + "px"; }
+        ind.firstChild.textContent = mesmo ? "Fica onde está" : atual.g !== g ? "Soltar aqui · " + nomeGrupo(atual.g) : "Soltar aqui";
+      },
+      fim: function (soltou) {
+        item.classList.remove("ed-arrastando"); ind.remove(); ED.arrastando = false;
+        if (!soltou || !atual) { $("#estado").textContent = "Arrasto cancelado: o item ficou onde estava."; return; }
+        if (atual.g !== g) { moverParaGrupo(item, atual.g, atual.k); return; }
+        if (atual.k === de || atual.k === de + 1) { $("#estado").textContent = "Solto no mesmo lugar: o item ficou onde estava."; return; }
+        var destino = atual.k > de ? atual.k - 1 : atual.k;
+        if (moverItem(item, destino)) {
+          var novo = itensDo(g)[destino] || item; novo.classList.add("ed-itemMovido"); setTimeout(function () { novo.classList.remove("ed-itemMovido"); }, 1600);
+          marcarSujo("Item movido (" + GRUPOS[g].nome + ", agora na posição " + (destino + 1) + " de " + it.length + "): a grade se ajustou. Para voltar: Desfazer");
+        }
+      }
+    });
+    seg.comeco(e0, true);
+  }
+
+  /* atalho para o e-mail-resumo, e a altura da barra de ferramentas (o painel fica logo abaixo dela) */
+  $("#bVoltaEdicao").addEventListener("click", function () { $("#secEditar").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  $("#bIrResumo").addEventListener("click", function () { $("#secLink").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  function topoFerramentas() { var f = document.querySelector("#secEditar .ferramentas"); if (f) document.documentElement.style.setProperty("--topoFerr", Math.round(f.getBoundingClientRect().height + 10) + "px"); }
+  window.addEventListener("resize", topoFerramentas);
 
   /* ---------- ordem das seções: arrastar e soltar, subir/descer, escolher a posição ---------- */
   /* Mudam de lugar as seções entre a capa e o encerramento: a capa abre e o rodapé fecha o report (hierarquia). Cada
@@ -2077,7 +2400,7 @@
       var barraTopo = document.querySelector(".ferramentas").getBoundingClientRect().bottom;
       arrasto = { y: fr.getBoundingClientRect().top + e.clientY, zona: null, quadro: 0 };
       /* enquanto arrasta, a barra dos itens não reage (nada da página é refeito: só a linha anda) */
-      alca.hidden = true; d.documentElement.classList.add("ed-movendo"); ED.arrastando = true; d.getElementById("ed-barra").hidden = true;
+      alca.hidden = true; d.documentElement.classList.add("ed-movendo"); document.documentElement.classList.add("ed-movendo-fora"); ED.arrastando = true; d.getElementById("ed-barra").hidden = true;
       function passo() {
         arrasto.quadro = 0;
         /* rolagem automática perto da borda da janela (o quadro cresce com a página: quem rola é a janela de fora) */
@@ -2096,7 +2419,7 @@
         d.removeEventListener("keydown", tecla); document.removeEventListener("keydown", tecla);
         if (arrasto.quadro) cancelAnimationFrame(arrasto.quadro);
         var z = ev && ev.type === "pointerup" ? arrasto.zona : null;
-        meus.forEach(function (n) { n.classList.remove("ed-arrastando"); }); linha.remove(); d.documentElement.classList.remove("ed-movendo"); arrasto = null; atual = ""; ED.arrastando = false;
+        meus.forEach(function (n) { n.classList.remove("ed-arrastando"); }); linha.remove(); d.documentElement.classList.remove("ed-movendo"); document.documentElement.classList.remove("ed-movendo-fora"); arrasto = null; atual = ""; ED.arrastando = false;
         if (z && !z.mesmo) moverSecaoComAviso(id, z.antesDe, true); else if (!ev || z) $("#estado").textContent = (ev ? "Solta no mesmo lugar" : "Arrasto cancelado") + ": a seção ficou onde estava.";
       }
       function tecla(ev) { if (ev.key === "Escape") fim(null); }
@@ -2204,13 +2527,16 @@
   };
   /* "+ Novo tópico": pergunta o nome e o layout (com a miniatura de cada um) e põe o tópico antes do Foco do próximo mês,
      vindo do modelo em branco (o tópico do mesmo layout, com as chaves trocadas para o id livre). */
-  async function novoTopico() {
+  /* Descrição do layout com os nomes das seções deste emulador (no PJ: Análises, Aprendizados, Outras campanhas do mês) */
+  function comoLayout(k) { return LAYOUTS[k].como.replace("o Transformation Hub", (PJ ? "as " : "o ") + UI.sec.transformation).replace("O que aprendemos", UI.sec.aprendizados).replace("Também neste mês", UI.compactos); }
+  async function novoTopico(opcoes) {
+    var antesDe = opcoes && typeof opcoes === "object" && "antesDe" in opcoes ? opcoes.antesDe : undefined;
     var livres = idsLivres();
     if (!livres.length) { await perguntar("Máximo de tópicos novos", "<p>Cabem até " + IDS_TOPICO.length + " tópicos novos. Desfaça um deles para criar outro.</p>", "Entendi"); return; }
     if (!window.CORINGA_HTML) { await perguntar("Modelo não encontrado", "<p>O modelo em branco não está junto deste emulador. Use a versão avulsa (kit/emulador-report.html).</p>", "Entendi"); return; }
-    var padrao = ["foco", "agenda"].filter(function (x) { return secoesMoveis().indexOf(x) >= 0; })[0] || "";
+    var padrao = antesDe !== undefined ? antesDe : ["foco", "agenda"].filter(function (x) { return secoesMoveis().indexOf(x) >= 0; })[0] || "";
     var opcoes = Object.keys(LAYOUTS).map(function (k, i) {
-      return '<label class="layout"><input type="radio" name="layoutTopico" value="' + k + '"' + (i ? "" : " checked") + '><svg viewBox="0 0 120 72" width="120" height="72" aria-hidden="true">' + MINI[k] + '</svg><b>' + LAYOUTS[k].nome + '</b><span>' + esc(LAYOUTS[k].como) + ' · até ' + LAYOUTS[k].max + ' itens</span></label>';
+      return '<label class="layout"><input type="radio" name="layoutTopico" value="' + k + '"' + (i ? "" : " checked") + '><svg viewBox="0 0 120 72" width="120" height="72" aria-hidden="true">' + MINI[k] + '</svg><b>' + LAYOUTS[k].nome + '</b><span>' + esc(comoLayout(k)) + ' · até ' + LAYOUTS[k].max + ' itens</span></label>';
     }).join("");
     var ok = await perguntar("Novo tópico", '<div class="campo" style="margin-top:0"><label for="nomeTopico">Nome do tópico (vai em MAIÚSCULAS no topo da seção)</label><input type="text" id="nomeTopico" placeholder="ex.: Testes" autocomplete="off"></div>' +
       '<p style="margin:12px 0 6px;font-size:14px;font-weight:600">Qual layout seguir?</p><div class="layouts">' + opcoes + '</div>' +
@@ -2570,7 +2896,7 @@
     var doc = ED.doc.cloneNode(true);
     Array.prototype.forEach.call(doc.querySelectorAll("[data-editor], #ed-css"), function (n) { n.remove(); });
     Array.prototype.forEach.call(doc.querySelectorAll("[data-ed-oculta]"), function (n) { n.remove(); });
-    Array.prototype.forEach.call(doc.querySelectorAll(".ed-novo, .ed-movida, .ed-arrastando, .ed-movendo"), function (n) { n.classList.remove("ed-novo", "ed-movida", "ed-arrastando", "ed-movendo"); if (!n.className) n.removeAttribute("class"); });
+    Array.prototype.forEach.call(doc.querySelectorAll(".ed-novo, .ed-movida, .ed-arrastando, .ed-movendo, .ed-itemMovido"), function (n) { n.classList.remove("ed-novo", "ed-movida", "ed-arrastando", "ed-movendo", "ed-itemMovido"); if (!n.className) n.removeAttribute("class"); });
     /* ícone da aba: sempre o Santander + PF (ou + PJ, no Emulador Report PJ) atual (report antigo, sem ícone ou com a chama da 4.8, é atualizado ao salvar) */
     Array.prototype.forEach.call(doc.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="shortcut icon"]'), function (l) { l.remove(); });
     if (doc.head) { var t = doc.createElement("template"); t.innerHTML = PERFIL.icone; var tt = doc.head.querySelector("title"), ref = tt ? tt.nextSibling : null; Array.prototype.slice.call(t.content.children).forEach(function (l) { doc.head.insertBefore(l, ref); }); }

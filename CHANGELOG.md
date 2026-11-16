@@ -2,6 +2,33 @@
 
 A versão atual aparece na página `gerar-report.html`, no topo de `report_backup.html` e em `tools/motor.js` (`VERSAO`).
 
+## 5.6 · 2026-11-11 · Mais simples de pôr, tirar e mover
+
+- **Sem a aba Elementos:** pôr algo novo agora é **+ Novo item**, na barra do próprio item. Ele entra logo depois, com os textos [entre colchetes]. Também dá para usar o **+ Adicionar** de cada grupo.
+- **Barra do item mais clara:** as ações aparecem agrupadas (Arrastar, + Novo item, Mover para outra seção, Link, Imagem, Etiqueta, Tirar).
+- **Etiqueta:**
+  - **Tirar etiqueta** quando o resultado não vale no mês;
+  - **+ Etiqueta**, na barra do item, para pôr de volta;
+  - a cor (verde ou âmbar) continua na própria etiqueta.
+- **Mover para outra seção:** leva o item, com textos e números, para uma seção do mesmo tipo (por exemplo, de "O que lançamos" para "Também vem aí").
+- **Arrastar:** além de reordenar no grupo, solta também num grupo compatível.
+  - O arrasto nativo de imagens e textos fica bloqueado dentro do editor, e a página não seleciona texto durante o arrasto.
+- **Testes:** `tests/edicao.e2e.js` cobre novo item, arrastar, mover e etiqueta (51 verificações), e os demais testes foram atualizados.
+
+## 5.5 · 2026-11-11 · Painel ao lado, arrastar com encaixe e Refazer
+
+- **Painel ao lado da página:**
+  - a aba Seções controla a ordem das seções e o que aparece;
+  - a aba Elementos mostrava o que dá para pôr e marcava na página os lugares possíveis. Ela saiu na 5.6, substituída pelo + Novo item.
+- **Arrastar:** o item muda de lugar pela linha "Soltar aqui", dentro do próprio grupo, sem quebrar a grade.
+- **Refazer:** botão novo, com Ctrl+Z e Ctrl+Y fora de um texto.
+- **Paridade PF e PJ:** o funil nos principais resultados (animado no navegador) e a peça embaixo do texto passam a valer também no PF.
+- **E-mail-resumo:** os passos ficam de um lado e a prévia ao lado.
+- **Ajustes menores:**
+  - Esc fecha as janelas;
+  - o modelo em branco ficou mais enxuto;
+  - o "Novo tópico" do PJ usa os nomes das seções do PJ.
+
 ## 5.4 · 2026-11-05 · Funil nos Principais resultados, peça embaixo e "Vem aí" (PJ)
 
 - **Funil editável no Emulador Report PJ.** Embaixo dos números dos Principais resultados, o botão **Ver como funil** transforma os números em degraus de um funil, num bloco Vermelho Santander:

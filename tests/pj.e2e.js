@@ -123,7 +123,7 @@ function salvarComo() {
       recuo: getComputedStyle(d.querySelector("td.px.ra")).borderTopWidth };
   });
   console.log("MODELO PJ: " + mod.campos + " campos editáveis, " + mod.imgs + " imagens trocáveis.");
-  confere(mod.seg === "pj" && mod.campos > 80 && mod.imgs >= 15, "modelo em branco PJ aberto, todas as seções editáveis");
+  confere(mod.seg === "pj" && mod.campos > 80 && mod.imgs >= 12, "modelo em branco PJ aberto, todas as seções editáveis (5.5: modelo mais enxuto, com espaço para pôr mais)");
   confere(mod.principal === "184x230" && mod.area === "Creative Strategy PJ" && mod.fundoPagina === "#FFFFFF" && mod.fundoConteudo === "#F5DECF" && mod.fundoAbertura === "#FFFFFF" && mod.recuo === "20px" && mod.layout === "3", "identidade Empresas (5.3): fundo do HTML Branco, conteúdo Rio, abertura num painel Branco recuado, peça da visão geral em retângulo vertical (184 x 230) · " + [mod.fundoPagina, mod.fundoConteudo, mod.fundoAbertura, mod.recuo].join(" "));
   var o1 = await ordem(p);
   confere(o1.indexOf("capa,visao,resultados,lancamos,cx,transformation,aprendizados") === 0 && /foco,agenda,rodape,fim$/.test(o1), "seções do PJ na ordem: abertura, visão geral, principais resultados, campanhas, indicadores, análises, aprendizados, próximas iniciativas, encerramento · " + o1);
@@ -154,9 +154,10 @@ function salvarComo() {
 
   /* 5. Itens: tirar e adicionar (grade refeita), números em Preto */
   /* passa o mouse no nome do card (no centro do card de baixo fica a imagem, que tem a barra dela) */
-  for (var lk of ["lancamento-6", "lancamento-5", "lancamento-4"]) await ferramenta(p, f, '[data-item="' + lk + '"] [data-campo$=".nome"]', "Tirar item");
+  /* 5.5: o modelo em branco traz 3 campanhas; uma sai e a grade se refaz em 2 colunas */
+  await ferramenta(p, f, '[data-item="lancamento-3"] [data-campo$=".nome"]', "Tirar item");
   var gl = await grade(p, "lancamento");
-  confere(gl.n === 3 && gl.larguras === "184,184,184", "campanhas: 3 cards numa linha depois de tirar 3 · " + gl.larguras);
+  confere(gl.n === 2 && gl.larguras === "288,288", "campanhas: 2 cards depois de tirar 1, em 2 colunas · " + gl.larguras);
   await clicarMais(p, "numero");
   var gn = await grade(p, "numero");
   confere(gn.n === 4 && gn.larguras === "132,132,132,132" && gn.cores === "preto,preto,preto,preto" && gn.filetes === "#000000,#000000,#000000,#000000", "principais resultados: 4 em colunas iguais, valores e filetes em Preto (Empresas) · " + gn.cores);
@@ -165,7 +166,6 @@ function salvarComo() {
   confere(gn.n === 3 && gn.larguras === "184,184,184" && gn.classes === "third|third|third", "de volta a 3 resultados na grade de 184 px");
 
   /* 6. Seções: tirar (Seções do report e alça), + Novo tópico */
-  await p.click("#secEditar details summary");
   await p.uncheck('#secoesRep input[value="aprendizados"]');
   confere(!(await p.$eval('#secoesRep input[value="aprendizados"]', function (e) { return e.checked; })), "seção Aprendizados desmarcada (fica de fora do arquivo)");
   var antesTop = await ordem(p);

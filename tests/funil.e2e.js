@@ -225,11 +225,11 @@ function salvarComo() {
   confere(ag && /Vem aí|VEM AÍ/.test(st), "report PJ da 5.3 aberto: a seção Agenda agora se chama VEM AÍ (avisado) · " + st.slice(0, 160));
   await p2.close();
 
-  /* 12. PF: sem o botão do funil */
+  /* 12. PF (5.5): o mesmo botão do funil, a mesma lógica do PJ */
   var p3 = await abrirEmulador(URL_PF);
   await p3.click("#bModelo"); await quadro(p3);
   var pf = await noQuadro(p3, function (d) { return { funil: !!d.querySelector('.ed-mais button[data-acao]'), mais: !!d.querySelector('.ed-mais button[data-grupo="numero"]') }; });
-  confere(!pf.funil && pf.mais, "Emulador Report PF: os números continuam em colunas, sem o botão do funil");
+  confere(pf.funil && pf.mais, "Emulador Report PF (5.5): os números com o botão Ver como funil, como no PJ");
   await p3.close();
 
   confere(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.join(" | ") : ""));

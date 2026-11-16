@@ -216,7 +216,7 @@ function salvarComo() {
   var id3 = await novoTopico(p, "Mídia", "numeros");
   confere(id3 === "topicoc" && await larguras(p, "topicoc") === "184,184,184", "tópico MÍDIA (números): 3 números de 184 px");
   var bNum = await botoes(p, f, '[data-item="topicoc-1"]');
-  confere(bNum.indexOf("+ Link") < 0 && bNum.indexOf("+ Imagem") < 0 && bNum.indexOf("+ Adicionar depois") >= 0, "números: sem + Link e + Imagem · " + bNum.join(", "));
+  confere(bNum.indexOf("+ Link") < 0 && bNum.indexOf("+ Imagem") < 0 && bNum.indexOf("+ Novo item") >= 0, "números: sem + Link e + Imagem · " + bNum.join(", "));
   await f.locator('.ed-mais button[data-grupo="topicoc"]').click();
   confere(await larguras(p, "topicoc") === "132,132,132,132", "+ Adicionar número: 4 de 132 px");
   await escrever(p, f, "topicoc-1.valor", "1,2 mi");

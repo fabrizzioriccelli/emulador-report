@@ -102,7 +102,7 @@ function salvarComo() {
   confere(await noQuadro(p, function (d) { return d.querySelectorAll("script").length; }) === 0, "na edição a página fica parada (sem script)");
   var nCampos = await noQuadro(p, function (d) { return d.querySelectorAll("[data-ed-campo]").length; }), nImgs = await noQuadro(p, function (d) { return d.querySelectorAll("img[data-img]").length; });
   console.log("MODELO: " + nCampos + " campos editáveis, " + nImgs + " imagens trocáveis.");
-  confere(nCampos > 80 && nImgs >= 15, "todas as seções editáveis (textos, números e imagens)");
+  confere(nCampos > 80 && nImgs >= 12, "todas as seções editáveis (textos, números e imagens)");
 
   /* 2. Editar textos, número, etiqueta e período. */
   await escrever(p, f, "frase", "Teste fictício");
@@ -153,16 +153,23 @@ function salvarComo() {
         cores: it.map(function (x) { var v = x.querySelector('[data-campo$=".valor"]'); return v ? (/color:#EC0000/i.test(v.getAttribute("style")) ? "vermelho" : "preto") : ""; }).join(",") };
     }, g);
   }
-  await ferramenta(p, f, '[data-item="agenda-6"]', "Tirar item");
+  /* 5.5: o modelo em branco traz 3 itens na agenda e 3 lançamentos (há espaço para pôr mais) */
+  await ferramenta(p, f, '[data-item="agenda-3"]', "Tirar item");
   var ga = await grade("agenda");
-  confere(ga.n === 5 && ga.linhas === "3+0 2+1", "agenda: item ocultado e a grade refeita (3 + 2 e um espaço vazio) · " + ga.linhas);
+  confere(ga.n === 2 && ga.linhas === "2+1", "agenda: item ocultado e a grade refeita (2 e um espaço vazio) · " + ga.linhas);
   confere(ga.mais === "+ Adicionar item na agenda", "agenda: botão visível \"+ Adicionar item na agenda\"");
-  await ferramenta(p, f, '[data-item="agenda-1"]', "+ Adicionar depois");
+  await ferramenta(p, f, '[data-item="agenda-1"]', "+ Novo item");
   ga = await grade("agenda");
-  confere(ga.n === 6 && ga.linhas === "3+0 3+0" && ga.chaves === "agenda-1,agenda-2,agenda-3,agenda-4,agenda-5,agenda-6" && /^bloqueado: Máximo de 6/.test(ga.mais), "agenda: item adicionado depois do 1º, chaves em sequência, máximo de 6 · " + ga.mais);
+  confere(ga.n === 3 && ga.linhas === "3+0" && ga.chaves === "agenda-1,agenda-2,agenda-3", "agenda: item adicionado depois do 1º, chaves em sequência · " + ga.chaves);
   confere(await noQuadro(p, function (d) { return d.querySelector('[data-campo="agenda-2.titulo"]').textContent.trim(); }) === "[Item da agenda 2]", "item novo vem do modelo, com o número da posição");
+  for (var ka = 0; ka < 3; ka++) {
+    await noQuadro(p, function (d) { d.querySelector('.ed-mais button[data-grupo="agenda"]').scrollIntoView({ block: "center" }); });
+    var cA = await noQuadro(p, function (d) { var q = document.querySelector("#edFrame").getBoundingClientRect(), b = d.querySelector('.ed-mais button[data-grupo="agenda"]').getBoundingClientRect(); return { x: q.left + b.left + b.width / 2, y: q.top + b.top + b.height / 2 }; });
+    await p.mouse.click(cA.x, cA.y); await p.waitForTimeout(150);
+  }
+  ga = await grade("agenda");
+  confere(ga.n === 6 && ga.linhas === "3+0 3+0" && /^bloqueado: Máximo de 6/.test(ga.mais), "agenda: até 6 itens (3 por linha), depois o botão bloqueia · " + ga.mais);
   await ferramenta(p, f, '[data-item="agenda-6"]', "Tirar item");
-  for (var lk of ["lancamento-6", "lancamento-5", "lancamento-4"]) await ferramenta(p, f, '[data-item="' + lk + '"]', "Tirar item");
   var gl = await grade("lancamento");
   confere(gl.n === 3 && gl.linhas === "3+0" && gl.larguras === "184,184,184" && gl.classes === "col gap|col gap|col" && gl.cab === "5", "lançamentos: 3 numa linha, como o motor monta · " + gl.larguras + " · " + gl.classes);
   await noQuadro(p, function (d) { d.querySelector('.ed-mais button[data-grupo="lancamento"]').scrollIntoView({ block: "center" }); });
@@ -189,7 +196,6 @@ function salvarComo() {
     await ferramenta(p, f, alvo + " >> visible=true", "Tirar imagem");
   }
   confere(await noQuadro(p, function (d) { return !d.querySelector('img[data-img="selo"], img[data-img="transformation-3-logo"], img[data-img="transformation-3-print-1"]') && !!d.querySelector('[data-campo="transformation-3.nome"]') && !!d.querySelector('img[data-img="transformation-2-logo"]'); }), "selo, logo e print tirados (o texto do projeto continua)");
-  await p.click("#secEditar details summary");
   await p.uncheck('#secoesRep input[value="aprendizados"]');
 
   /* 5. Importar conteúdo (resposta do Copilot no formato da biblioteca de prompts). */
