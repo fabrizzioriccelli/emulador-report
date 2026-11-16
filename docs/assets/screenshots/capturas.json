@@ -1,0 +1,54 @@
+[
+ {
+  "arquivo": "01-emulador-pf.webp",
+  "legenda": "Emulador Report PF: abre no navegador, sem instalar nada"
+ },
+ {
+  "arquivo": "02-emulador-pj.webp",
+  "legenda": "Emulador Report PJ: o mesmo sistema, com a identidade do segmento"
+ },
+ {
+  "arquivo": "03-edicao-texto.webp",
+  "legenda": "Clique e escreva: o texto vira campo editável na própria página"
+ },
+ {
+  "arquivo": "04-indicadores.webp",
+  "legenda": "Indicadores e etiquetas: valor, variação, cor e referência"
+ },
+ {
+  "arquivo": "05-adicionar-item.webp",
+  "legenda": "Barra do item: + Novo item, arrastar, mover para outra seção, link, imagem"
+ },
+ {
+  "arquivo": "06-organizar.webp",
+  "legenda": "Organizar: mover um item para outra seção do mesmo tipo, com textos e números"
+ },
+ {
+  "arquivo": "07-imagem-video.webp",
+  "legenda": "Imagens e vídeos: trocar imagem, colocar vídeo, imagem embaixo"
+ },
+ {
+  "arquivo": "08-previa-celular.webp",
+  "legenda": "Prévia no celular antes de salvar"
+ },
+ {
+  "arquivo": "09-report-html.webp",
+  "legenda": "O report final: um arquivo HTML, com movimento, vídeo e peças no clique"
+ },
+ {
+  "arquivo": "10-email-resumo.webp",
+  "legenda": "E-mail-resumo: até 4 destaques escolhidos do report, com prévia ao lado"
+ },
+ {
+  "arquivo": "11-exportar-eml.webp",
+  "legenda": "Status em tempo real e exportação do e-mail-resumo em .eml para o Outlook"
+ },
+ {
+  "arquivo": "12-funil-pj.webp",
+  "legenda": "PJ: principais resultados como funil (dados fictícios e coerentes entre as etapas)"
+ },
+ {
+  "arquivo": "13-celular.webp",
+  "legenda": "No celular: o mesmo report, em uma coluna"
+ }
+]

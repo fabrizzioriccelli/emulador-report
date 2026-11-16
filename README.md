@@ -1,136 +1,309 @@
-# Report Mensal · Creative Strategy PF e PJ
-
-Modelo do report mensal da Creative Strategy PF (Customer Interactions), em duas experiências que saem **da mesma página**:
-
-- **o report completo** (HTML): movimento ao rolar, vídeos, peças e documentos no clique;
-- **o e-mail-resumo** (Outlook): a porta de entrada, estático, com a frase do mês, até 4 destaques escolhidos por você (números, campanhas, "O que aprendemos" ou uma informação nova revisada, com imagem e link opcionais) e um único botão principal, "Acessar report completo". Também sai como imagem (`.png`), para prévia.
-
-O time atualiza tudo no **emulador**: um arquivo só, que abre no Chrome ou no Edge, sem instalar nada.
-
-**Versão 5.4 (2026-11-05).** Histórico em [CHANGELOG.md](CHANGELOG.md).
-
-**Dois emuladores, o mesmo sistema:** o **Emulador Report PF** (Creative Strategy PF) e o **Emulador Report PJ** (Santander Empresas, pelo capítulo 6 do Brand Guide). As funções são as mesmas e, a partir da 5.1, **o esqueleto da página também** (o do PJ): muda a identidade (cores e formiguinha), o ícone da aba e os nomes das seções. Um não abre o report do outro. Detalhes do PJ: [docs/REPORT_PJ.md](docs/REPORT_PJ.md).
-
-<p>
-<img src="docs/preview-modelo.jpg" width="420" alt="Prévia do modelo em branco no computador">
-&nbsp;
-<img src="docs/preview-modelo-celular.jpg" width="200" alt="Prévia do modelo em branco no celular">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/banner-escuro.png">
+    <img src="docs/assets/brand/banner-claro.png" alt="Emulador Report: reports de performance editados na própria página. Telas reais dos emuladores com dados fictícios." width="100%">
+  </picture>
 </p>
 
-> Este repositório é um **modelo sem dados**: o modelo em branco tem textos [entre colchetes] e números em **X**; o exemplo de treinamento é **fictício** (Janeiro 2099). Nada disso é resultado real. Os dados de cada mês ficam só no ambiente corporativo autorizado (veja [Segurança dos dados](#segurança-dos-dados)).
->
-> Identidade visual conforme o **Brand Guide Santander Brasil (maio/2026)**: paleta, tipografia, chama, cantos e tom de voz ([ARQUITETURA.md › Brand Guide](docs/ARQUITETURA.md#brand-guide-como-foi-aplicado-num-e-mail)).
+<p align="center">
+  <b>Português</b> · <a href="README.en.md">English</a>
+</p>
 
----
+<p align="center">
+  <a href="#demonstrações-em-vídeo">Vídeos</a> ·
+  <a href="#galeria">Galeria</a> ·
+  <a href="docs/demo/">Demonstração interativa</a> ·
+  <a href="#arquitetura">Arquitetura</a> ·
+  <a href="#minha-contribuição">Minha contribuição</a> ·
+  <a href="#documentação">Documentação</a>
+</p>
 
-## Para o time: o kit
+# Emulador Report
 
-Tudo o que o time usa está em **[`kit/`](kit/)**:
+**O report mensal de performance de marketing, editado na própria página — e transformado em um e-mail executivo pronto para o Outlook. Sem código, sem instalar nada.**
 
-| Arquivo | Para quê |
+Dois emuladores, um para **PF** e outro para **PJ**, que nasceram de uma necessidade real de comunicação de resultados: atualizar todo mês um report com campanhas, indicadores, peças e vídeos, manter a identidade de cada segmento e entregar um resumo que a liderança lê no e-mail.
+
+> [!NOTE]
+> **Demonstração fictícia:** este repositório utiliza imagens ilustrativas, campanhas fictícias, nomes demonstrativos e dados sintéticos exclusivamente para apresentar as funcionalidades do projeto. Nenhum dado exibido representa resultados reais, informações de clientes ou campanhas internas do Santander.
+> Case de portfólio independente, sem vínculo institucional nem endosso do Santander. Detalhes em [avisos de dados, marca e licença](docs/disclaimer.md).
+
+<p align="center">
+  <img src="docs/assets/gifs/01-visao-geral.gif" alt="Gravação real: o Emulador Report PF abre o report fictício de abril e a página do mês vira o editor" width="100%">
+</p>
+
+## Em 30 segundos
+
+| | |
 |---|---|
-| [`emulador-report.html`](kit/emulador-report.html) | **Emulador Report PF.** Abre o modelo em branco ou o report salvo, edita textos, indicadores, imagens e links na própria página, salva o report do mês e gera o e-mail-resumo (`.eml`) |
-| [`emulador-report-pj.html`](kit/emulador-report-pj.html) | **Emulador Report PJ** (Santander Empresas): o mesmo emulador, para o report PJ |
-| [`guia-operacional.pdf`](kit/guia-operacional.pdf) | **O guia unificado PF + PJ**, passo a passo, com telas reais dos dois emuladores e a biblioteca de prompts do Copilot ([.pptx](kit/guia-operacional.pptx) editável) |
-| [`apresentacao-executiva.pdf`](kit/apresentacao-executiva.pdf) | A apresentação da nova experiência, 10 slides ([.pptx](kit/apresentacao-executiva.pptx)). As chamadas abrem os arquivos desta pasta |
-| [`report-exemplo.html`](kit/report-exemplo.html) | Um report completo de exemplo (fictício), para ver a experiência |
-| [`report-coringa.html`](kit/report-coringa.html) · [`report-coringa-pj.html`](kit/report-coringa-pj.html) | Os modelos em branco do PF e do PJ (os mesmos que cada emulador abre em "Começar do modelo em branco") |
-| [`report-exemplo-pj.html`](kit/report-exemplo-pj.html) | Um report PJ completo de exemplo (fictício) |
+| **O problema** | Um report mensal com a mesma estrutura, refeito todo mês, com regras de marca, limites do Outlook e dois segmentos com identidades diferentes. As primeiras versões eram HTML editado à mão. |
+| **A resposta** | Um arquivo que abre no navegador e transforma a página do report no próprio editor: clicar, escrever, organizar, trocar imagens e vídeos, salvar um `.html` único e gerar o e-mail-resumo `.eml`. |
+| **O diferencial** | Separar **conteúdo** (o time), **forma** (a marca e o layout) e **canal** (página e e-mail). Um motor, dois perfis (PF e PJ), nenhum número inventado pela ferramenta. |
 
-**O mês em 8 passos** (detalhes no guia e em [docs/COMO_ATUALIZAR_O_MES.md](docs/COMO_ATUALIZAR_O_MES.md)):
+## Sumário
 
-1. **Organizar:** imagens do mês numa pasta, com nomes no padrão (`black_friday_selo.png`, `one_brief_icone.png`).
-2. **Abrir** o `emulador-report.html` no Chrome ou no Edge.
-3. **Editar** na própria página: clique no texto e escreva; passe o mouse na imagem e "Trocar imagem"; **+ Adicionar item** (assistente: tipo, onde entra, conteúdo e prévia antes de confirmar) ou **+ Adicionar** embaixo de cada grupo; "← Antes / Depois →" para mudar um item de lugar; a alça **⠿ Mover seção** (ou ↑ ↓ Posição… em "Seções do report") para mudar a ordem das seções; "Tirar item" no que não vale no mês (a grade se ajusta no computador e no celular). Ou cole o conteúdo organizado pelo Copilot em **Importar conteúdo**.
-4. **Salvar** o report do mês (`report-AAAA-MM.html`).
-5. **Conferir:** reabrir o arquivo salvo, no computador e no celular.
-6. **Link do report:** colar no emulador **qualquer link**: o caminho do arquivo salvo (`C:\…`, ex.: a pasta do OneDrive no computador; Explorador › botão direito › Copiar como caminho) ou o link de compartilhamento (`https://…`). O botão do e-mail sai no formato que o Outlook abre (espaço e acento funcionam). Para enviar, use o **link do OneDrive** (botão direito no arquivo › Compartilhar › Copiar link): no e-mail recebido, o Outlook para Windows bloqueia link para arquivo ("O Outlook bloqueou o acesso a links para os arquivos de zona da Internet"), e um caminho `C:\…` só existe no seu computador. O emulador aceita o caminho, mas avisa.
-7. **E-mail-resumo:** em "Selecionar destaques do e-mail", partir da sugestão (os números do projeto principal) e escolher, ordenar e ajustar até 4 destaques; incluir imagem, link ou uma informação nova (marcada para revisão); baixar o `.eml` (e, se quiser, a imagem `.png`).
-8. **Enviar** pelo Outlook: primeiro para você, depois para a área.
+1. [Contexto](#contexto)
+2. [Dores e oportunidades](#dores-e-oportunidades)
+3. [A solução](#a-solução)
+4. [Os dois emuladores: PF e PJ](#os-dois-emuladores-pf-e-pj)
+5. [Principais funcionalidades](#principais-funcionalidades)
+6. [Galeria](#galeria)
+7. [Demonstrações em vídeo](#demonstrações-em-vídeo)
+8. [Como funciona](#como-funciona)
+9. [Arquitetura](#arquitetura)
+10. [Tecnologias](#tecnologias)
+11. [Organização das pastas](#organização-das-pastas)
+12. [Como executar](#como-executar)
+13. [Documentação](#documentação)
+14. [Minha contribuição](#minha-contribuição)
+15. [Linha do tempo](#linha-do-tempo)
+16. [Dados fictícios, marca e licença](#dados-fictícios-marca-e-licença)
+17. [Status e próximos passos](#status-e-próximos-passos)
 
-Regras que o emulador segue: não cria nem calcula número; indicador sem dado é ocultado (nunca 0 nem o número do mês anterior); ao mudar o período de um report antigo, lista os números que ninguém mexeu antes de salvar; sem o link do report completo, o e-mail-resumo não é liberado: nunca sai um botão vazio.
+## Contexto
 
-## Como o report conta o mês
+O projeto nasceu no contexto de uma experiência profissional em marketing, ligada às frentes **PF** (pessoa física) e **PJ** (empresas) do Santander. A necessidade era a de muitos times de marketing: **contar todo mês o que foi feito e o que funcionou** — campanhas, indicadores, peças, vídeos, aprendizados e próximos passos — para quem precisa decidir, num formato bonito, consistente e fácil de atualizar.
 
-Sempre na mesma ordem:
+O report tinha dois destinos: uma **página completa** (com movimento, vídeos e peças no clique) e um **e-mail** (a porta de entrada, lido no Outlook). Quem atualizava não era desenvolvedor, e o ambiente era corporativo: nada de instalar programas.
 
-| | Seção | Pergunta que responde |
+## Dores e oportunidades
+
+O que o projeto precisou resolver, segundo o histórico do repositório (versões, documentação e decisões registradas). A intensidade de cada dor não foi medida: a tabela mostra o que aparece documentado.
+
+| Dor | Evidência no repositório | Oportunidade | O que a solução faz |
+|---|---|---|---|
+| Report refeito todo mês, com a mesma estrutura | Fluxo mensal em [`docs/COMO_ATUALIZAR_O_MES.md`](docs/COMO_ATUALIZAR_O_MES.md) | Reaproveitar o mês anterior | Abrir o report salvo e editar só o que mudou; modelo em branco para começar do zero |
+| Edição técnica (HTML) | Versões 1.x e 2.x: "e-mail HTML editável à mão" ([CHANGELOG](CHANGELOG.md)) | Tirar o código do caminho | Edição na própria página: clicar e escrever, barra do item, Desfazer e Refazer |
+| Consistência visual e regras de marca | Marca centralizada em [`config/marca.txt`](config/marca.txt); guia de tipografia | A ferramenta cuida da forma | Cores, fontes, símbolo e grade aplicados pelo motor; o time só mexe no conteúdo |
+| Limites do Outlook | [`docs/OUTLOOK_COMPATIBILITY.md`](docs/OUTLOOK_COMPATIBILITY.md), correções de modo escuro (4.12.1) | E-mail que chega como a prévia | HTML de e-mail em tabelas e estilos em linha, modo escuro tratado, `.eml` pronto |
+| Dois segmentos com identidades diferentes | Versões 5.0 a 5.4 (PJ) | Um sistema, dois perfis | Mesmo código, perfis PF e PJ; cada emulador só abre o seu segmento |
+| Resumo executivo à parte | E-mail-resumo desde a 3.9; destaques escolhidos na 4.13 | Gerar o resumo da própria página | Até 4 destaques escolhidos do report, prévia e status em tempo real |
+| Pessoas sem conhecimento técnico, sem instalação | [`docs/CORPORATE_SETUP.md`](docs/CORPORATE_SETUP.md) | Um arquivo, dois cliques | Emulador avulso (um `.html`) que abre no Chrome ou no Edge |
+| Confiabilidade dos números | Regras do emulador em [`docs/operacao.md`](docs/operacao.md) | Ferramenta que não inventa | Não cria nem calcula número; indicador sem dado fica oculto |
+
+<p align="center"><img src="docs/assets/diagrams/problema-oportunidade-solucao.svg" alt="Diagrama: desafios do report mensal, a oportunidade de separar conteúdo, forma e canal, e a solução com os emuladores PF e PJ" width="100%"></p>
+
+## A solução
+
+Os **emuladores** são ferramentas de criação e edição de reports de performance de marketing que funcionam inteiramente no navegador:
+
+- **Criar e atualizar** o report do mês a partir do modelo em branco ou do mês anterior.
+- **Editar visualmente**: textos, números, etiquetas de resultado, campanhas, destaques e aprendizados, direto na página.
+- **Organizar**: novo item, arrastar com encaixe, mover para outra seção, mostrar, ocultar e reordenar seções.
+- **Inserir mídia**: trocar imagens (reduzidas e recortadas no próprio navegador), colocar vídeos e links.
+- **Visualizar antes de salvar**: computador e celular.
+- **Gerar um report HTML único**, com imagens e vídeos embutidos.
+- **Produzir o resumo executivo por e-mail** e exportar em **EML** para o Outlook.
+- **Padronizar sem apagar a identidade** de cada segmento: PF e PJ compartilham o motor e mudam marca, seções e layout.
+- **Ser usada por quem não programa**: um arquivo, sem instalação, sem servidor.
+
+Cada item acima está verificado no código e nos testes: veja [`docs/features.md`](docs/features.md).
+
+## Os dois emuladores: PF e PJ
+
+| Emulador Report PF | Emulador Report PJ |
+|---|---|
+| <img src="docs/assets/screenshots/01-emulador-pf.webp" alt="Tela inicial do Emulador Report PF, com o aviso de demonstração" width="100%"> | <img src="docs/assets/screenshots/02-emulador-pj.webp" alt="Tela inicial do Emulador Report PJ, com o aviso de demonstração" width="100%"> |
+| Página contínua; seções de lançamentos, qualidade criativa, laboratório e aprendizados | Layout com painéis; campanhas, indicadores, análises e funil nos principais resultados |
+
+O **mesmo código** (`converter-html-eml.html`, `tools/motor.js` e `template/report.html`) atende os dois segmentos. Muda o perfil: marca, nomes de seção, modelo em branco e layout. O segmento fica gravado na página, e um emulador **não abre** o report do outro.
+
+<p align="center"><img src="docs/assets/diagrams/estrutura-pf-pj.svg" alt="Diagrama: um código (emulador, motor e template) e dois perfis, PF e PJ" width="100%"></p>
+
+## Principais funcionalidades
+
+| Recurso | O que resolve |
+|---|---|
+| **Edição na própria página** | Clicar e escrever; o texto ganha contorno e vira campo editável. Sem formulário separado. |
+| **Etiquetas de resultado** | Variação em verde ou âmbar, com **Tirar etiqueta** quando não vale no mês e **+ Etiqueta** para voltar. |
+| **+ Novo item e + Novo tópico** | Itens novos entram com textos `[entre colchetes]`, na grade certa. |
+| **Arrastar com encaixe** | Reordena pela linha de encaixe, inclusive para grupos compatíveis, sem quebrar o layout. |
+| **Mover para outra seção** | Leva o item com textos e números para uma seção do mesmo tipo. |
+| **Seções** | Ordem, visibilidade e posição ao lado da página. |
+| **Imagens, vídeos e links** | Trocar imagem (com recorte e redução automáticos), colocar vídeo, imagem embaixo, + Link. |
+| **Funil** | Principais resultados também como funil (cliques → leads → contas). |
+| **Desfazer, Refazer e Recuperar** | A edição fica guardada no navegador (IndexedDB) até salvar. |
+| **Importar conteúdo** | Cola blocos de texto estruturados (por exemplo, gerados com o Copilot corporativo a partir da biblioteca de prompts) e preenche os campos. |
+| **Report `.html` único** | Imagens e vídeos dentro do arquivo; abre em qualquer navegador, no computador e no celular. |
+| **E-mail-resumo `.eml`** | Até 4 destaques, link do report completo, prévia no computador e no celular, status em tempo real e exportação para o Outlook (mais o e-mail completo e uma imagem `.png` do resumo). |
+
+Lista completa, com a evidência de cada recurso no código e nos testes: [`docs/features.md`](docs/features.md).
+
+## Galeria
+
+Capturas reais dos emuladores de demonstração (versão 5.6), com dados fictícios.
+
+| | |
+|---|---|
+| <img src="docs/assets/screenshots/03-edicao-texto.webp" alt="Edição de texto na própria página"><br><sub>**Clique e escreva:** o texto vira campo editável na página.</sub> | <img src="docs/assets/screenshots/04-indicadores.webp" alt="Edição de indicadores e etiquetas"><br><sub>**Indicadores e etiquetas:** valor, variação, cor e referência.</sub> |
+| <img src="docs/assets/screenshots/05-adicionar-item.webp" alt="Barra do item com Novo item, Arrastar e Mover"><br><sub>**Barra do item:** + Novo item, arrastar, mover, link, imagem.</sub> | <img src="docs/assets/screenshots/06-organizar.webp" alt="Mover para outra seção"><br><sub>**Organizar:** mover um item para outra seção do mesmo tipo.</sub> |
+| <img src="docs/assets/screenshots/07-imagem-video.webp" alt="Barra da imagem com Trocar imagem e Colocar vídeo"><br><sub>**Imagens e vídeos:** trocar imagem, colocar vídeo.</sub> | <img src="docs/assets/screenshots/08-previa-celular.webp" alt="Prévia do report no celular dentro do emulador"><br><sub>**Prévia no celular** antes de salvar.</sub> |
+| <img src="docs/assets/screenshots/09-report-html.webp" alt="Report HTML final"><br><sub>**O report final:** um arquivo HTML com tudo dentro.</sub> | <img src="docs/assets/screenshots/12-funil-pj.webp" alt="Principais resultados em funil no PJ"><br><sub>**PJ:** resultados como funil, com números coerentes.</sub> |
+| <img src="docs/assets/screenshots/10-email-resumo.webp" alt="Seleção de destaques do e-mail-resumo e prévia"><br><sub>**E-mail-resumo:** até 4 destaques, com prévia ao lado.</sub> | <img src="docs/assets/screenshots/11-exportar-eml.webp" alt="Status e exportação do e-mail em EML"><br><sub>**Status e exportação** do `.eml` para o Outlook.</sub> |
+
+<p align="center"><img src="docs/assets/screenshots/13-celular.webp" alt="Report de demonstração aberto no celular" width="260"><br><sub>O mesmo report no celular, em uma coluna.</sub></p>
+
+## Demonstrações em vídeo
+
+Gravações reais da interface (sem slides), com legendas na tela para assistir sem áudio. O GitHub não reproduz MP4 do repositório dentro do README: clique na imagem para abrir o arquivo, ou veja todos na [página de apresentação](docs/index.html) quando o GitHub Pages estiver ativo.
+
+| | |
+|---|---|
+| [<img src="docs/assets/videos/overview.jpg" alt="Miniatura do vídeo de visão geral">](docs/assets/videos/overview.mp4)<br>**Visão geral** · 45 s · PF, celular, PJ, funil e e-mail | [<img src="docs/assets/videos/emuladores-pf-pj.jpg" alt="Miniatura do vídeo PF e PJ">](docs/assets/videos/emuladores-pf-pj.mp4)<br>**Os dois emuladores** · 26 s · PF e PJ lado a lado no tempo |
+| [<img src="docs/assets/videos/workflow-report.jpg" alt="Miniatura do vídeo do fluxo de criação">](docs/assets/videos/workflow-report.mp4)<br>**Do modelo em branco ao arquivo salvo** · 78 s | [<img src="docs/assets/videos/email-summary.jpg" alt="Miniatura do vídeo do e-mail-resumo">](docs/assets/videos/email-summary.mp4)<br>**E-mail-resumo e .eml** · 34 s |
+
+GIFs curtos:
+
+| Edição | Organização | E-mail-resumo |
 |---|---|---|
-| 01 | **O mês em uma frase** | O que aconteceu? Qual foi o principal resultado? |
-| 02 | **O que lançamos** | O que foi para o ar e o que evoluiu? |
-| 03 | **Creative X** | Como está a qualidade criativa (antes → agora)? |
-| 04 | **Transformation Hub** | O que estamos mudando na forma de criar? |
-| 05 | **O que aprendemos** | O que os dados ensinaram? (opcional desde a 4.13: cada campanha pode ter o seu "O que aprendemos", curto, dentro da própria seção) |
-| 06 | **Foco do próximo mês** | Qual é a prioridade agora? |
-| 07 | **Também vem aí** | O que está na agenda? |
+| <img src="docs/assets/gifs/02-edicao.gif" alt="GIF: edição de período, frase e indicadores" width="100%"> | <img src="docs/assets/gifs/03-organizacao.gif" alt="GIF: novo item, arrastar e mover para outra seção" width="100%"> | <img src="docs/assets/gifs/04-email-resumo.gif" alt="GIF: destaques, prévia e exportação do e-mail-resumo" width="100%"> |
 
-## Segurança dos dados
+## Como funciona
 
-- **Este repositório não tem dados reais.** Só o modelo, o exemplo fictício, a chama, a formiguinha e os ícones.
-- **Não ficam aqui:** o Brand Guide (interno), os `.otf` das fontes (proprietários), as fotos do banco de imagens (licenciadas; `assets/fotos/` está no `.gitignore`) e os reports reais de cada mês.
-- **Resultados, peças, vídeos e documentos reais** ficam só no ambiente corporativo autorizado. Nunca em repositório pessoal, computador pessoal ou ferramenta externa. O Copilot usado é o corporativo.
-- O emulador não envia nada para a internet: só lê e grava os arquivos que você escolhe. A cópia da edição em andamento fica no navegador do próprio computador, até salvar.
-- O histórico antigo deste repositório tem versões com dados reais. Veja [docs/BACKUP.md › Histórico do Git](docs/BACKUP.md#histórico-do-git-e-dados-antigos).
+<p align="center"><img src="docs/assets/diagrams/fluxo-de-uso.svg" alt="Fluxo de uso em sete passos: abrir, editar, organizar, mídia, conferir, salvar e e-mail" width="100%"></p>
+
+1. **Abrir** o emulador (um arquivo `.html`, dois cliques) e escolher o modelo em branco ou o report do mês anterior.
+2. **Editar** campanhas, textos, números e etiquetas na própria página.
+3. **Organizar** os itens e as seções: novo item, arrastar, mover, ordem e visibilidade.
+4. **Inserir** imagens, vídeos e links.
+5. **Conferir** no computador e no celular.
+6. **Salvar** o report: um `.html` com tudo embutido.
+7. **Gerar** o e-mail-resumo, escolher os destaques e baixar o `.eml`, que abre no Outlook.
+
+Do report ao e-mail: [diagrama do fluxo de e-mail](docs/assets/diagrams/fluxo-do-email.svg). Do conteúdo à página: [diagrama da criação do report](docs/assets/diagrams/fluxo-do-report.svg).
+
+## Arquitetura
+
+Tudo roda **no navegador, a partir de um arquivo local**: não há servidor, banco de dados, API nem serviço externo. O Node.js só é usado por quem mantém a ferramenta, para montar os arquivos avulsos e rodar os testes.
+
+<p align="center"><img src="docs/assets/diagrams/arquitetura.svg" alt="Diagrama de arquitetura: emulador, página do report em iframe, motor, modelos em branco e IndexedDB no navegador; saídas .html, .eml e .png; montagem e testes em Node.js" width="100%"></p>
+
+| Componente | Papel |
+|---|---|
+| `converter-html-eml.html` | A interface do emulador: abrir, editar (a página do report num iframe), organizar, salvar, e-mail-resumo |
+| `tools/motor.js` | O motor: lê os blocos de dados, aplica template e marca, confere pendências, gera o e-mail (`.eml`) e o modo escuro; perfis PF e PJ |
+| `template/report.html` | O esqueleto da página do report (um só, para PF e PJ) |
+| `config/marca*.txt` | Marca de cada segmento: cores, fontes, símbolo, regras de imagens e links |
+| `tools/coringa*.js` | Os modelos em branco, embutidos no emulador |
+| `tools/montar-avulso.js` | Monta o emulador avulso (um único `.html`, com motor e modelo dentro) |
+| `tests/` | Testes de ponta a ponta (Playwright) e do motor (Node) |
+
+Mais detalhes, com Mermaid e a relação entre os componentes: [`docs/architecture.md`](docs/architecture.md).
+
+## Tecnologias
+
+- **HTML, CSS e JavaScript**, sem framework e sem dependências no navegador.
+- **Web APIs do navegador**: `contenteditable`, arrastar e soltar, Canvas (recorte e redução de imagens), File API, IndexedDB, Blob e download.
+- **E-mail**: HTML compatível com Outlook (tabelas, estilos em linha, modo escuro) e geração de `.eml` (MIME) no próprio navegador.
+- **Node.js** para montagem e manutenção; **Playwright** (Chromium) para testes de ponta a ponta e para as capturas e vídeos deste case; **ffmpeg** para os vídeos e GIFs.
+
+## Organização das pastas
+
+```text
+.
+├── README.md · README.en.md · CHANGELOG.md
+├── converter-html-eml.html     interface do emulador (código-fonte)
+├── gerar-report.html           gerador a partir dos arquivos de dados
+├── template/report.html        esqueleto da página do report
+├── config/                     marca de cada segmento (PF e PJ)
+├── dados/                      modelos de dados e exemplos de treinamento (fictícios)
+├── assets/                     marca, ícones, espaços de imagem e peças de exemplo
+├── tools/
+│   ├── motor.js                motor do report e do e-mail
+│   ├── montar-avulso.js        monta os emuladores avulsos
+│   ├── atualizar-coringa.js    regenera os modelos em branco
+│   ├── guia/                   gera o guia operacional
+│   └── portfolio/              build de demonstração, dados fictícios, mídia e diagramas deste case
+├── kit/                        o que o time usava: emuladores, modelos e guias (versão de produção)
+├── tests/                      testes de ponta a ponta e do motor
+└── docs/
+    ├── index.html              página de apresentação (GitHub Pages)
+    ├── demo/                   emuladores e reports de demonstração (dados fictícios)
+    ├── assets/                 marca do case, capturas, GIFs, vídeos, diagramas, fontes
+    ├── overview.md · problem-and-solution.md · architecture.md · features.md
+    ├── user-guide.md · benchmark.md · contribution.md · disclaimer.md · demo-data.md
+    ├── audit/                  auditoria de publicação e relatório de testes
+    └── operacao.md e demais    documentação operacional original do time
+```
+
+## Como executar
+
+**Demonstração (sem instalar nada):** baixe o repositório e abra [`docs/demo/emulador-pf.html`](docs/demo/emulador-pf.html) ou [`docs/demo/emulador-pj.html`](docs/demo/emulador-pj.html) no Chrome ou no Edge. Use **Abrir um report salvo** e escolha `docs/demo/report-demo-pf.html` (ou `-pj`). Servida por http (GitHub Pages ou `python3 -m http.server --directory docs`), a página tem o botão **Abrir o report fictício de abril**.
+
+**Manutenção** (Node.js 18+ e Playwright):
+
+```bash
+node tools/montar-avulso.js            # monta kit/emulador-report.html (PF)
+node tools/montar-avulso.js pj         # monta kit/emulador-report-pj.html (PJ)
+node tests/motor.test.js               # testes do motor
+node tests/edicao.e2e.js               # um dos testes de ponta a ponta (Playwright)
+
+# demonstração do portfólio (docs/demo/ e mídia)
+node tools/portfolio/conferir-dados.js # confere as relações entre os números fictícios
+node tools/portfolio/montar-demo.js    # build de demonstração com a marca do case
+```
+
+O passo a passo de cada script está em [`tools/portfolio/README.md`](tools/portfolio/README.md) e em [`tools/README.md`](tools/README.md).
 
 ## Documentação
 
-| Guia | Para quê |
+| Documento | Conteúdo |
 |---|---|
-| [kit/guia-operacional.pdf](kit/guia-operacional.pdf) | **O guia do time** (comece por aqui) |
-| [COMO_ATUALIZAR_O_MES.md](docs/COMO_ATUALIZAR_O_MES.md) | O mesmo passo a passo, em texto |
-| [EMULADOR.md](docs/EMULADOR.md) | Cada função do emulador, o e-mail-resumo e o status |
-| [PROMPTS_COPILOT.md](docs/PROMPTS_COPILOT.md) | Biblioteca de 12 prompts do Microsoft Copilot (com o formato para importar) |
-| [TEST_CHECKLIST.md](docs/TEST_CHECKLIST.md) | Checklist antes de enviar |
-| [HOW_TO_EXPORT_EML.md](docs/HOW_TO_EXPORT_EML.md) | O que é o `.eml`, como abrir e enviar |
-| [OUTLOOK_COMPATIBILITY.md](docs/OUTLOOK_COMPATIBILITY.md) | O que funciona em cada Outlook |
-| [FAQ.md](docs/FAQ.md) | Perguntas frequentes |
-| [GUIA_TIPOGRAFIA.md](docs/GUIA_TIPOGRAFIA.md) | Fontes Santander, arquivos `.otf` e a alternativa |
-| [LINKS_SHAREPOINT_STREAM.md](docs/LINKS_SHAREPOINT_STREAM.md) | Qual link copiar, permissões, como testar |
-| [CORPORATE_SETUP.md](docs/CORPORATE_SETUP.md) | Primeiro uso no banco e teste piloto |
-| [BACKUP.md](docs/BACKUP.md) | Backup, versões e recuperação |
-| [ARQUITETURA.md](docs/ARQUITETURA.md) | Decisões técnicas, Brand Guide aplicado e o que foi testado |
+| [Visão geral](docs/overview.md) | O projeto em uma página |
+| [Problema e solução](docs/problem-and-solution.md) | Dores, evidências, oportunidades e decisões |
+| [Arquitetura](docs/architecture.md) | Componentes, fluxos e diagramas |
+| [Funcionalidades](docs/features.md) | Cada recurso com a evidência no código e nos testes |
+| [Guia de uso](docs/user-guide.md) | Como usar os emuladores, passo a passo |
+| [Dados fictícios](docs/demo-data.md) | A base da demonstração e como os números foram calculados |
+| [Benchmark](docs/benchmark.md) | 12 referências de apresentação e o que foi adaptado |
+| [Contribuição](docs/contribution.md) | Meu papel no projeto |
+| [Avisos](docs/disclaimer.md) | Dados fictícios, marca, propriedade intelectual e licença |
+| [Auditoria de publicação](docs/audit/publication-audit.md) | Segurança, privacidade e o que pode ser publicado |
+| [Relatório de testes](docs/audit/test-report.md) | O que foi testado e o resultado |
+| [Documentação operacional](docs/operacao.md) | O README do time e os guias originais |
 
-## Limitações conhecidas
+## Minha contribuição
 
-- **Não testado num Outlook real, no Edge nem no Windows** (o ambiente de desenvolvimento é Linux com Chromium, a base do Chrome e do Edge). Layout, edição, salvamento, `.eml` e links foram verificados no Chromium (de 320 a 1440 px). Antes do primeiro envio, faça o **teste piloto** ([CORPORATE_SETUP.md](docs/CORPORATE_SETUP.md)).
-- **Salvar por cima do mesmo arquivo** usa a janela "Salvar como" do Chrome e do Edge. Em navegadores sem esse recurso, o report vai para Downloads.
-- **Fontes Santander:** os `.otf` não estão no projeto; aparece a fonte instalada ou Arial ([GUIA_TIPOGRAFIA.md](docs/GUIA_TIPOGRAFIA.md)).
-- **Brand Guide em e-mail:** a margem de 8% e o Botão de Início "Começa agora" não foram aplicados ([ARQUITETURA.md](docs/ARQUITETURA.md#brand-guide-como-foi-aplicado-num-e-mail)). **VALIDAR COM MARCA**.
-- No Outlook para Windows, os cantos aparecem retos e o layout é sempre o de computador.
-- Links, permissões e vídeo dependem do ambiente corporativo e só podem ser testados lá.
+Conduzi o projeto de ponta a ponta, como dono do produto: identifiquei a oportunidade no processo do report mensal, defini o que a ferramenta precisava fazer e para quem, e evoluí a solução versão a versão a partir do uso real.
+
+- **Problema e requisitos:** traduzi a rotina do report (conteúdo, marca, Outlook, celular, dois segmentos) em requisitos e regras, como "a ferramenta não inventa número" e "indicador sem dado fica oculto".
+- **Experiência de uso:** desenhei o fluxo de edição na própria página, para pessoas sem conhecimento técnico, e simplifiquei a interface a cada rodada de uso (por exemplo, a troca da aba Elementos pelo + Novo item na 5.6).
+- **Produto PF e PJ:** levei o sistema de um segmento para dois, com o mesmo motor e identidades próprias.
+- **Desenvolvimento com IA:** construí a solução com apoio de IA generativa (Claude Code): eu definia o problema, os critérios de aceite e as prioridades, revisava cada entrega e validava no uso real. O histórico registra 41 pull requests revisados e integrados por mim.
+- **Qualidade e documentação:** testes automatizados, guia operacional, biblioteca de prompts para o Copilot corporativo e material de treinamento para o time.
+
+Detalhes e evidências: [`docs/contribution.md`](docs/contribution.md).
+
+**Competências demonstradas:** visão de produto · marketing e comunicação de resultados · dados e indicadores · experiência do usuário · organização de processos · automação · tecnologia e uso aplicado de IA.
+
+## Linha do tempo
+
+| Período | Marco |
+|---|---|
+| Out/2026 · 1.x–2.x | Report em HTML com vídeo; e-mail HTML editável à mão, pronto para o Outlook |
+| Out/2026 · 3.x | Modelo reutilizável: dados do mês em texto + motor de geração; marca aplicada pelo sistema |
+| Out/2026 · 4.0–4.2 | E-mail-resumo, versão interativa e campos editáveis identificados |
+| Out/2026 · 4.3 | **O emulador vira o centro da operação:** edição na própria página |
+| Out–Nov/2026 · 4.4–4.13 | Links e mídia em qualquer item, celular, desempenho, modo escuro, destaques escolhidos |
+| Nov/2026 · 5.0–5.4 | **Emulador PJ**, esqueleto único de página, identidade do segmento, funil |
+| Nov/2026 · 5.5–5.6 | Arrastar com encaixe, Refazer, + Novo item, etiqueta removível, mover entre seções |
+
+São 42 entradas de versão no [CHANGELOG](CHANGELOG.md) em cerca de seis semanas (02/10 a 11/11/2026).
+
+## Dados fictícios, marca e licença
+
+- **Dados:** todas as telas, vídeos e GIFs deste case usam a base fictícia de [`docs/demo-data.md`](docs/demo-data.md), com relações conferidas automaticamente (CTR = cliques ÷ impressões, custo por conversão = investimento ÷ conversões, etapas do funil). Os materiais levam a marcação **DEMO · DADOS FICTÍCIOS**.
+- **Marca:** a demonstração usa a identidade própria do case (não a do banco). O Santander é citado apenas para contextualizar a origem profissional do projeto. Este repositório **não** é uma publicação institucional, não é um produto oficial e não tem endosso do Santander.
+- **Licença:** nenhuma licença de código aberto foi atribuída. A titularidade do código produzido em contexto profissional precisa ser confirmada antes de qualquer licenciamento ([auditoria](docs/audit/publication-audit.md)). As fontes da página de apresentação (Inter, Instrument Serif e JetBrains Mono) são SIL OFL.
+
+## Status e próximos passos
+
+- **Emuladores:** versão 5.6, estável; suíte de testes completa verde (veja o [relatório de testes](docs/audit/test-report.md)).
+- **Publicação:** este repositório é **privado**. O histórico de commits contém materiais de trabalho que **não** podem ser publicados. Antes de qualquer publicação pública:
+  - confirmar a autorização sobre o código;
+  - publicar a partir de um repositório novo, sem o histórico ([auditoria](docs/audit/publication-audit.md)).
+- **GitHub Pages:** a página está pronta em [`docs/index.html`](docs/index.html). A ativação depende da visibilidade e do plano da conta.
 
 ---
 
-## Para quem mantém a ferramenta
-
-| Parte | Arquivo |
-|---|---|
-| Emulador (fonte) | `converter-html-eml.html` (usa `tools/motor.js` e `tools/coringa.js`) |
-| Emulador avulso (o do kit) | `node tools/montar-avulso.js` → `kit/emulador-report.html` (motor e modelo embutidos) |
-| Motor (template, resumo, `.eml`, importação) | `tools/motor.js` |
-| Layout | `template/report.html` (com `{{campos}}`; marcas `data-campo`, `data-img`, `data-item`) |
-| Modelo em branco | `dados/CORINGA.txt` + `assets/coringa/` → página gerada → `tools/coringa.js` ([ARQUITETURA.md](docs/ARQUITETURA.md#modelo-em-branco-coringa)) |
-| Geração por arquivo de dados (caminho técnico) | `gerar-report.html` + `dados/*.txt` + `config/marca.txt` |
-| Backup do layout | `report_backup.html` ([BACKUP.md](docs/BACKUP.md)) |
-
-Testes (Node.js; os `e2e` também precisam do Playwright):
-
-- `node tests/motor.test.js`: motor (79 testes).
-- `node tests/pj.e2e.js`: o Emulador Report PJ de ponta a ponta (aba e ícone Santander + PJ, modelo em branco PJ, editar, imagem vertical, itens com a grade em Preto, seções, + Novo tópico, celular sem rolagem para o lado, importar, salvar com o ícone e a marca do PJ, reabrir, rascunho separado do PF, recusa do report do outro segmento nos dois sentidos, e-mail-resumo no tema Empresas com 4 destaques, `.eml`, `.png` e e-mail completo).
-- `node tests/funil.e2e.js`: o funil dos Principais resultados e a peça da visão geral embaixo, no Emulador Report PJ (Ver como funil, degraus, total, Ver em colunas, Desfazer, Imagem embaixo / ao lado, salvar e reabrir, e-mail-resumo, e-mail completo, celular, "Vem aí" num report da 5.3, PF sem o botão).
-- `node tests/resumo.e2e.js`: e-mail-resumo com destaques escolhidos (sugestão, ordem, título ajustado, informação nova com revisão, imagem do computador, capa de vídeo, link, número vindo do report, `.eml`, `.png`, salvar e reabrir, celular).
-- `node tests/aprendizado.e2e.js`: "O que aprendemos" dentro de cada campanha (criar pela barra, importar do Copilot, tirar e desfazer, salvar e reabrir, celular).
-- `node tests/assistente.e2e.js`: + Adicionar item (os 7 tipos, posição, prévia, Voltar e ajustar, Cancelar, campos obrigatórios, Creative X trimestral), mover itens e a ordem das seções (↑ ↓ Posição…, arrastar no painel e na página, Esc, rolagem automática), leveza do arrasto com a CPU 4× mais lenta, salvar, reabrir, e-mail-resumo e celular.
-- `node tests/escuro.e2e.js`: e-mail-resumo no modo escuro: igual ao claro (pixel a pixel) no modo escuro do sistema e, numa simulação do Outlook.com / novo Outlook, as cores aprovadas voltam.
-- `node tests/emulador.e2e.js`: o fluxo completo do emulador como uma pessoa faria (abrir, editar, imagem, link, ocultar, importar, salvar, reabrir, recuperar, resumo, `.eml`). Com `EMULADOR=kit/emulador-report.html`, testa a versão avulsa.
-- `node tests/emulador-extras.e2e.js`: + Link e + Imagem em vários tipos de item (até 3 imagens), tirar e desfazer, os tópicos novos (+ Novo tópico com os 4 layouts, numa página nova e numa antiga, adicionar e ocultar itens, numeração, salvar, e-mail-resumo, reabrir, celular) e o report de antes da 4.11 com o "Resumo das campanhas" (a seção sai ao abrir, sem vão).
-- `node tests/desempenho.e2e.js`: abrir, editar e salvar um report sintético pesado (~27 MB) com a CPU 4× mais lenta; falha se a página voltar a travar. Confere também o aviso de andamento, vídeo e PDF idênticos no arquivo salvo e a imagem desfeita saindo da memória. Com `GIGANTE=1`, abre, edita e salva um report de ~600 MB (precisa do ffmpeg).
-- `node tests/trabalhador.test.js`: o trabalho pesado do emulador (Web Worker) sem navegador: separar e juntar a mídia devolve o arquivo idêntico, byte a byte.
-- `node tests/celular.e2e.js`: conteúdo longo (valores de 15 caracteres, títulos e nomes longos, palavras sem espaço) em 320, 375, 390 e 430 px: report, e-mail-resumo e emulador sem passar da tela; os 3 indicadores normais seguem lado a lado.
-- `node tests/leveza.e2e.js`: imagem e vídeo pesados otimizados, report pesado mais leve ao abrir, edição e prévia sem rolagem dentro do quadro, nomes dos projetos e aviso de repetição no resumo, ícones da aba (precisa do ffmpeg para gerar os arquivos de teste).
-- `node tests/barras.e2e.js`: as barras de botões que aparecem ao passar o mouse (imagem, link, item, bloco, etiqueta), em todos os alvos, no computador e no Celular: o mouse anda como uma pessoa (em passos, reto, em curva e devagar) até cada botão, e a barra não pode trocar no caminho.
-- `node tests/grade.e2e.js`: o grid depois de cada adicionar e tirar (itens de todos os grupos, os 4 layouts de tópico, imagens, links, seções), medido no computador e no celular (89 passos).
-- `node tests/ferramenta.e2e.js`: geração pelo arquivo de dados, em 7 larguras de tela.
-- `node tests/movimento.e2e.js`: o movimento da página (números contando, seções aparecendo, "reduzir movimento").
-
-Commits por assunto (`tools: …`, `docs: …`, `kit: …`). Registre mudanças de layout ou de motor no [CHANGELOG.md](CHANGELOG.md).
+<sub>Emulador Report · case de portfólio · dados fictícios · sem vínculo institucional.</sub>

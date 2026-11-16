@@ -1,0 +1,189 @@
+# ======================================================================
+#  DEMONSTRAÇÃO DO PORTFÓLIO · PJ · CONTEÚDO 100% FICTÍCIO
+# ======================================================================
+#  Report de demonstração do case (README, página de apresentação,
+#  capturas e vídeos). Campanhas, números, imagens e telas são
+#  INVENTADOS. Nenhum dado representa resultado real, cliente ou
+#  campanha de qualquer empresa.
+#  Funil do Programa Vértice: impressões → cliques → leads → contas,
+#  conferido por tools/portfolio/conferir-dados.js.
+# ======================================================================
+
+[EDICAO]
+mes: Abril
+ano: 2099
+proximo_mes: Maio
+pasta_imagens: assets/demo-pj
+contato: demo@example.com
+link_report_completo: https://www.example.com/report-demo-pj.html
+segmento: PJ
+
+[ABERTURA]
+frase: Mais empresas
+frase_final: do primeiro clique à conta aberta.
+previa: Report PJ de demonstração com dados fictícios: Programa Vértice, Conecta Negócios e os lançamentos do mês.
+
+[PROJETO PRINCIPAL]
+rotulo: Campanha do mês
+nome: Programa Vértice
+resumo: Em abril, 18.000 cliques viraram 3.600 leads e 720 contas abertas: 20% de conversão em cada etapa do funil.
+aprendizado: O formulário curto, com três campos, manteve a conversão de clique para lead em 20%.
+imagem: vertice-principal.jpg
+descricao_imagem: Peça fictícia do Programa Vértice
+enquadramento: centro
+tipo: peca
+link:
+
+[NUMERO 1]
+valor: 18.000
+titulo: Cliques
+detalhe: Referência: 15.000 em março
+variacao: +20%
+
+[NUMERO 2]
+valor: 3.600
+titulo: Leads
+detalhe: Referência: 2.700 em março
+variacao: +33,3%
+
+[NUMERO 3]
+valor: 720
+titulo: Contas abertas
+detalhe: Referência: 600 em março
+variacao: +20%
+
+[LANCAMOS]
+titulo: Campanhas para empresas em abril.
+
+[DESTAQUE]
+categoria: Jornada fictícia · Eventos
+titulo: Conecta Negócios: encontros mensais com empresas parceiras
+texto: Quatro encontros on-line em abril, com inscrição pelo site e pesquisa ao final.
+imagem: conecta-destaque.jpg
+descricao_imagem: Peça fictícia da Conecta Negócios
+enquadramento: centro
+tipo: peca
+link:
+nota: Dados fictícios de demonstração. Taxa de presença = participantes ÷ inscritos (806 ÷ 1.240).
+aprendizado: Lembretes no dia do encontro mantiveram a presença acima de 60%.
+
+[RESULTADO 1]
+valor: 806
+titulo: Participantes
+detalhe: Referência: 700 em março
+variacao: +15,1%
+
+[RESULTADO 2]
+valor: 65,0%
+titulo: Taxa de presença
+detalhe: 806 de 1.240 inscritos
+
+[RESULTADO 3]
+valor: 72
+titulo: NPS dos encontros
+detalhe: Referência: 64 em março
+variacao: +8 pts
+
+[LANCAMENTO 1]
+status: No ar
+status_cor: verde
+nome: Impulso PME
+texto: Crédito para pequenas empresas explicado em três telas.
+imagem: impulso.jpg
+descricao_imagem: Peça fictícia do Impulso PME
+enquadramento: centro
+tipo: peca
+link:
+
+[LANCAMENTO 2]
+status: Em teste
+status_cor: ambar
+nome: Rota Exportação
+texto: Guia prático para empresas que querem vender para fora.
+imagem: rota.jpg
+descricao_imagem: Peça fictícia da Rota Exportação
+enquadramento: centro
+tipo: peca
+link:
+
+[LANCAMENTO 3]
+status: Finalizado
+status_cor: verde
+nome: Teaser do Programa Vértice
+texto: Vídeo curto de lançamento do programa, encerrado em abril.
+imagem: vertice-video.jpg
+descricao_imagem: Capa do teaser fictício do Programa Vértice
+enquadramento: centro
+tipo: video
+video: vertice-video.webm
+link:
+
+[CREATIVE X]
+subtitulo: Índice de qualidade criativa · fictício
+anterior: 70%
+atual: 76%
+variacao: +6 p.p.
+periodo: março vs. abril
+referencia: As peças do Programa Vértice passaram pela revisão antes de ir ao ar.
+significado: Levar a mesma revisão para as campanhas de eventos.
+nota: *Índice fictício, usado só para demonstrar a seção. Fonte: dados de demonstração.
+
+[TRANSFORMATION]
+titulo: Análises do mês.
+
+[TRANSFORMATION 1]
+status: Concluída
+status_cor: verde
+nome: Agenda de parceiros
+texto: Convites, presença e retorno de cada encontro, numa tela só.
+citacao:
+resultado: A presença por encontro passou a ser acompanhada no mesmo dia.
+icones:
+logo:
+descricao_logo:
+links: Documento de exemplo | https://www.example.com/agenda-demo
+prints: painel-print.jpg
+descricao_prints: Tela fictícia da agenda de parceiros
+imagem:
+descricao_imagem:
+tipo: projeto
+link:
+
+[TRANSFORMATION 2]
+status: Em andamento
+status_cor: ambar
+nome: Funil por canal
+texto: Comparar cliques, leads e contas por canal de origem.
+citacao:
+resultado:
+icones:
+imagem:
+descricao_imagem:
+tipo: projeto
+link:
+
+[APRENDIZADO 1]
+titulo: Formulário curto converte mais
+texto: Com três campos, 20% dos cliques viraram leads (18% em março).
+levamos: manter o formulário curto nas próximas campanhas.
+
+[APRENDIZADO 2]
+titulo: Lembrete no dia faz diferença
+texto: Nos encontros da Conecta Negócios, 806 dos 1.240 inscritos participaram: 65,0%.
+levamos: enviar o lembrete também uma hora antes.
+
+[FOCO]
+prioridade: Levar o funil do Programa Vértice para novos canais.
+texto: Testar o mesmo formulário em dois canais novos, mantendo a conversão de 20% em cada etapa.
+selo:
+descricao_selo:
+
+[AGENDA 1]
+data: 12 MAI
+titulo: Próximo encontro Conecta Negócios
+detalhe: Tema: vendas para fora do país.
+
+[AGENDA 2]
+data: EM DESENVOLVIMENTO
+titulo: Funil por canal
+detalhe: Primeira leitura prevista para maio.

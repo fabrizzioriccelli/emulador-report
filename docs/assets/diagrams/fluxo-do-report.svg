@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" width="1200" height="470" role="img" aria-labelledby="t d">
+<title id="t">Como um report é criado</title>
+<desc id="d">Dois caminhos que geram o mesmo report HTML: o emulador e o gerador por arquivo de dados.</desc>
+<defs><marker id="ponta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5D6270"/></marker></defs>
+<rect width="1200" height="470" rx="18" fill="#F7F5F0"/>
+<text x="32" y="44" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#14161B">Como um report é criado</text>
+<rect x="32" y="80" width="300" height="150" rx="14" fill="#FFFFFF" stroke="#DCD7CD" stroke-width="1.5"/>
+<text x="48" y="106" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#5D6270">ENTRADA · EMULADOR</text>
+<text x="48" y="128" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">Abrir no emulador</text>
+<text x="48" y="150" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Modelo em branco (coringa)</text>
+<text x="48" y="170" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">ou o report do mês anterior (.html)</text>
+<text x="48" y="190" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">ou blocos de texto colados</text>
+<text x="48" y="210" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">(Importar conteúdo)</text>
+<path d="M332,155 L402,155" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<rect x="402" y="80" width="360" height="150" rx="14" fill="#E8EEFF" stroke="#C9D6FF" stroke-width="1.5"/>
+<text x="418" y="106" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#2D5BFF">EDIÇÃO NA PÁGINA</text>
+<text x="418" y="128" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">A página do mês vira o editor</text>
+<text x="418" y="150" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Clique e escreva · barra do item</text>
+<text x="418" y="170" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Novo item, arrastar, mover, seções</text>
+<text x="418" y="190" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Imagens reduzidas e recortadas no navegador</text>
+<text x="418" y="210" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Desfazer, Refazer, Recuperar</text>
+<path d="M762,155 L832,155" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<rect x="832" y="80" width="336" height="150" rx="14" fill="#14161B" stroke="#14161B" stroke-width="1.5"/>
+<text x="848" y="106" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#9AA3B2">SAÍDA</text>
+<text x="848" y="128" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#fff">report-AAAA-MM.html</text>
+<text x="848" y="150" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#D5D9E0">Um arquivo só: imagens e vídeos dentro</text>
+<text x="848" y="170" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#D5D9E0">Abre em qualquer navegador</text>
+<text x="848" y="190" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#D5D9E0">Movimento ao rolar, vídeo no clique</text>
+<text x="848" y="210" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#D5D9E0">Pronto para o computador e o celular</text>
+<rect x="32" y="270" width="300" height="150" rx="14" fill="#FFFFFF" stroke="#DCD7CD" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="48" y="296" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#5D6270">ENTRADA · GERADOR</text>
+<text x="48" y="318" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">Arquivos do mês</text>
+<text x="48" y="340" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">dados/AAAA-MM.txt (blocos)</text>
+<text x="48" y="360" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">assets/ (peças e vídeos)</text>
+<text x="48" y="380" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">config/marca.txt (marca)</text>
+<path d="M332,345 L402,345" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<rect x="402" y="270" width="360" height="150" rx="14" fill="#FFFFFF" stroke="#DCD7CD" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="418" y="296" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#5D6270">GERAR-REPORT.HTML + MOTOR</text>
+<text x="418" y="318" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">Conferência e montagem</text>
+<text x="418" y="340" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Lê os blocos e o template</text>
+<text x="418" y="360" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Confere imagens, links e campos</text>
+<text x="418" y="380" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Lista pendências antes de liberar</text>
+<text x="418" y="400" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Monta a página com a marca do segmento</text>
+<path d="M762,345 C806,345 806,232 850,232" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<text x="32" y="450" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="12" fill="#5D6270">O caminho tracejado é o original (gerador); desde a versão 4.3 o emulador é o centro da operação.</text>
+</svg>

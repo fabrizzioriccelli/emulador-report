@@ -1,0 +1,36 @@
+{
+ "duracao": 26.15342092514038,
+ "marcas": [
+  {
+   "n": 1,
+   "t": "Emulador Report PF",
+   "s": 0.48542094230651855
+  },
+  {
+   "n": 2,
+   "t": "PF: seções do report, ordem e visibilidade ao lado da página",
+   "s": 6.009420871734619
+  },
+  {
+   "n": 3,
+   "t": "Emulador Report PJ",
+   "s": 11.900420904159546
+  },
+  {
+   "n": 3,
+   "t": "Emulador Report PJ",
+   "s": 12.332420825958252
+  },
+  {
+   "n": 4,
+   "t": "PJ: o mesmo motor, com seções próprias (Campanhas, Indicadores, Análises, Vem aí)",
+   "s": 17.303421020507812
+  },
+  {
+   "n": 5,
+   "t": "Um emulador só abre reports do seu segmento: PF e PJ não se misturam",
+   "s": 22.947420835494995
+  }
+ ],
+ "erros": []
+}

@@ -2,6 +2,22 @@
 
 A versão atual aparece na página `gerar-report.html`, no topo de `report_backup.html` e em `tools/motor.js` (`VERSAO`).
 
+## Portfólio · 2026-11-16 · O repositório como case de portfólio
+
+O código dos emuladores não muda nesta entrada. Foi tudo apresentação e documentação.
+
+- **Apresentação:** README novo (PT) e `README.en.md`, com narrativa de produto, galeria, GIFs e vídeos. A documentação foi organizada em `docs/`: visão geral, problema e solução, arquitetura, funcionalidades, guia de uso, benchmark, contribuição e avisos.
+- **Página de apresentação (GitHub Pages):** `docs/index.html`, com os vídeos, a galeria, os diagramas e a demonstração interativa.
+- **Build de demonstração** (`tools/portfolio/montar-demo.js` → `docs/demo/`): os mesmos emuladores PF e PJ, com a identidade visual do case e dados 100% fictícios. Não há marca do banco, personagem nem fontes proprietárias.
+  - A conferência automática bloqueia o build se algum termo ou ativo da marca original aparecer na tela.
+- **Dados fictícios coerentes** (`tools/portfolio/demo/`): as métricas (CTR, custo por conversão, funil, taxas e variações) saem de uma base numérica. `tools/portfolio/conferir-dados.js` confere 41 relações.
+- **Mídia real:**
+  - 13 capturas, 4 GIFs e 4 vídeos MP4, gravados dos emuladores de demonstração com interações de verdade (`tools/portfolio/capturas.js`, `gravar-demos.js`);
+  - 7 diagramas SVG (`gerar-diagramas.js`);
+  - banner e prévia social (`gerar-banner.js`).
+- **Auditoria:** relatório de segurança e publicação e relatório de testes em `docs/audit/`.
+- **README operacional anterior:** preservado em `docs/operacao.md`.
+
 ## 5.6 · 2026-11-11 · Mais simples de pôr, tirar e mover
 
 - **Sem a aba Elementos:** pôr algo novo agora é **+ Novo item**, na barra do próprio item. Ele entra logo depois, com os textos [entre colchetes]. Também dá para usar o **+ Adicionar** de cada grupo.

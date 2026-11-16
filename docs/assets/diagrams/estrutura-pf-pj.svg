@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-labelledby="t d">
+<title id="t">Um código, dois segmentos</title>
+<desc id="d">O mesmo emulador, motor e template, com perfis PF e PJ.</desc>
+<defs><marker id="ponta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5D6270"/></marker></defs>
+<rect width="1200" height="520" rx="18" fill="#F7F5F0"/>
+<text x="32" y="44" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#14161B">Um código, dois segmentos</text>
+<rect x="380" y="76" width="440" height="128" rx="14" fill="#14161B" stroke="#14161B" stroke-width="1.5"/>
+<text x="396" y="102" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#9AA3B2">MESMO CÓDIGO</text>
+<text x="396" y="124" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#fff">Emulador + motor + template</text>
+<text x="396" y="146" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#D5D9E0">converter-html-eml.html · tools/motor.js</text>
+<text x="396" y="166" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#D5D9E0">template/report.html (um esqueleto de página)</text>
+<path d="M520,204 C410,204 410,262 300,262" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<path d="M680,204 C790,204 790,262 900,262" fill="none" stroke="#5D6270" stroke-width="1.8" marker-end="url(#ponta)"/>
+<rect x="80" y="262" width="440" height="196" rx="14" fill="#E8EEFF" stroke="#C9D6FF" stroke-width="1.5"/>
+<text x="96" y="288" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#2D5BFF">PERFIL PF</text>
+<text x="96" y="310" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">Emulador Report PF</text>
+<text x="96" y="332" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">config/marca.txt · cores, fontes, símbolo</text>
+<text x="96" y="352" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Seções: visão geral, resultados, lançamentos,</text>
+<text x="96" y="372" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">qualidade criativa, laboratório, aprendizados…</text>
+<text x="96" y="392" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Modelo em branco próprio (tools/coringa.js)</text>
+<text x="96" y="412" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Layout de página contínua</text>
+<rect x="680" y="262" width="440" height="196" rx="14" fill="#E3F2EF" stroke="#9FD5CC" stroke-width="1.5"/>
+<text x="696" y="288" font-family="'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace" font-size="11" letter-spacing="1.2" fill="#0F8A7E">PERFIL PJ</text>
+<text x="696" y="310" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#14161B">Emulador Report PJ</text>
+<text x="696" y="332" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">config/marca-pj.txt · cores, fontes, símbolo</text>
+<text x="696" y="352" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Seções: campanhas, indicadores, análises,</text>
+<text x="696" y="372" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">próximas iniciativas, vem aí</text>
+<text x="696" y="392" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Modelo em branco próprio (tools/coringa-pj.js)</text>
+<text x="696" y="412" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13.5" fill="#5D6270">Layout com painéis · funil nos resultados</text>
+<text x="600" y="488" text-anchor="middle" font-family="Inter, 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="13" fill="#5D6270">O segmento fica gravado na página (meta report-segmento): cada emulador só abre os reports do seu segmento.</text>
+</svg>

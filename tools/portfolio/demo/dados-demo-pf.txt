@@ -1,0 +1,188 @@
+# ======================================================================
+#  DEMONSTRAÇÃO DO PORTFÓLIO · PF · CONTEÚDO 100% FICTÍCIO
+# ======================================================================
+#  Report de demonstração do case (README, página de apresentação,
+#  capturas e vídeos). Campanhas, números, imagens e telas são
+#  INVENTADOS. Nenhum dado representa resultado real, cliente ou
+#  campanha de qualquer empresa.
+#  Os números seguem tools/portfolio/demo/metricas.json e são conferidos
+#  por tools/portfolio/conferir-dados.js (CTR, CPA, taxas e variações).
+# ======================================================================
+
+[EDICAO]
+mes: Abril
+ano: 2099
+proximo_mes: Maio
+pasta_imagens: assets/demo-pf
+contato: demo@example.com
+link_report_completo: https://www.example.com/report-demo-pf.html
+
+[ABERTURA]
+frase: Mais conversão
+frase_final: com o mesmo investimento.
+previa: Report de demonstração com dados fictícios: Campanha Horizonte, Projeto Aurora e os lançamentos do mês.
+
+[PROJETO PRINCIPAL]
+rotulo: Campanha do mês
+nome: Campanha Horizonte
+resumo: A nova chamada principal elevou o CTR para 1,75% e reduziu o custo por conversão para R$ 30,00, com 3.150 conversões no mês.
+aprendizado: Chamadas diretas, com o benefício na primeira linha, geraram mais cliques do que as chamadas de marca.
+imagem: horizonte-video.jpg
+descricao_imagem: Capa do teaser fictício da Campanha Horizonte
+enquadramento: centro
+tipo: video
+video: horizonte-video.webm
+link:
+
+[NUMERO 1]
+valor: 1,75%
+titulo: CTR
+detalhe: Referência: 1,40% em março
+variacao: +25%
+
+[NUMERO 2]
+valor: R$ 30,00
+titulo: Custo por conversão
+detalhe: Referência: R$ 36,00 em março
+variacao: -16,7%
+
+[NUMERO 3]
+valor: 3.150
+titulo: Conversões
+detalhe: Referência: 2.700 em março
+variacao: +16,7%
+
+[LANCAMOS]
+titulo: O que foi para o ar em abril.
+
+[DESTAQUE]
+categoria: Projeto fictício · Vídeo
+titulo: Projeto Aurora: vídeos curtos para quem está começando
+texto: Série de vídeos de 15 segundos para o início da jornada, veiculada em abril.
+imagem: aurora-destaque.jpg
+descricao_imagem: Peça fictícia do Projeto Aurora
+enquadramento: centro
+tipo: peca
+link:
+nota: Dados fictícios de demonstração. Custo por visualização completa = investimento ÷ visualizações completas.
+
+[RESULTADO 1]
+valor: 215 mil
+titulo: Visualizações completas
+detalhe: Referência: 180 mil em março
+variacao: +19,4%
+
+[RESULTADO 2]
+valor: 25,0%
+titulo: Taxa de conclusão
+detalhe: Referência: 22,5% em março
+variacao: +11,1%
+
+[RESULTADO 3]
+valor: R$ 0,12
+titulo: Custo por visualização completa
+detalhe: Referência: R$ 0,14 em março
+variacao: -14,3%
+
+[LANCAMENTO 1]
+status: No ar
+status_cor: verde
+nome: Jornada Conecta
+texto: Conteúdos que acompanham cada etapa do cliente, do cadastro ao primeiro uso.
+imagem: conecta.jpg
+descricao_imagem: Peça fictícia da Jornada Conecta
+enquadramento: centro
+tipo: peca
+link:
+
+[LANCAMENTO 2]
+status: Em teste
+status_cor: ambar
+nome: Programa Vértice
+texto: Benefícios em três degraus, em teste com uma parte da base.
+imagem: vertice.jpg
+descricao_imagem: Peça fictícia do Programa Vértice
+enquadramento: centro
+tipo: peca
+link:
+
+[LANCAMENTO 3]
+status: Finalizado
+status_cor: verde
+nome: Campanha Evolução
+texto: Comparativo de antes e depois do novo aplicativo, encerrado em abril.
+imagem: evolucao.jpg
+descricao_imagem: Peça fictícia da Campanha Evolução
+enquadramento: centro
+tipo: peca
+link:
+
+[CREATIVE X]
+subtitulo: Índice de qualidade criativa · fictício
+anterior: 68%
+atual: 74%
+variacao: +6 p.p.
+periodo: março vs. abril
+referencia: As peças novas seguiram o guia de boas práticas desde o primeiro rascunho.
+significado: Manter a revisão das peças antes da veiculação.
+nota: *Índice fictício, usado só para demonstrar a seção. Fonte: dados de demonstração.
+
+[TRANSFORMATION]
+titulo: Como estamos transformando<br>a forma de criar.
+
+[TRANSFORMATION 1]
+status: Protótipo
+status_cor: ambar
+nome: Painel de criativos
+texto: Peças, status e próximos passos de cada campanha num lugar só.
+citacao:
+resultado:
+icones:
+logo: icone.png
+descricao_logo: Ícone fictício do painel
+links: Documento de exemplo | https://www.example.com/painel-demo
+prints: painel-print.jpg
+descricao_prints: Tela fictícia do painel de criativos
+imagem:
+descricao_imagem:
+tipo: projeto
+link:
+
+[TRANSFORMATION 2]
+status: Previsão: mai/99
+status_cor: ambar
+nome: Biblioteca de prompts
+texto: Prompts prontos para transformar os resultados do mês em texto do report.
+citacao:
+resultado:
+icones:
+imagem:
+descricao_imagem:
+tipo: projeto
+link:
+
+[APRENDIZADO 1]
+titulo: Chamada direta funciona melhor
+texto: Com a nova chamada principal, o CTR da Campanha Horizonte passou de 1,40% para 1,75%.
+levamos: usar o benefício na primeira linha das próximas peças.
+
+[APRENDIZADO 2]
+titulo: Vídeo curto segura a atenção
+texto: No Projeto Aurora, 25,0% de quem foi alcançado viu o vídeo até o fim (22,5% em março).
+levamos: priorizar cortes de 15 segundos no início da jornada.
+
+[FOCO]
+prioridade: Escalar a Campanha Horizonte sem subir o custo por conversão.
+texto: Ampliar a verba nos formatos com custo por conversão abaixo de R$ 30,00 e concluir o teste do Programa Vértice.
+selo:
+descricao_selo:
+
+[AGENDA 1]
+data: 08 MAI
+titulo: Revisão de criativos da Campanha Horizonte
+detalhe: Novas variações da chamada principal.
+
+[AGENDA 2]
+data: EM DESENVOLVIMENTO
+titulo: Novo teaser do Projeto Aurora
+detalhe: Versão vertical para celular.
