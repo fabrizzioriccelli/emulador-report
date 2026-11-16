@@ -1,6 +1,6 @@
 # Como atualizar o report todo mês
 
-Passo a passo para o time, no **emulador** (`kit/emulador-report.html`). É o mesmo conteúdo do guia ilustrado, [kit/guia-operacional.pdf](../kit/guia-operacional.pdf), em texto. Depois dos dados aprovados, leva de 30 a 45 minutos.
+Passo a passo para o time, no **emulador** (`kit/emulador-report.html` no PF; `kit/emulador-report-pj.html` no PJ, com os mesmos passos e os nomes de seção do PJ, veja [REPORT_PJ.md](REPORT_PJ.md)). É o mesmo conteúdo do guia ilustrado, [kit/guia-operacional.pdf](../kit/guia-operacional.pdf), em texto. Depois dos dados aprovados, leva de 30 a 45 minutos.
 
 Você precisa de: **Chrome ou Edge**, o arquivo `emulador-report.html`, as imagens do mês, os resultados aprovados pela área, acesso ao ambiente corporativo autorizado (para publicar o report) e o **Outlook**. Não precisa instalar nada.
 
@@ -8,7 +8,7 @@ Você precisa de: **Chrome ou Edge**, o arquivo `emulador-report.html`, as image
 imagens do mês ─┐
 resultados ─────┼─► emulador (Chrome/Edge) ─► report-AAAA-MM.html ─► ambiente autorizado ─► link
 Copilot ────────┘        │                                                                   │
-                         └──────────── e-mail-resumo (.eml) ◄── até 3 indicadores + link ◄───┘
+                         └──────────── e-mail-resumo (.eml) ◄── até 4 destaques + link ◄────┘
                                               │
                                               ▼
                                   Outlook ─► área (botão "Acessar report completo")
@@ -64,8 +64,9 @@ Tamanho recomendado (a ferramenta recorta e reduz): projeto principal 440 × 440
 | Mudar um item de lugar | Passo o mouse no item › **← Antes** / **Depois →** (ou **↑ Subir** / **↓ Descer**) |
 | Mudar a ordem das seções | Passo o mouse na seção › arrasto a alça **⠿ Mover seção** até a linha vermelha do lugar novo (Esc cancela), ou uso **↑** / **↓** / **Posição…**. Também em **Seções do report** (arrastando a linha pela ⠿ ou com ↑ ↓ Posição…). A capa e o encerramento não mudam |
 | Creative X do trimestre | No mês que fecha o trimestre: o bloco trimestral fica abaixo do resultado do mês (até 3 indicadores, leitura curta e a estimativa, sempre marcada como estimativa). Nos outros meses: passo o mouse no bloco › **Tirar trimestral**. Para trazer de volta: **+ Adicionar item › Indicador › Creative X: indicadores do trimestre** |
+| O que aprendemos numa campanha | Passo o mouse nos números do projeto principal, nos resultados do destaque ou no card do lançamento › **+ O que aprendemos** e escrevo uma ou duas frases: o que fizemos, o que vimos e o que fazemos melhor. Pelo Copilot: campo `aprendizado` no bloco da campanha |
 | Tirar um item sem dado | Passo o mouse no item › **Tirar item** (canto de cima, à direita). A grade se ajusta. Nunca deixo o número do mês anterior nem escrevo 0 |
-| Tirar uma seção inteira | **Seções do report** › desmarco a seção. A numeração se ajusta |
+| Tirar uma seção inteira | Passo o mouse na seção › **Tirar seção** (na alça, ao lado de **⠿ Mover seção**), ou **Seções do report** › desmarco a seção. Pela importação do Copilot: bloco `[SECOES]` com `tirar: O que aprendemos` (o nome como aparece em Seções do report). A numeração se ajusta; **Desfazer** traz de volta |
 | Voltar atrás | **Desfazer** (imagem, link, cor, item, item novo, ordem); **Ctrl+Z** (texto) |
 
 `%` é variação relativa (+30%); `p.p.` é diferença entre duas porcentagens (de 40% para 52% = +12 p.p.). Não troque um pelo outro.
@@ -112,6 +113,7 @@ Imagens, links e PDF não vêm pelo Copilot: troque na página.
 - **Reabrir:** "Abrir um report salvo (.html)". Textos, números e imagens voltam como ficaram.
 - **Fechou sem salvar?** Ao abrir o emulador de novo: "Há uma edição não salva…" › **Recuperar a edição**. A cópia fica só neste navegador, neste computador.
 - **Mês novo a partir do anterior:** abra o report do mês anterior e troque o período. Ao salvar, o emulador lista os números que ninguém mexeu: confira antes de "Salvar mesmo assim".
+- **Layout novo (5.1):** um report PF salvo antes da 5.1 continua no layout em que foi salvo. Para o mês ficar no esqueleto novo (o mesmo do PJ), comece em "Começar do modelo em branco" e traga o conteúdo pela importação do Copilot ou digitando.
 
 ## 3. Conferir e publicar
 
@@ -131,10 +133,10 @@ O link fica gravado no report ao salvar: no mês seguinte, é só trocar. Teste 
 ## 4. E-mail-resumo e envio
 
 1. **Sem o link**, o botão "Baixar e-mail-resumo" fica bloqueado e a prévia mostra "FALTA O LINK DO REPORT COMPLETO".
-2. **Indicadores:** vêm marcados os números do projeto principal (até 3). Troque se quiser (resultados do destaque ou Creative X). Só aparecem indicadores que estão no report.
-3. **Botão:** "Acessar report completo", o único link do e-mail.
+2. **Selecionar destaques do e-mail:** vem uma sugestão (os números do projeto principal). Troque, tire, reordene (↑ ↓) ou inclua o que quiser do report, até 4: números, campanhas, "O que aprendemos", lançamentos, Creative X, foco. Ajuste título e descrição só para o e-mail, se precisar. Opcional: imagem (do computador ou do report, acima ou ao lado, capa de vídeo com ▶) e um link por destaque. **+ Informação nova** é para o que não está no report: confira com os resultados e marque **Revisei**, senão o `.eml` não sai.
+3. **Botão:** "Acessar report completo", o único botão do e-mail (os links dos destaques saem como texto).
 4. **Status:** ✓ pronto · ! olhar · ✕ problema. **Prévia:** Computador e Celular.
-5. **Baixar e-mail-resumo (.eml):** vai para Downloads (`report-AAAA-MM-resumo.eml`).
+5. **Baixar e-mail-resumo (.eml):** vai para Downloads (`report-AAAA-MM-resumo.eml`). Se quiser uma foto do e-mail (prévia, apresentação), **Baixar imagem do resumo (.png)**.
 6. **Outlook:** dois cliques no `.eml`. O Outlook clássico abre uma mensagem nova com assunto e imagens. Abriu como mensagem recebida (novo Outlook)? **Encaminhar** e apague o cabeçalho do topo.
 7. Envie primeiro **só para você**: confira no computador e no celular e clique no botão.
 8. Tudo certo: abra o `.eml` de novo, coloque os destinatários autorizados e envie.
@@ -149,6 +151,7 @@ O link fica gravado no report ao salvar: no mês seguinte, é só trocar. Teste 
 | "pode ficar borrada" | A imagem é menor que o espaço: peça a versão em alta |
 | "Link não aceito" | O endereço começa com `javascript:`, `data:` ou `vbscript:` (pode executar código) |
 | No Outlook: "Não conseguimos localizar 'C:\…\report-AAAA-MM.html'" | Confira se o report está nessa pasta, com esse nome (Copiar como caminho no arquivo e cole de novo). `.eml` gerado antes da 4.12 com acento no caminho: gere de novo. Outlook na Web, novo Outlook e celular não abrem link de arquivo: use o link de compartilhamento |
+| No Outlook: "O Outlook bloqueou o acesso a links para os arquivos de zona da Internet" | O botão do e-mail aponta para um caminho de arquivo (`C:\…`). O Outlook bloqueia link para arquivo no e-mail recebido, e esse caminho só existe no seu computador. Use o link do OneDrive: botão direito no `report-AAAA-MM.html` › Compartilhar › Copiar link; cole no passo 3 do emulador e gere o e-mail-resumo de novo |
 | No modo escuro, o Outlook mudou as cores do e-mail | No Outlook.com, no novo Outlook, no Apple Mail e nos apps do celular, o e-mail-resumo mantém as cores aprovadas. No Outlook clássico para Windows, as cores do modo escuro são escolhidas pelo próprio Outlook: use o botão de sol/lua da mensagem ("Mudar fundo") para ver como foi enviado |
 | Fechei sem salvar | Abra o emulador: **Recuperar a edição** |
 | Não acho o arquivo salvo | Downloads ou a pasta escolhida; pesquise `report-` no Explorador |
@@ -175,6 +178,6 @@ O link fica gravado no report ao salvar: no mês seguinte, é só trocar. Teste 
 
 **Publicar e enviar**
 - [ ] Report publicado no ambiente autorizado; link testado em janela anônima
-- [ ] Link colado no emulador; até 3 indicadores; status verde; prévia conferida
+- [ ] Link colado no emulador; até 4 destaques conferidos (informação nova revisada); status verde; prévia conferida
 - [ ] `.eml` aberto no Outlook, enviado primeiro para você, botão testado
 - [ ] Enviado aos destinatários autorizados

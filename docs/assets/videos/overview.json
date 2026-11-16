@@ -1,0 +1,51 @@
+{
+ "duracao": 45.223471879959106,
+ "marcas": [
+  {
+   "n": 1,
+   "t": "Emulador Report PF: um arquivo que abre no navegador, sem instalar nada",
+   "s": 0.49047183990478516
+  },
+  {
+   "n": 2,
+   "t": "Abre o report do mês anterior (aqui, o report fictício de abril)",
+   "s": 3.0974719524383545
+  },
+  {
+   "n": 3,
+   "t": "A página do mês vira o editor: seções ao lado, o report no meio",
+   "s": 7.786471843719482
+  },
+  {
+   "n": 4,
+   "t": "Cada bloco é um componente: indicadores, campanhas, destaques, aprendizados",
+   "s": 10.900471925735474
+  },
+  {
+   "n": 5,
+   "t": "Prévia no celular antes de salvar",
+   "s": 16.091471910476685
+  },
+  {
+   "n": 6,
+   "t": "Emulador Report PJ: o mesmo sistema, com a identidade e as seções do segmento",
+   "s": 25.20147204399109
+  },
+  {
+   "n": 6,
+   "t": "Emulador Report PJ: o mesmo sistema, com a identidade e as seções do segmento",
+   "s": 25.637471914291382
+  },
+  {
+   "n": 7,
+   "t": "Principais resultados como funil: cliques → leads → contas (dados fictícios)",
+   "s": 30.75547194480896
+  },
+  {
+   "n": 8,
+   "t": "E-mail-resumo: destaques escolhidos e a prévia do que chega no Outlook",
+   "s": 36.40347194671631
+  }
+ ],
+ "erros": []
+}

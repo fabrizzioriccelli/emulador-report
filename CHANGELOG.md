@@ -2,6 +2,164 @@
 
 A versão atual aparece na página `gerar-report.html`, no topo de `report_backup.html` e em `tools/motor.js` (`VERSAO`).
 
+## Portfólio · 2026-11-16 · O repositório como case de portfólio
+
+O código dos emuladores não muda nesta entrada. Foi tudo apresentação e documentação.
+
+- **Apresentação:** README novo (PT) e `README.en.md`, com narrativa de produto, galeria, GIFs e vídeos. A documentação foi organizada em `docs/`: visão geral, problema e solução, arquitetura, funcionalidades, guia de uso, benchmark, contribuição e avisos.
+- **Página de apresentação (GitHub Pages):** `docs/index.html`, com os vídeos, a galeria, os diagramas e a demonstração interativa.
+- **Build de demonstração** (`tools/portfolio/montar-demo.js` → `docs/demo/`): os mesmos emuladores PF e PJ, com a identidade visual do case e dados 100% fictícios. Não há marca do banco, personagem nem fontes proprietárias.
+  - A conferência automática bloqueia o build se algum termo ou ativo da marca original aparecer na tela.
+- **Dados fictícios coerentes** (`tools/portfolio/demo/`): as métricas (CTR, custo por conversão, funil, taxas e variações) saem de uma base numérica. `tools/portfolio/conferir-dados.js` confere 41 relações.
+- **Mídia real:**
+  - 13 capturas, 4 GIFs e 4 vídeos MP4, gravados dos emuladores de demonstração com interações de verdade (`tools/portfolio/capturas.js`, `gravar-demos.js`);
+  - 7 diagramas SVG (`gerar-diagramas.js`);
+  - banner e prévia social (`gerar-banner.js`).
+- **Auditoria:** relatório de segurança e publicação e relatório de testes em `docs/audit/`.
+- **README operacional anterior:** preservado em `docs/operacao.md`.
+
+## 5.6 · 2026-11-11 · Mais simples de pôr, tirar e mover
+
+- **Sem a aba Elementos:** pôr algo novo agora é **+ Novo item**, na barra do próprio item. Ele entra logo depois, com os textos [entre colchetes]. Também dá para usar o **+ Adicionar** de cada grupo.
+- **Barra do item mais clara:** as ações aparecem agrupadas (Arrastar, + Novo item, Mover para outra seção, Link, Imagem, Etiqueta, Tirar).
+- **Etiqueta:**
+  - **Tirar etiqueta** quando o resultado não vale no mês;
+  - **+ Etiqueta**, na barra do item, para pôr de volta;
+  - a cor (verde ou âmbar) continua na própria etiqueta.
+- **Mover para outra seção:** leva o item, com textos e números, para uma seção do mesmo tipo (por exemplo, de "O que lançamos" para "Também vem aí").
+- **Arrastar:** além de reordenar no grupo, solta também num grupo compatível.
+  - O arrasto nativo de imagens e textos fica bloqueado dentro do editor, e a página não seleciona texto durante o arrasto.
+- **Testes:** `tests/edicao.e2e.js` cobre novo item, arrastar, mover e etiqueta (51 verificações), e os demais testes foram atualizados.
+
+## 5.5 · 2026-11-11 · Painel ao lado, arrastar com encaixe e Refazer
+
+- **Painel ao lado da página:**
+  - a aba Seções controla a ordem das seções e o que aparece;
+  - a aba Elementos mostrava o que dá para pôr e marcava na página os lugares possíveis. Ela saiu na 5.6, substituída pelo + Novo item.
+- **Arrastar:** o item muda de lugar pela linha "Soltar aqui", dentro do próprio grupo, sem quebrar a grade.
+- **Refazer:** botão novo, com Ctrl+Z e Ctrl+Y fora de um texto.
+- **Paridade PF e PJ:** o funil nos principais resultados (animado no navegador) e a peça embaixo do texto passam a valer também no PF.
+- **E-mail-resumo:** os passos ficam de um lado e a prévia ao lado.
+- **Ajustes menores:**
+  - Esc fecha as janelas;
+  - o modelo em branco ficou mais enxuto;
+  - o "Novo tópico" do PJ usa os nomes das seções do PJ.
+
+## 5.4 · 2026-11-05 · Funil nos Principais resultados, peça embaixo e "Vem aí" (PJ)
+
+- **Funil editável no Emulador Report PJ.** Embaixo dos números dos Principais resultados, o botão **Ver como funil** transforma os números em degraus de um funil, num bloco Vermelho Santander:
+  - em cima, o nome da campanha (vem da visão geral, em maiúsculas);
+  - cada número vira um degrau Branco, centrado e mais estreito que o de cima (100, 88 e 76% com 3 degraus; 100, 90, 80 e 70% com 4), com o número, o que ele mede e a referência;
+  - ao lado, um total (ex.: a produção financeira), com o texto [entre colchetes] para trocar; no celular, o total desce para baixo do funil.
+  - Tudo se edita no clique. **+ Adicionar indicador**, **Tirar item** e **↑ / ↓** funcionam nos degraus (as larguras se refazem). No total: **Tirar o total** (os degraus usam a largura toda) e **+ Total ao lado** (volta). **Ver em colunas** volta para as colunas (o nome e o total saem). Cada passo é um passo no **Desfazer**.
+  - Os degraus usam os mesmos campos dos números (`numero-1` a `numero-4`): o e-mail-resumo, a importação do Copilot e o e-mail completo seguem iguais.
+- **Funil também pelos dados:** o bloco `[FUNIL]` (`rotulo`, `total`, `total_titulo`) faz o mesmo no `gerar-report.html`. O emulador e o motor montam o mesmo bloco (`Motor.blocoFunil`).
+- **Peça da visão geral embaixo do texto (PJ):** na barra da imagem, **Imagem embaixo** leva a peça para baixo do texto, na largura do report (600 px), inteira, sem recorte. Serve para a peça horizontal, como o KV com o selo da campanha à mostra. Depois, **Trocar imagem** coloca a peça horizontal, que entra sem recorte. **Imagem ao lado** volta ao retângulo vertical. Pelos dados: `[PROJETO PRINCIPAL] posicao_imagem: embaixo`.
+- **"Agenda · Próximas datas" agora se chama "Vem aí" no PJ** (o nome do report do time). Um report PJ salvo antes muda ao abrir no emulador, com aviso (salve para gravar).
+- **O PF não muda:** o report, o modelo e o exemplo do PF saem idênticos aos da 5.3, comparados byte a byte. No PJ, sem `[FUNIL]` e sem `posicao_imagem`, só o rótulo "Vem aí" muda. O Emulador Report PF não tem o botão do funil.
+- **Correção no emulador (PF e PJ):** o rascunho automático (1,2 s depois da última mudança) não roda mais quando outro report está sendo aberto no quadro. Antes, salvar e abrir outro arquivo logo em seguida podia dar um erro no console (o documento de antes já tinha saído).
+- Modelos em branco, exemplos e emuladores avulsos gerados de novo.
+- Testes: `tests/funil.e2e.js` (novo: funil, degraus, total, colunas, Desfazer, peça embaixo, salvar e reabrir, e-mail-resumo, e-mail completo, celular a 390, 640 e 690 px, "Vem aí" num report da 5.3, PF sem o botão) e a suíte inteira do PF e do PJ.
+
+## 5.3 · 2026-11-05 · Hierarquia de cores do Santander Empresas no PJ
+
+- **O fundo do conteúdo não se confunde mais com o fundo do HTML.** Na 5.2, a página e o report do PJ eram os dois Rio, e o report se misturava com a página. Agora o PJ segue a hierarquia da paleta do Brand Guide (6.2 · Paleta e proporção):
+  - **Rio** é a cor principal e é o fundo do conteúdo (o report);
+  - **Branco** é a base: o fundo do HTML em volta do report e os painéis e cartões;
+  - **Vermelho Santander** é o acento (chama, links, botão e texto do balão Branco);
+  - **Boston** e **Preto** ficam com os textos.
+- **Painéis recuados:** a abertura, os principais resultados, os indicadores, as próximas iniciativas e o encerramento ficam recuados dentro do report. Há uma borda de Rio de 20 px em volta (8 px no celular), então o branco do painel nunca encosta no branco do HTML. O canto do painel fica com 24 px e a grade de 600 px não muda.
+- **E-mail-resumo PJ na mesma hierarquia:** fundo do e-mail Branco; cabeçalho, corpo e assinatura em Rio; cartões dos destaques e chamada final Brancos, recuados no Rio.
+- **O PF não muda:** recuo, raio e margem dos painéis vêm do perfil (`PERFIS.*.painel_recuo`: 0 no PF, 20 no PJ), e a cor do corpo do resumo vem do tema (`corpo`). O report e o e-mail-resumo do PF saem idênticos aos da 5.2, comparados byte a byte.
+- Modelo em branco e exemplo PJ, emuladores avulsos e guia gerados de novo.
+- Testes: motor (fundo do HTML, conteúdo e os 5 painéis recuados no PJ; painéis do PF sem recuo; 81) e `tests/pj.e2e.js` (hierarquia do report e do resumo). A suíte inteira do PF e do PJ.
+
+## 5.2 · 2026-11-05 · Report PJ com fundo Rio
+
+- **Fundo do report PJ em Rio:** antes, a página do PJ era toda branca. Agora a página e o fundo do e-mail são **Rio**, o tom de destaque do Brand Guide Santander Empresas. Os blocos viraram painéis **Brancos** arredondados sobre o Rio: abertura, principais resultados, indicadores, próximas iniciativas, encerramento e o cartão das análises. As outras seções ficam direto sobre o Rio.
+- **Balões nas duas variações do guia:**
+  - sobre o Rio (número da seção, rótulo da campanha), balão Branco com texto Vermelho Santander;
+  - nos painéis Brancos (período da abertura, número da seção, contato), balão Rio com texto Boston;
+  - textos pequenos sobre o Rio (datas da agenda, rótulos) em Boston, para o contraste de 4,5:1;
+  - filetes e divisórias: Brancos sobre o Rio e Rio nos painéis.
+- **Cores novas na marca, com valor padrão:** `selo_texto` (texto dos balões dos painéis), `cartao_fundo` (cartão das análises) e `rotulo_texto` (rótulos pequenos). Sem elas, valem as que a página já usava. Por isso o **PF não muda**: o HTML, o texto puro, a página interativa e o e-mail saem idênticos aos da 5.1, comparados byte a byte.
+- **Layout na página:** o report PJ novo leva `<meta name="report-layout" content="3">`. O emulador usa as cores do layout do report aberto para o que acrescenta: separadores, filetes, 1º número e "O que aprendemos". O report PJ salvo na 5.0 ou na 5.1 continua com as cores dele.
+- **Imagens do PJ:**
+  - os espaços de imagem do modelo em branco e as peças fictícias de treino que ficam sobre o Rio passaram a ter fundo Branco (`assets/coringa-pj/`, `assets/exemplo-pj/`, com o vídeo de exemplo);
+  - o espaço do selo, que fica num painel Branco, passou a ter fundo Rio.
+- Modelo em branco e exemplo PJ, os dois emuladores avulsos e o guia gerados de novo.
+- Testes: motor (layout 3 no PJ, página Rio, balões nas duas variações; 81) e `tests/pj.e2e.js` (página Rio e painel Branco, separadores Rio no painel). A suíte inteira do PF e do PJ, no repositório e no kit.
+
+## 5.1 · 2026-11-04 · PF e PJ no mesmo esqueleto de página
+
+- **Um template só para os dois segmentos** (`template/report.html`, o esqueleto que nasceu no PJ; `template/report-pj.html` saiu). A estrutura, a grade, os blocos arredondados, os balões, as pílulas numeradas e a marcação de cada item são os mesmos no PF e no PJ. Muda só o que vem da marca e do perfil de cada um:
+  - cores: no PF, abertura, foco e encerramento em Vermelho Santander com texto branco; no PJ, em Rio com texto Preto. Principais resultados e Creative X/Indicadores em Rio nos dois;
+  - nomes das seções: os do PF continuam (O que lançamos, Creative X, Transformation Hub, O que aprendemos, Foco de…, Também vem aí);
+  - formiguinha: só no PF, no encerramento.
+- **Report PF no esqueleto novo:**
+  - a abertura traz só a frase do mês;
+  - a campanha do mês vai para **01 · Visão geral**, com a peça num retângulo vertical (184 x 230 px; envie com 368 x 460 px ou mais). Antes, era quadrada (220 px);
+  - os números vão para **02 · Principais resultados**, num bloco Rio, com o 1º número em vermelho e o "O que aprendemos" da campanha embaixo;
+  - Visão geral e Principais resultados se movem e se tiram como as outras seções;
+  - o e-mail-resumido leva também essas duas seções.
+- **Cores novas na marca** (`config/marca.txt` e `config/marca-pj.txt`): `abertura_texto`, `bloco_fundo` e `foco_fundo`. Numa marca de antes, sem elas, valem as que a abertura já usava.
+- **Rótulos das seções** em `PERFIS.*.rotulos` (`tools/motor.js`): o template usa `{{rot.*}}`.
+- **Marcas na página:** a página traz `<meta name="report-segmento" content="pf">` (ou `pj`) e `<meta name="report-layout" content="2">`.
+- **No emulador:**
+  - as cores do que ele acrescenta seguem o layout do report aberto: separadores, filetes, 1º número, tópicos e "O que aprendemos";
+  - nomes novos no PF: "Visão geral · campanha", "Peça da visão geral", "Resultado principal N" e "Principais resultados".
+- **Report salvo antes:** um report PF salvo antes da 5.1 abre e funciona no Emulador Report PF como sempre, no layout em que foi salvo. Para o mês ficar no esqueleto novo, comece do modelo em branco.
+- **Movimento:** as células vazias que só separam os blocos não entram mais na animação de entrada. Antes, rolando direto até o fim, uma delas podia ficar esperando a vez de aparecer.
+- **Kit gerado de novo:**
+  - modelo em branco PF, com o espaço da imagem vertical (`assets/coringa/coringa-principal.png`);
+  - exemplo PF (`kit/report-exemplo.html`, agora por `node tools/atualizar-coringa.js exemplo`);
+  - modelo e exemplo PJ e os dois emuladores avulsos.
+- **Testes:**
+  - motor: o mesmo esqueleto nos dois segmentos e a marca de antes sem as cores novas (81);
+  - o exemplo do kit da 4.12 virou peça de teste do "report de antes" (`tests/dados/report-exemplo-4.12.html`);
+  - testes do emulador atualizados para os nomes e a ordem das seções do PF.
+
+## 5.0 · 2026-11-04 · Emulador Report PJ (Santander Empresas) e guia operacional unificado PF + PJ
+
+- **Emulador Report PJ** (`kit/emulador-report-pj.html`): o mesmo emulador do PF, com todas as funções (edição no Chrome/Edge, textos e indicadores, imagens e vídeos, + Adicionar item, + Novo tópico, mover e tirar seções, grade do computador e do celular, movimento, HTML completo, e-mail-resumo com até 4 destaques, imagens no resumo, link, `.eml`, e-mail completo, importação do Copilot, rascunho recuperado, conferências e as otimizações de desempenho). Muda o que é do PJ: aba **Emulador Report PJ**, ícone **Santander + PJ**, cabeçalho em Rio, modelo em branco PJ e os nomes das seções.
+- **Template PJ** (`template/report-pj.html`, `config/marca-pj.txt`) pelo **Brand Guide Santander Brasil, capítulo 6 · Santander Empresas**: fundos Rio e Branco (nenhum fundo vermelho), títulos e textos em Preto, Santander Condensed nos títulos e na frase do mês, balões nas duas variações do guia (Branco/Vermelho sobre Rio, Rio/Boston sobre Branco), peças em retângulos verticais ou horizontais (nunca quadrados), chama positiva. Seções: Abertura, Visão geral, Principais resultados, Campanhas, Indicadores, Análises, Aprendizados, Próximas iniciativas (com a agenda) e Encerramento. Por dentro, cada item tem a mesma marcação do PF: é por isso que todas as funções do emulador valem no PJ. Detalhes e o que validar com Marca: `docs/REPORT_PJ.md`.
+- **Ícone Santander + PJ** (`assets/marca/svg/santander-pj.svg` e PNG de 16, 32 e 180 px): a mesma chama do PF, sem redesenho nem mudança de proporção, com o selo "PJ" no lugar do "PF" e o contorno em Rio. Embutido no emulador PJ e em todo report PJ salvo (funciona em qualquer computador).
+- **PF e PJ não se misturam:** o report PJ leva a marca do segmento (`<meta name="report-segmento" content="pj">`); cada emulador recusa o report do outro ("Este é um report PF/PJ", com o emulador certo) sem mexer no que está aberto; o rascunho guardado no navegador é separado. O PJ tem imagens próprias (`assets/coringa-pj/`, `assets/exemplo-pj/`, todas fictícias) e não usa a formiguinha.
+- **E-mail-resumo PJ:** mesmo funcionamento, no tema Empresas (cabeçalho e cartões Rio, texto Preto, etiquetas Boston, botão em Vermelho Santander), com o modo escuro protegido.
+- **Dados do PJ:** `dados/CORINGA-PJ.txt` (modelo em branco) e `dados/EXEMPLO-PJ-treinamento.txt` (treino, 100% fictício, Janeiro 2099) → `kit/report-coringa-pj.html` e `kit/report-exemplo-pj.html`. Campo novo, opcional, `segmento: PJ` em `[EDICAO]`: `gerar-report.html` usa o template e a marca do PJ.
+- **O PF não muda:** o motor, o template, a marca e o kit do PF geram exatamente o mesmo resultado de antes (comparado byte a byte: HTML, texto puro, e-mail-resumo, página interativa e e-mail resumido); muda só o número da versão.
+- **Guia operacional unificado PF + PJ** (`kit/guia-operacional.pptx` e `.pdf`), no sistema visual da referência Santander ("Boas práticas nas redes sociais"): navegação em pílulas no alto de cada página, índice com cartões clicáveis, aberturas de seção em Vermelho Santander, 14 seções, telas reais dos dois emuladores (dados fictícios) com marcações, e o que muda no PJ marcado. Gerado por `tools/guia/capturas.js` e `tools/guia/gerar-guia.js`.
+- **Correções que valem para os dois emuladores** (achadas nos testes do PJ):
+  - trocar a cor de uma etiqueta (verde, âmbar) grava a cor no código `#RRGGBB`. Antes, o navegador podia gravar `rgb(…)`, que alguns programas de e-mail não leem bem. Num report de antes que tenha `rgb(…)`, a cor é convertida para `#RRGGBB` ao gerar os e-mails;
+  - ao passar para o modo Celular, a barra do item que estava aberta some. Antes, ela ficava na largura do computador e fazia a página rolar para o lado.
+- Testes: `tests/pj.e2e.js` (novo, ponta a ponta do PJ, incluindo a recusa do outro segmento e o rascunho separado). A suíte do PF, inteira, no repositório e no kit.
+
+## 4.13 · 2026-11-03 · "O que aprendemos" em cada campanha e e-mail-resumo com destaques escolhidos
+
+- **"O que aprendemos" dentro de cada campanha:** campo novo `aprendizado` em `[PROJETO PRINCIPAL]`, `[DESTAQUE]` e `[LANCAMENTO n]`. Sai um bloco curto, com o rótulo O QUE APRENDEMOS e uma ou duas frases, no lugar da campanha: abaixo dos números do projeto principal, abaixo dos resultados do destaque (antes da nota) e no fim do card do lançamento. Sem texto, o bloco não aparece. Aviso acima de 180 caracteres (100 no card). A seção geral "O que aprendemos" continua e virou opcional: quando ficar repetida, oculte em Seções do report.
+- **No emulador:** **+ O que aprendemos** na barra dos números, dos resultados e do card cria o bloco com o texto do modelo para digitar por cima; **Tirar aprendizado** tira (o Desfazer devolve). A importação do Copilot cria o bloco que falta, inclusive num report de antes da 4.13.
+- **E-mail-resumo: "Selecionar destaques do e-mail" (passo 4):** a lista do que o report oferece, por seção (números do projeto principal e do destaque, Creative X, campanhas, "O que aprendemos", lançamentos, Transformation Hub, foco, agenda e tópicos). Até 4 destaques. A escolha automática é só uma sugestão (os números do projeto principal que não estão na frase do mês). Dá para incluir, tirar, reordenar (↑ ↓), ajustar o título e a descrição só no e-mail (o report não muda) e voltar para a sugestão.
+- **Informação nova:** **+ Informação nova** entra marcada como "precisa de revisão" e trava o `.eml` até "Revisei: confere com os resultados". Fica identificada no emulador e não entra no report.
+- **Imagem, capa de vídeo e link no destaque:** imagem do computador (guardada reduzida) ou do report, acima ou ao lado do texto (ao lado, no destaque de largura toda), com recorte (centro, topo, base) ou inteira, e o ▶ desenhado na capa (o vídeo fica no report: e-mail não toca vídeo). Link opcional por destaque, como texto ("Saiba mais"), sem competir com o botão principal. Link que roda código não entra.
+- **Layout novo dos destaques:** cartões em dois por linha (com número ímpar, o primeiro ocupa a largura toda), fundo Lisboa, etiqueta com o nome curto da campanha, chamada final num painel Rio. Sem VML; imagens dentro do `.eml`; modo escuro protegido como na 4.12.
+- **Imagem do resumo (.png):** "Baixar imagem do resumo (.png)" no passo 6: uma foto do e-mail-resumo no dobro da largura (1360 px), para prévia ou para usar junto. O `.eml` continua sendo o e-mail.
+- **O report continua sendo a fonte:** valores dos destaques vêm sempre da página (mudar um número no report muda o e-mail). A escolha do e-mail fica gravada no report salvo num bloco de dados à parte (`<script type="application/json" id="resumo-email">`), que não muda o conteúdo da página e não vai para nenhum dos dois e-mails.
+- **Barra do item visível em item alto:** com o começo do item já acima da tela (ex.: o destaque no modo Celular), a barra dele ficava embaixo da barra de ferramentas do emulador, presa no alto da janela, e sumia ao ir até ela. Agora fica logo abaixo da barra do emulador, dentro do item (era a falha intermitente de `tests/barras.e2e.js`).
+- **Capa: "CAMPANHA" no lugar de "PROJETO PRINCIPAL":** o rótulo acima do nome da campanha agora é um campo (clique e escreva, ou `rotulo:` em `[PROJETO PRINCIPAL]`), com "CAMPANHA" por padrão: a campanha da capa nem sempre é um "projeto principal". O e-mail-resumo e o emulador usam esse rótulo (etiqueta do cartão e lista de destaques) e não falam mais em "Projeto principal". Report de antes: ao abrir no emulador, "PROJETO PRINCIPAL" vira "CAMPANHA", editável.
+- **Números em ordem de leitura:** cada número responde, de cima para baixo, quanto (o número grande) → o quê (o título, em negrito, colado no número) → comparado com quê (a etiqueta colorida e, logo embaixo, a referência, sempre juntas). Antes, a etiqueta vinha longe da referência ou antes do título ("▲ 2x" sem dizer do quê). Vale para a capa, os resultados do destaque, o Creative X trimestral, os tópicos em Números e os cartões do e-mail-resumo. No e-mail-resumo, quando todos os cartões são da mesma campanha, o nome dela vai uma vez, no título da seção ("DESTAQUES DO MÊS · NOME"), e não em cada cartão. Report de antes: o emulador reorganiza ao abrir (salvar grava).
+- **Sem rolagem para o lado entre 621 e 700 px** (ex.: celular deitado, janela estreita): o layout de celular agora vale até 700 px (era até 620 px, e a capa de 680 px não cabia). Vale para o report, o e-mail completo e o e-mail-resumo; o report de antes é atualizado ao abrir no emulador.
+- **Tirar uma seção:** botão **Tirar seção** na alça da seção (ao lado de "⠿ Mover seção") e bloco `[SECOES]` na importação do Copilot (`tirar: O que aprendemos`, `mostrar: …`, pelo nome como aparece em "Seções do report"). A seção sai do arquivo salvo, a numeração se ajusta e o Desfazer traz de volta.
+- **Painel de destaques no celular:** a lista "+ Imagem do report…" não passa mais da largura do cartão com nomes de peça longos.
+- Modelo em branco, `dados/MODELO.txt`, `dados/CORINGA.txt` e o emulador avulso do kit gerados de novo.
+- Testes: `tests/resumo.e2e.js` (novo), `tests/aprendizado.e2e.js` (novo), motor com o aprendizado, os destaques , o `[SECOES]`, o rótulo da capa e a ordem dos números (79), `tests/escuro.e2e.js` com os destaques escolhidos, `tests/emulador.e2e.js`, `tests/leveza.e2e.js` e `tests/emulador-extras.e2e.js` na tela nova.
+
+## 4.12.1 · 2026-10-29 · E-mail-resumo: sem quadrados no Outlook clássico (modo escuro) e aviso do link de arquivo
+
+- **Quadrados entre os indicadores:** no Outlook clássico para Windows com o modo escuro ligado, apareciam quadrados entre os indicadores do e-mail-resumo, na altura da linha de detalhe. Os espaços entre as colunas (e entre os tópicos) eram células com um caractere invisível (`&nbsp;`) e letra tamanho 0, e o Outlook pinta esse caractere. Agora são células vazias, com a mesma largura: o modo claro não muda.
+- **Cores no Outlook clássico (modo escuro):** continuam a cargo do Outlook. Ele recolore o e-mail na tela de quem lê (vermelho mais claro, texto do cabeçalho escuro, texto do botão rosado) e não aceita nenhum recurso do e-mail para impedir. Os truques conhecidos (desenho VML atrás do vermelho, preenchimento de texto do Word) não sobrevivem ao fluxo de abrir o `.eml` no Outlook e enviar: o Outlook regrava a mensagem ao enviar, e o desenho vira imagem (sem link e com largura fixa no celular). O modo escuro não muda o que é enviado: quem lê no modo claro vê as cores aprovadas. Documentado em `docs/EMULADOR.md`, com o botão do Outlook que mostra as cores originais.
+- **Link do report como caminho de arquivo:** no e-mail recebido, o Outlook para Windows bloqueia o botão ("O Outlook bloqueou o acesso a links para os arquivos de zona da Internet", proteção do próprio Outlook), e um caminho `C:\…` só existe no computador de quem fez. O caminho continua aceito, mas a nota do campo e um aviso no passo 4 ("Ok, ciente", não trava o `.eml`) dizem isso e indicam o link do OneDrive (botão direito no arquivo › Compartilhar › Copiar link). Documentação e solução de problemas atualizadas.
+- Teste novo no motor: espaços do e-mail-resumo sem caractere (75).
+
 ## 4.12 · 2026-10-28 · Creative X trimestral, + Adicionar item, ordem das seções, link do report e modo escuro
 
 - **Creative X trimestral (sem tirar nada do mês):** blocos opcionais `[CREATIVE X TRIMESTRE]` (rótulo, título, leitura curta, estimativa) e `[CREATIVE X TRIMESTRE 1..3]` (como os números). Entram na mesma seção, abaixo do resultado do mês, depois de um filete fino, na mesma grade (3 colunas de 184 px; terços no celular). O mês ganha o rótulo "MENSAL · MÊS ANO" e o trimestral o seu ("TRIMESTRAL · …"), para separar os dois. A estimativa sai sempre com a etiqueta "Estimativa" (fixa no template): o que é modelo não se mistura ao que foi alcançado. `[CREATIVE X] nota`: linha pequena no fim da seção para as siglas (ex.: CQR, QSR) e a fonte. "29 p.p." não quebra no meio. Importação do Copilot, texto puro do `.eml`, modelo em branco, `MODELO.txt`, exemplo e Prompt 7 atualizados. No emulador: **Tirar trimestral** (sai com o rótulo MENSAL) e o bloco volta por **+ Adicionar item**.

@@ -35,12 +35,12 @@ O que a importação **não** faz: não traz imagens, links nem PDFs (esses são
 ```text
 [EDICAO]            mes · ano · proximo_mes
 [ABERTURA]          frase · frase_final
-[PROJETO PRINCIPAL] nome · resumo
+[PROJETO PRINCIPAL] rotulo · nome · resumo · aprendizado
 [NUMERO 1] a [3]    valor · titulo · detalhe · variacao · variacao_cor
 [LANCAMOS]          titulo
-[DESTAQUE]          categoria · titulo · texto · nota
+[DESTAQUE]          categoria · titulo · texto · nota · aprendizado
 [RESULTADO 1] a [3] valor · titulo · detalhe · variacao · variacao_cor
-[LANCAMENTO 1] a [6] status · status_cor · nome · texto
+[LANCAMENTO 1] a [6] status · status_cor · nome · texto · aprendizado
 [CREATIVE X]        subtitulo · anterior · atual · variacao · periodo · referencia · significado · nota
 [CREATIVE X TRIMESTRE] rotulo · titulo · texto · estimativa
 [CREATIVE X TRIMESTRE 1] a [3] valor · titulo · detalhe · variacao · variacao_cor
@@ -48,6 +48,7 @@ O que a importação **não** faz: não traz imagens, links nem PDFs (esses são
 [TRANSFORMATION 1] a [3] status · status_cor · nome · texto · resultado
 [APRENDIZADO 1] a [3] titulo · texto · levamos
 [TOPICO]            rotulo · titulo · texto   ([TOPICO B], [TOPICO C], [TOPICO D]: outros tópicos novos)
+[SECOES]            tirar · mostrar   (nomes como em "Seções do report", separados por vírgula)
 [TOPICO 1] a [6]    status · status_cor · nome · texto · valor   ([TOPICO B 1]…)
 [FOCO]              prioridade · texto
 [AGENDA 1] a [6]    data · titulo · detalhe
@@ -165,12 +166,12 @@ Se não houver critério, diga qual usou. Não explique causas.
 
 | | |
 |---|---|
-| **Objetivo** | Escolher o projeto principal, os 3 números da capa e o que fica de fora |
+| **Objetivo** | Escolher o projeto principal, os 3 principais resultados e o que fica de fora |
 | **Quando usar** | Depois das variações calculadas |
 | **Entradas** | Tabelas dos prompts 1 e 3 |
 | **Formato de saída** | Projeto principal + número 1 a 3; destaque de "O que lançamos"; lista do que foi descartado e por quê |
 | **Validação** | A área aprova a escolha antes de escrever os textos |
-| **Onde entra no report** | Capa (projeto principal e números), "O que lançamos" e e-mail-resumo (até 3 indicadores) |
+| **Onde entra no report** | Visão geral e Principais resultados (projeto principal e números), "O que lançamos" e a sugestão do e-mail-resumo (os números do projeto principal; os destaques do e-mail são escolhidos no emulador, até 4) |
 
 ```text
 Com base nas tabelas anteriores, proponha:
@@ -187,18 +188,20 @@ Liste também o que você DESCARTOU (pequeno, sem base, base pequena) e o motivo
 
 | | |
 |---|---|
-| **Objetivo** | Escrever a capa: frase do mês, projeto principal e os 3 números |
+| **Objetivo** | Escrever a abertura: frase do mês, projeto principal e os 3 números |
 | **Quando usar** | Depois que a área aprovar os destaques (Prompt 4) |
 | **Entradas** | Destaques aprovados; mês e próximo mês |
 | **Formato de saída** | Blocos `[EDICAO]`, `[ABERTURA]`, `[PROJETO PRINCIPAL]`, `[NUMERO 1]` a `[NUMERO 3]` |
 | **Validação** | Cada `valor` igual ao da tabela; frase sem número; nenhum campo inventado |
-| **Onde entra no report** | Capa vermelha e e-mail-resumo (frase e indicadores) |
+| **Onde entra no report** | Abertura (frase do mês), Visão geral, Principais resultados e e-mail-resumo (frase e indicadores) |
 
 ```text
 Escreva a capa do report de [MÊS/ANO] usando só os destaques aprovados.
 Limites (o layout tem espaço fixo):
 - frase + frase_final: juntas, até 8 palavras, sem número;
 - nome do projeto: até 40 caracteres; resumo: 1 a 2 frases;
+- aprendizado (opcional): 1 ou 2 frases, até 180 caracteres: o que a campanha
+  ensinou e o que fazemos melhor; só com o que está nos dados, sem número novo;
 - valor: até 10 caracteres (ex.: 12,5% · R$ 1,20 · 2,5x);
 - titulo: 1 a 3 palavras; detalhe: base de comparação, até 5 palavras;
 - variacao: com sinal (+25%, -20%, +3 p.p.); variacao_cor: verde ou ambar.
@@ -215,6 +218,7 @@ frase_final: ...
 [PROJETO PRINCIPAL]
 nome: ...
 resumo: ...
+aprendizado: ...
 
 [NUMERO 1]
 valor: ...
@@ -241,7 +245,9 @@ Escreva a seção "O que lançamos" de [MÊS/ANO] com os itens aprovados.
 Limites: titulo da seção até 60 caracteres; destaque: titulo até 60 caracteres
 e texto de 2 linhas; lançamento: nome até 30 caracteres e texto de 1 frase;
 status: até 25 caracteres; status_cor: verde (no ar, implementado) ou ambar
-(previsto, em teste, aguardando resultado).
+(previsto, em teste, aguardando resultado). aprendizado (opcional): o que a
+campanha ensinou, em 1 ou 2 frases (destaque: até 180 caracteres; lançamento:
+até 100); só para o que tem resultado, sem inventar.
 Responda SOMENTE neste formato, sem comentários:
 [LANCAMOS]
 titulo: ...
@@ -250,6 +256,7 @@ titulo: ...
 categoria: ...
 titulo: ...
 texto: ...
+aprendizado: ...
 
 [RESULTADO 1]
 valor: ...

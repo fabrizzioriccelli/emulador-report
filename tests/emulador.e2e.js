@@ -4,7 +4,7 @@
  *   abrir o modelo em branco → editar texto, número, etiqueta, imagem e link → ocultar
  *   um item → importar conteúdo (Copilot) → salvar → fechar → reabrir o arquivo salvo e
  *   conferir que tudo ficou → aviso de números do mês anterior → rascunho recuperado
- *   depois de fechar a aba sem salvar → e-mail-resumo (até 3 indicadores, um único
+ *   depois de fechar a aba sem salvar → e-mail-resumo (até 4 destaques, um único
  *   botão, aviso sem o link) → .eml (MIME, imagens dentro, X-Unsent).
  *   Requer Node.js + Playwright:  node tests/emulador.e2e.js [pasta-de-saida]
  *   Versão avulsa:  EMULADOR=kit/emulador-report.html node tests/emulador.e2e.js
@@ -102,7 +102,7 @@ function salvarComo() {
   confere(await noQuadro(p, function (d) { return d.querySelectorAll("script").length; }) === 0, "na edição a página fica parada (sem script)");
   var nCampos = await noQuadro(p, function (d) { return d.querySelectorAll("[data-ed-campo]").length; }), nImgs = await noQuadro(p, function (d) { return d.querySelectorAll("img[data-img]").length; });
   console.log("MODELO: " + nCampos + " campos editáveis, " + nImgs + " imagens trocáveis.");
-  confere(nCampos > 80 && nImgs >= 15, "todas as seções editáveis (textos, números e imagens)");
+  confere(nCampos > 80 && nImgs >= 12, "todas as seções editáveis (textos, números e imagens)");
 
   /* 2. Editar textos, número, etiqueta e período. */
   await escrever(p, f, "frase", "Teste fictício");
@@ -153,16 +153,23 @@ function salvarComo() {
         cores: it.map(function (x) { var v = x.querySelector('[data-campo$=".valor"]'); return v ? (/color:#EC0000/i.test(v.getAttribute("style")) ? "vermelho" : "preto") : ""; }).join(",") };
     }, g);
   }
-  await ferramenta(p, f, '[data-item="agenda-6"]', "Tirar item");
+  /* 5.5: o modelo em branco traz 3 itens na agenda e 3 lançamentos (há espaço para pôr mais) */
+  await ferramenta(p, f, '[data-item="agenda-3"]', "Tirar item");
   var ga = await grade("agenda");
-  confere(ga.n === 5 && ga.linhas === "3+0 2+1", "agenda: item ocultado e a grade refeita (3 + 2 e um espaço vazio) · " + ga.linhas);
+  confere(ga.n === 2 && ga.linhas === "2+1", "agenda: item ocultado e a grade refeita (2 e um espaço vazio) · " + ga.linhas);
   confere(ga.mais === "+ Adicionar item na agenda", "agenda: botão visível \"+ Adicionar item na agenda\"");
-  await ferramenta(p, f, '[data-item="agenda-1"]', "+ Adicionar depois");
+  await ferramenta(p, f, '[data-item="agenda-1"]', "+ Novo item");
   ga = await grade("agenda");
-  confere(ga.n === 6 && ga.linhas === "3+0 3+0" && ga.chaves === "agenda-1,agenda-2,agenda-3,agenda-4,agenda-5,agenda-6" && /^bloqueado: Máximo de 6/.test(ga.mais), "agenda: item adicionado depois do 1º, chaves em sequência, máximo de 6 · " + ga.mais);
+  confere(ga.n === 3 && ga.linhas === "3+0" && ga.chaves === "agenda-1,agenda-2,agenda-3", "agenda: item adicionado depois do 1º, chaves em sequência · " + ga.chaves);
   confere(await noQuadro(p, function (d) { return d.querySelector('[data-campo="agenda-2.titulo"]').textContent.trim(); }) === "[Item da agenda 2]", "item novo vem do modelo, com o número da posição");
+  for (var ka = 0; ka < 3; ka++) {
+    await noQuadro(p, function (d) { d.querySelector('.ed-mais button[data-grupo="agenda"]').scrollIntoView({ block: "center" }); });
+    var cA = await noQuadro(p, function (d) { var q = document.querySelector("#edFrame").getBoundingClientRect(), b = d.querySelector('.ed-mais button[data-grupo="agenda"]').getBoundingClientRect(); return { x: q.left + b.left + b.width / 2, y: q.top + b.top + b.height / 2 }; });
+    await p.mouse.click(cA.x, cA.y); await p.waitForTimeout(150);
+  }
+  ga = await grade("agenda");
+  confere(ga.n === 6 && ga.linhas === "3+0 3+0" && /^bloqueado: Máximo de 6/.test(ga.mais), "agenda: até 6 itens (3 por linha), depois o botão bloqueia · " + ga.mais);
   await ferramenta(p, f, '[data-item="agenda-6"]', "Tirar item");
-  for (var lk of ["lancamento-6", "lancamento-5", "lancamento-4"]) await ferramenta(p, f, '[data-item="' + lk + '"]', "Tirar item");
   var gl = await grade("lancamento");
   confere(gl.n === 3 && gl.linhas === "3+0" && gl.larguras === "184,184,184" && gl.classes === "col gap|col gap|col" && gl.cab === "5", "lançamentos: 3 numa linha, como o motor monta · " + gl.larguras + " · " + gl.classes);
   await noQuadro(p, function (d) { d.querySelector('.ed-mais button[data-grupo="lancamento"]').scrollIntoView({ block: "center" }); });
@@ -189,7 +196,6 @@ function salvarComo() {
     await ferramenta(p, f, alvo + " >> visible=true", "Tirar imagem");
   }
   confere(await noQuadro(p, function (d) { return !d.querySelector('img[data-img="selo"], img[data-img="transformation-3-logo"], img[data-img="transformation-3-print-1"]') && !!d.querySelector('[data-campo="transformation-3.nome"]') && !!d.querySelector('img[data-img="transformation-2-logo"]'); }), "selo, logo e print tirados (o texto do projeto continua)");
-  await p.click("#secEditar details summary");
   await p.uncheck('#secoesRep input[value="aprendizados"]');
 
   /* 5. Importar conteúdo (resposta do Copilot no formato da biblioteca de prompts). */
@@ -228,7 +234,7 @@ function salvarComo() {
   await p.click("#bSalvar");
   await p.waitForSelector("#modal:not([hidden])");
   var aviso = await p.$eval("#modalCorpo", function (e) { return e.textContent; });
-  confere(/JANEIRO 2099/.test(aviso) && /Número 1 da capa \(valor\): 12,5%/.test(aviso) && !/numero-1\.valor/.test(aviso), "aviso: período mudou e os números ainda são do mês anterior (com o nome de cada campo)");
+  confere(/JANEIRO 2099/.test(aviso) && /Resultado principal 1 \(valor\): 12,5%/.test(aviso) && !/numero-1\.valor/.test(aviso), "aviso: período mudou e os números ainda são do mês anterior (com o nome de cada campo)");
   await p.click("#modalCancela");
   confere(await p.evaluate(function () { return window.__salvos.length; }) === 0, "\"Voltar e conferir\" não salva");
 
@@ -250,10 +256,10 @@ function salvarComo() {
   await p.setInputFiles("#arquivo", path.join(SAIDA, salvo.nome));
   f = await quadro(p);
   await esperaConversao(p);
-  var marcados = await p.$$eval("#indicadores input:checked", function (l) { return l.map(function (x) { return x.value; }); });
-  console.log("INDICADORES MARCADOS: " + marcados.join(", "));
-  confere(marcados.join(",") === "numero-1,numero-2,numero-3", "indicadores: os 3 números do projeto principal por padrão");
-  confere(await p.$$eval("#indicadores input:disabled", function (l) { return l.length; }) > 0, "no máximo 3 indicadores (os outros ficam bloqueados)");
+  var marcados = await p.$$eval("#dtqEscolhidos .dtq[data-origem]", function (l) { return l.map(function (x) { return x.getAttribute("data-origem"); }); });
+  console.log("DESTAQUES SUGERIDOS: " + marcados.join(", "));
+  confere(marcados.join(",") === "numero-1,numero-2,numero-3" && /^3 de 4 · sugestão/.test(await p.$eval("#dtqConta", function (e) { return e.textContent; })), "destaques: a sugestão são os 3 números do projeto principal (3 de 4)");
+  confere(await p.$$eval("#dtqLista button[data-origem]:disabled", function (l) { return l.length; }) >= 3, "os já escolhidos ficam marcados na lista do report (✓)");
   confere(await p.$eval("#bEmlRes", function (b) { return b.disabled; }) && /FALTA O LINK DO REPORT COMPLETO/.test(await p.$eval("#prev", function (e) { return e.srcdoc; })), "sem o link: e-mail-resumo bloqueado e a prévia avisa");
   /* qualquer link vale (4.12). Caminho do Windows com espaço e acento (pasta do OneDrive, "Copiar como caminho"): vira
      file:/// no formato que o Outlook grava (espaço %20, acento como está) e o e-mail-resumo é liberado, com uma nota. */
@@ -263,6 +269,10 @@ function salvarComo() {
   confere(hrefRes === "file:///C:/Users/t000000/OneDrive%20-%20Empresa/Report%20PF/Produção/Outubro_26/HTML/report-2099-01.html" && /Caminho de arquivo/.test(infoRes) && !/Não dá para usar/.test(infoRes),
     "caminho do Windows (OneDrive, com espaço e acento) aceito: botão com file:/// no formato do Outlook, nota no campo · " + hrefRes);
   confere(decodeURIComponent(new URL(hrefRes).pathname) === "/C:/Users/t000000/OneDrive - Empresa/Report PF/Produção/Outubro_26/HTML/report-2099-01.html", "o endereço do botão volta exatamente ao caminho colado");
+  /* 4.12.1: no e-mail recebido, o Outlook bloqueia link para arquivo. O passo 4 avisa (com "Ok, ciente") e indica o link do
+     OneDrive, sem travar o .eml */
+  var etArq = await p.$eval("#et-resumir", function (e) { return { t: e.textContent, ciente: !!Array.prototype.filter.call(e.querySelectorAll("button"), function (b) { return /Ok, ciente/.test(b.textContent); }).length }; });
+  confere(/o Outlook bloqueia esse link/.test(etArq.t) && /Copiar link/.test(etArq.t) && etArq.ciente && !(await p.$eval("#bEmlRes", function (b) { return b.disabled; })), "caminho de arquivo: aviso de que o Outlook bloqueia no e-mail recebido, com o link do OneDrive e \"Ok, ciente\" (o .eml continua liberado)");
   /* o link do .eml abre o arquivo de verdade: o report salvo numa pasta com espaço e acento, o endereço copiado da barra do
      navegador (com %C3%A7…), o .eml baixado e o link de dentro dele aberto no navegador */
   /* (pasta temporária fora do projeto: a página de geração lê a pasta do projeto inteira nos outros testes) */
@@ -280,9 +290,9 @@ function salvarComo() {
   var LINK = "https://www.example.com/report-ficticio";
   await p.fill("#link", LINK);
   await p.waitForFunction(function () { return !document.querySelector("#bEmlRes").disabled; }, null, { timeout: 30000 });
-  await p.uncheck('#indicadores input[value="numero-3"]');
-  await p.check('#indicadores input[value="resultado-1"]');
-  await p.waitForFunction(function () { return !document.querySelector("#bEmlRes").disabled && /resultado-1/.test(Array.prototype.map.call(document.querySelectorAll("#indicadores input:checked"), function (x) { return x.value; }).join()); }, null, { timeout: 30000 });
+  await p.click('#dtqEscolhidos button[aria-label="Tirar o destaque 3"]');
+  await p.click('#dtqLista button[data-origem="resultado-1"]');
+  await p.waitForFunction(function () { return !document.querySelector("#bEmlRes").disabled && Array.prototype.map.call(document.querySelectorAll("#dtqEscolhidos .dtq"), function (x) { return x.getAttribute("data-origem"); }).join() === "numero-1,numero-2,resultado-1"; }, null, { timeout: 30000 });
   await p.waitForTimeout(1500);
   var d = await Promise.all([p.waitForEvent("download"), p.click("#bEmlRes")]);
   var arqRes = path.join(SAIDA, d[0].suggestedFilename());
@@ -295,7 +305,7 @@ function salvarComo() {
   confere(hrefs.length === 1 && hrefs[0] === 'href="' + LINK + '"', "um único link: o botão do report completo (" + hrefs.length + " href)");
   confere(!/<v:roundrect|<w:anchorlock/.test(html) && /<td class="dm-marca-bg" align="center" bgcolor="#EC0000"[^>]*><a class="cta fx dm-txt-branco" href="/.test(html), "botão sem VML (célula vermelha + link de texto): continua clicável depois que o Outlook envia");
   confere(/Acessar report completo/.test(html), "botão: \"Acessar report completo\"");
-  confere(/12,5%/.test(html) && /R\$ 1,20/.test(html) && /Indicador fictício A/.test(html), "indicadores escolhidos estão no resumo");
+  confere(/12,5%/.test(html) && /R\$ 1,20/.test(html) && /Indicador fictício A/.test(html), "destaques escolhidos estão no resumo");
   confere(!/<script|data-campo|contenteditable/.test(html), "resumo estático, sem marcas");
   var cids = (html.match(/src="cid:([^"]+)"/g) || []).map(function (s) { return s.slice(9, -1); });
   var anexos = (eml.match(/Content-ID: <([^>]+)>/g) || []).map(function (s) { return s.slice(13, -1); });

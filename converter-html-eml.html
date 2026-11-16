@@ -21,8 +21,9 @@
     3. SALVAR: o report completo do mês (.html), com as alterações dentro.
        É o arquivo publicado no ambiente corporativo autorizado;
     4. LINK: o endereço do report publicado (o botão do e-mail usa esse link);
-    5. E-MAIL-RESUMO: até 3 indicadores e uma única chamada, "Acessar report
-       completo";
+    5. E-MAIL-RESUMO: até 4 destaques escolhidos (números, campanhas, "O que
+       aprendemos" ou informação nova revisada), com imagem e link opcionais, e
+       uma única chamada principal, "Acessar report completo";
     6. .EML: e-mail de verdade (MIME, imagens dentro), que o Outlook abre
        como mensagem nova.
   Nada é enviado para a internet: a página só lê e grava os arquivos que
@@ -96,6 +97,31 @@
   code{background:#F3F1EF;padding:1px 5px;border-radius:4px;font-size:13px}
   .campo{margin-top:14px}.campo>label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
   .lista{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:4px}
+  /* destaques do e-mail-resumo (4.13) */
+  .dtqCab{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.dtqCab label{font-size:14px;font-weight:600}
+  .dtqs{display:grid;gap:10px;margin-top:8px}
+  .dtq{border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:#FCFAF8;min-width:0;overflow-wrap:anywhere}
+  .dtq.novo{border-color:#F0B998;background:#FFF8F2}.dtq.fora{border-color:#E8B4B4;background:#FFF5F5}
+  .dtq .topo{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+  .dtq .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:700;flex:none}
+  .dtq .tag{font-size:12px;color:var(--gray);font-weight:700;letter-spacing:.4px}
+  .selo{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;background:#F3F1EF;color:var(--gray)}
+  .selo.novo{background:var(--warnbg);color:var(--warn)}.selo.ed{background:#EEF0F3;color:#3D4A5C}.selo.fora{background:var(--errbg);color:#990000}.selo.ok{background:var(--okbg);color:var(--ok)}
+  .dtq .acoes{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px}.dtq .acoes button,.dtq .img button{padding:4px 10px;font-size:13px}
+  .dtq .valor{font:bold 22px Arial,sans-serif;margin-top:8px}
+  .dtq .grade{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;margin-top:8px}
+  @media (max-width:600px){.dtq .grade{grid-template-columns:minmax(0,1fr)}}
+  .dtq label.f{display:block;font-size:13px;font-weight:600;min-width:0}
+  .dtq label.f input,.dtq label.f textarea,.dtq label.f select{display:block;width:100%;box-sizing:border-box;margin-top:3px;font:inherit;font-size:14px;font-weight:400;padding:7px 9px;border:1px solid #CFC9C4;border-radius:8px;background:#fff}
+  .dtq label.f textarea{resize:vertical;min-height:52px}
+  .dtq .larga{grid-column:1/-1}
+  .dtq .img{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--rule)}
+  .dtq .img img{width:96px;height:auto;border-radius:6px;border:1px solid var(--rule);display:block}
+  .dtq .img .check{font-size:13px}
+  /* a lista de imagens do report tem o nome de cada peça: a caixa não passa da largura do cartão (a lista aberta mostra o nome inteiro) */
+  .dtq .img select{max-width:100%;min-width:0;text-overflow:ellipsis}
+  .dtqLista .grupo{margin-top:10px}.dtqLista .grupo>b{display:block;font-size:13px;color:var(--gray);margin-bottom:2px}
+  .dtqLista button{padding:4px 10px;font-size:13px;margin:4px 6px 0 0;text-align:left;max-width:100%;white-space:normal;overflow-wrap:anywhere}
   .passos{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--gray)}
   .inicio{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px;margin-top:12px}
   .cartao{border:1px solid #CFC9C4;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fff}
@@ -104,6 +130,39 @@
   .estado{font-size:13px;color:var(--gray)}
   .estado.sujo{color:var(--warn);font-weight:600}.estado.salvo{color:var(--ok);font-weight:600}
   .ajuda{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;margin:10px 0 12px;font-size:13px;color:var(--gray)}
+  /* Área de edição (5.5): painel lateral (Elementos e Seções) + página em edição */
+  .ajudaCurta{margin:8px 0 4px;font-size:14px;color:var(--gray)}.ajudaCurta b{color:var(--ink)}
+  .dicas{margin:0 0 6px}.dicas summary{font-size:13px}.dicas .ajuda{margin-top:8px}
+  .areaEdicao{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:12px;align-items:start}
+  .lateral{border:1px solid var(--rule);border-radius:12px;background:#fff;padding:12px;min-width:0}
+  @media (min-width:1100px){
+    .areaEdicao{grid-template-columns:316px minmax(0,1fr)}
+    #abaSecoes .secaoRep .check{overflow-wrap:normal}
+    .lateral{position:sticky;top:var(--topoFerr,76px);max-height:calc(100vh - var(--topoFerr,76px) - 12px);overflow:auto}
+  }
+  .tituloLateral{margin:0 0 4px;font-size:15px}
+  /* arrastando (item ou seção): a página do emulador em volta não seleciona texto quando o ponteiro sai do report */
+  .ed-movendo-fora,.ed-movendo-fora *{user-select:none !important;-webkit-user-select:none !important;cursor:grabbing !important}
+  .dicaLateral{font-size:12px;margin:0 0 10px}
+  .comoPor{display:grid;gap:3px;margin:14px 0 10px;padding:10px 12px;border-radius:10px;background:#FFF7F5;border:1px solid #F5D2CB;font-size:12px;line-height:1.35}
+  .comoPor b{font-size:12px;margin-top:4px}.comoPor b:first-child{margin-top:0}.comoPor span b{margin:0}
+  #abaSecoes .lista{display:block}#abaSecoes .secaoRep{flex-wrap:nowrap;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--rule);border-radius:0;gap:6px}
+  #abaSecoes .secaoRep .check{flex:1;min-width:0;font-size:13px;line-height:1.25}
+  #abaSecoes .acoesRep{display:flex;gap:3px;flex:none}#abaSecoes .acoesRep button{padding:3px 6px;font-size:12px;min-width:0}
+  #abaSecoes .novoTopico{margin-top:10px;width:100%}
+  .assistBtn{width:100%}
+  /* passos do e-mail com a prévia ao lado (5.5) */
+  .etapaEmail{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0}
+  .colEmail{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;min-width:0;align-content:start}
+  .colPrev{min-width:0}
+  .voltaEdicao{float:right;font-size:13px;padding:6px 10px}
+  @media (min-width:1360px){
+    main{max-width:1400px}
+    .etapaEmail{grid-template-columns:minmax(0,1fr) 724px;align-items:start}
+    .colPrev{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;border-radius:12px}
+  }
+  .irResumo{margin-left:auto}
+  #secEditar .ferramentas{gap:8px}#secEditar .ferramentas button{padding:9px 13px}
   .ajuda b{color:var(--ink)}
   #painelImportar{border:1px solid var(--rule);border-radius:10px;padding:14px;margin:10px 0;background:var(--lisboa)}
   #painelImportar textarea{width:100%;min-height:180px;font:12.5px/1.5 Consolas,Menlo,monospace;border:1px solid #CFC9C4;border-radius:8px;padding:10px}
@@ -187,26 +246,31 @@
   <!-- 2 · EDITAR E SALVAR -->
   <section aria-labelledby="s2" id="secEditar" hidden>
     <h2 id="s2"><b>2</b>Edite e salve o report</h2>
+    <p class="ajudaCurta"><b>Clique num texto</b> para escrever. <b>Passe o mouse</b> num item ou imagem para ver as opções: <b>+ Novo item</b>, arrastar, mover para outra seção, trocar, tirar. As seções ficam ao lado da página.</p>
+    <details class="dicas"><summary>Mais dicas de edição</summary>
     <div class="ajuda">
       <span><b>Texto ou número:</b> clique e escreva. Enter confirma; Shift+Enter quebra a linha.</span>
       <span><b>Imagem ou vídeo:</b> passe o mouse e use "Trocar imagem" (ou "Trocar vídeo").</span>
       <span><b>Link:</b> passe o mouse em um link vermelho e use "Trocar link".</span>
       <span><b>Mais links ou imagens:</b> passe o mouse no item (projeto, lançamento, destaque…) e use "+ Link" ou "+ Imagem" (até 3 por item).</span>
       <span><b>Item que não vale este mês:</b> passe o mouse e use "Tirar item" (o último de um grupo fica: para tirar tudo, oculte a seção).</span>
-      <span><b>Item novo:</b> <b>+ Adicionar item</b>: escolha o tipo (indicador, card, texto, destaque, imagem, vídeo ou conteúdo complementar), onde entra, preencha e confira a prévia antes de confirmar.</span>
-      <span><b>Mudar de lugar:</b> item: passe o mouse e use ← Antes / Depois →. Seção: arraste a alça "⠿ Mover seção" (ou ↑ ↓ Posição…), aqui ou em Seções do report.</span>
+      <span><b>Item novo:</b> passe o mouse num item e use <b>+ Novo item</b> (entra logo depois dele), ou o <b>+ Adicionar</b> embaixo do grupo. Prefere um formulário? <b>+ Adicionar item com formulário</b>, ao lado da página.</span>
+      <span><b>Mudar de lugar:</b> item: segure <b>⠿ Arrastar</b> e solte na linha vermelha (no grupo ou em outra seção do mesmo tipo), ou use ← Mover / Mover → e <b>Mover para outra seção</b>. Seção: arraste a alça "⠿ Mover seção" (ou ↑ ↓ Posição…), aqui ou na lista ao lado.</span>
+      <span><b>Etiqueta (▲ +12%, ● No ar):</b> clique nela para trocar a cor ou <b>Tirar etiqueta</b>; para pôr de volta, <b>+ Etiqueta</b> na barra do item.</span>
       <span><b>Assunto novo (ex.: Testes):</b> <b>+ Novo tópico</b>: escreva o nome, escolha o layout (lista, colunas, cartões ou números) e onde entra. Até 4.</span>
     </div>
+    </details>
     <div class="ferramentas">
       <button type="button" class="pri" id="bSalvar">Salvar report (.html)</button>
       <button type="button" id="bImportar">Importar conteúdo (Copilot)</button>
-      <button type="button" id="bAdicionarItem">+ Adicionar item</button>
       <button type="button" id="bNovoTopico">+ Novo tópico</button>
-      <button type="button" id="bDesfazer" disabled>Desfazer</button>
+      <button type="button" id="bDesfazer" disabled title="Desfazer a última mudança (Ctrl+Z fora de um texto)">&#8630; Desfazer</button>
+      <button type="button" id="bRefazer" disabled title="Refazer o que foi desfeito (Ctrl+Y)">&#8631; Refazer</button>
       <span class="tabs" role="group" aria-label="Tamanho da edição">
         <button type="button" data-ew="100%" aria-pressed="true">Computador</button>
         <button type="button" data-ew="390px" aria-pressed="false">Celular</button>
       </span>
+      <button type="button" id="bIrResumo" class="irResumo" title="Descer até o link e o e-mail-resumo">E-mail-resumo &#8595;</button>
       <span class="estado" id="estado" role="status" aria-live="polite"></span>
     </div>
     <div id="painelImportar" hidden>
@@ -214,18 +278,34 @@
       <textarea id="txtImportar" spellcheck="false" aria-label="Conteúdo do Copilot para importar" placeholder="[EDICAO]&#10;mes: Novembro&#10;ano: 2026&#10;&#10;[NUMERO 1]&#10;valor: 12,5%&#10;titulo: Taxa de clique&#10;detalhe: Outras peças: 10%"></textarea>
       <div class="row"><button type="button" class="pri" id="bAplicar">Aplicar na página</button><button type="button" id="bFecharImportar">Fechar</button><span class="muted" id="importarInfo"></span></div>
     </div>
-    <details>
-      <summary>Seções do report (ordem, mostrar, ocultar ou criar um tópico novo)</summary>
-      <div class="lista" id="secoesRep"></div>
-    </details>
     <div class="previaItem" id="previaItem" role="status" aria-live="polite" hidden><span id="previaTxt"></span><span class="botoes"><button type="button" class="pri" id="previaOk">Confirmar</button><button type="button" id="previaAjustar">Voltar e ajustar</button><button type="button" id="previaCancela">Cancelar</button></span></div>
-    <div class="frame" style="margin-top:4px"><iframe id="edFrame" title="Report em edição" sandbox="allow-same-origin"></iframe></div>
+    <!-- Área de edição (5.6): as seções ao lado da página e a página em edição (tudo se põe e se move na própria página) -->
+    <div class="areaEdicao">
+      <aside class="lateral" id="lateral" aria-label="Seções do report">
+        <h3 class="tituloLateral">Seções do report</h3>
+        <p class="muted dicaLateral">Arraste a alça &#10303; ou use &#8593; &#8595; para mudar a ordem. Desmarque para tirar a seção do report (Desfazer traz de volta).</p>
+        <div id="abaSecoes"><div class="lista" id="secoesRep"></div></div>
+        <div class="comoPor" id="comoPor">
+          <b>Para pôr algo novo</b>
+          <span>Passe o mouse num item e clique em <b>+ Novo item</b>, ou use o <b>+ Adicionar</b> que fica embaixo de cada grupo.</span>
+          <b>Para mudar de lugar</b>
+          <span>Segure <b>&#10303; Arrastar</b> e solte na linha vermelha: no mesmo grupo ou em outra seção do mesmo tipo. Ou use <b>Mover para outra seção</b>.</span>
+          <b>Etiqueta verde ou âmbar</b>
+          <span>Clique nela: troque a cor ou <b>Tirar etiqueta</b>. Sem etiqueta? <b>+ Etiqueta</b>, na barra do item.</span>
+        </div>
+        <button type="button" id="bAdicionarItem" class="assistBtn">+ Adicionar item com formulário</button>
+      </aside>
+      <div class="frame"><iframe id="edFrame" title="Report em edição" sandbox="allow-same-origin"></iframe></div>
+    </div>
   </section>
 
+  <!-- 3 a 6 (5.5): os passos do e-mail à esquerda e a prévia do e-mail ao lado, sempre à vista (telas largas) -->
+  <div class="etapaEmail"><div class="colEmail">
   <!-- 3 · LINK -->
   <section aria-labelledby="s3" id="secLink" hidden>
+    <button type="button" class="voltaEdicao" id="bVoltaEdicao">&#8593; Voltar ao report</button>
     <h2 id="s3"><b>3</b>Link do report completo</h2>
-    <p class="muted">O botão do e-mail-resumo leva quem lê ao report completo (o arquivo salvo no passo 2). Vale <b>qualquer link</b>: o <b>caminho do arquivo</b> (<code>C:\…</code>, como a pasta do OneDrive no computador, <code>\\servidor\…</code> ou <code>file:///…</code>) ou o link de compartilhamento (<code>https://…</code>; só <code>empresa.sharepoint.com/…</code> também vale e ganha o <code>https://</code>). Caminho com espaço e acento funciona: o botão vai no formato que o Outlook abre. O caminho de arquivo abre onde o arquivo existe (no seu computador, ou para quem tem a mesma pasta sincronizada ou de rede); o Outlook na Web, o novo Outlook e o celular não abrem link de arquivo. Só endereço que executa código (<code>javascript:</code>) é recusado. Sem link, o e-mail-resumo não sai (nada de botão vazio).</p>
+    <p class="muted">O botão do e-mail-resumo leva quem lê ao report completo (o arquivo salvo no passo 2). Vale <b>qualquer link</b>: o <b>caminho do arquivo</b> (<code>C:\…</code>, como a pasta do OneDrive no computador, <code>\\servidor\…</code> ou <code>file:///…</code>) ou o link de compartilhamento (<code>https://…</code>; só <code>empresa.sharepoint.com/…</code> também vale e ganha o <code>https://</code>). Para quem recebe, use o <b>link do OneDrive</b> (botão direito no arquivo › Compartilhar › Copiar link): no e-mail recebido, o Outlook para Windows bloqueia link para arquivo ("O Outlook bloqueou o acesso a links para os arquivos de zona da Internet"), um caminho <code>C:\…</code> só existe no seu computador, e o Outlook na Web, o novo Outlook e o celular não abrem link de arquivo. Só endereço que executa código (<code>javascript:</code>) é recusado. Sem link, o e-mail-resumo não sai (nada de botão vazio).</p>
     <div class="campo">
       <label for="link">Link do report completo</label>
       <input type="text" id="link" inputmode="url" placeholder="qualquer link: C:\…\report-AAAA-MM.html  ·  https://…" autocomplete="off" aria-describedby="linkInfo">
@@ -241,11 +321,18 @@
   <!-- 4 · E-MAIL-RESUMO -->
   <section aria-labelledby="s4" id="secResumo" hidden>
     <h2 id="s4"><b>4</b>E-mail-resumo</h2>
-    <p class="muted">Curto de propósito: o período, a frase do mês, <b>até 3 indicadores</b> e uma única chamada, "Acessar report completo". O resto fica no report completo.</p>
-    <div class="campo">
-      <label>Indicadores do e-mail (até 3)</label>
-      <div class="lista" id="indicadores"><span class="muted">Abra um report para ver os indicadores.</span></div>
-      <p class="muted" style="margin-top:6px">Vêm marcados os números do projeto da capa (cada um com o nome do projeto). O número que a frase do mês já diz não vem marcado, para não repetir. Pode trocar por outros indicadores da página. Nenhum número é criado aqui: só aparecem os que estão no report.</p>
+    <p class="muted">A porta de entrada para o report: a frase do mês, <b>até 4 destaques</b> que você escolhe e uma única chamada para o report completo.</p>
+    <div class="campo" id="dtq">
+      <div class="dtqCab"><label id="dtqTit">Selecionar destaques do e-mail</label><span id="dtqConta" class="muted">0 de 4</span></div>
+      <p class="muted" id="dtqDica">Abra um report para ver o que dá para destacar.</p>
+      <div class="dtqs" id="dtqEscolhidos" aria-labelledby="dtqTit"></div>
+      <div class="row">
+        <button type="button" id="bDtqNovo" disabled>+ Informação nova</button>
+        <button type="button" id="bDtqSugestao" disabled>Voltar para a sugestão</button>
+      </div>
+      <details id="dtqDisp" open><summary>No report: clique para incluir no e-mail</summary><div class="dtqLista" id="dtqLista"></div></details>
+      <p class="muted" style="margin-top:8px">Os números vêm sempre do report: mudou lá, muda aqui. Título e descrição podem ser ajustados só para o e-mail (o report não muda). Informação nova, que não está no report, só libera o e-mail depois de revisada.</p>
+      <input type="file" id="fDtqImg" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
     </div>
     <div class="campo">
       <label for="botao">Texto do botão</label>
@@ -276,6 +363,10 @@
       <span id="emlResInfo" class="muted"></span>
     </div>
     <div class="row">
+      <button type="button" id="bPngRes" disabled>Baixar imagem do resumo (.png)</button>
+      <span id="pngResInfo" class="muted">Uma foto do e-mail-resumo, para prévia ou para usar junto (não substitui o .eml).</span>
+    </div>
+    <div class="row">
       <button type="button" id="bEml" disabled>Baixar e-mail completo (.eml, opcional)</button>
       <span id="emlInfo" class="muted"></span>
     </div>
@@ -289,6 +380,7 @@
     </details>
   </section>
 
+  </div><div class="colPrev">
   <section aria-labelledby="s7" id="secPrev" hidden>
     <h2 id="s7">Prévia do e-mail</h2>
     <p class="muted">É o que vai dentro do .eml: estático, sem vídeo nem animação (e-mail não roda script). No e-mail-resumo, cantos retos e botão de texto são de propósito: é assim que ele chega depois que o Outlook envia.</p>
@@ -302,6 +394,7 @@
     </div>
     <div class="frame" style="margin-top:12px"><iframe id="prev" title="Prévia do e-mail"></iframe></div>
   </section>
+  </div></div>
 </main>
 
 <div class="modal" id="modal" hidden><div role="dialog" aria-modal="true" aria-labelledby="modalTit">
@@ -348,6 +441,8 @@
       $("#modal").hidden = false; $("#modalOk").focus();
       function fim(v) { $("#modal").hidden = true; $("#modalOk").onclick = $("#modalCancela").onclick = null; res(v); }
       $("#modalOk").onclick = function () { fim(true); }; $("#modalCancela").onclick = function () { fim(false); };
+      /* Esc fecha (5.5): com "Cancelar", cancela; sem ele, é o mesmo que o único botão */
+      $("#modal").onkeydown = function (e) { if (e.key === "Escape") { e.preventDefault(); fim(!cancela); } };
     });
   }
 
@@ -359,7 +454,7 @@
     if (DB) return Promise.resolve(DB);
     return new Promise(function (ok) {
       try {
-        var r = indexedDB.open("emulador-report", 1);
+        var r = indexedDB.open(PJ ? "emulador-report-pj" : "emulador-report", 1);
         r.onupgradeneeded = function () { r.result.createObjectStore("rascunho"); };
         r.onsuccess = function () { DB = r.result; ok(DB); }; r.onerror = function () { ok(null); };
       } catch (e) { ok(null); }
@@ -402,6 +497,32 @@
   /* EDITOR: o report aberto num quadro, editável no lugar                */
   /* =================================================================== */
   var ED = { doc: null, nome: "", origem: "", periodoInicial: "", sujo: false, desfazer: [], ocultas: {}, nomeSalvo: "", alterados: {}, abertura: 0 };
+  /* Segmento deste emulador (5.0): PF (padrão) ou PJ (kit/emulador-report-pj.html, montado com "node tools/montar-avulso.js pj").
+     O código é o mesmo; mudam os nomes, as cores da grade, o ícone e o modelo em branco. Um report do outro segmento não abre. */
+  var SEG = window.SEGMENTO === "pj" ? "pj" : "pf", PERFIL = Motor.perfil(SEG), PJ = SEG === "pj";
+  var UI = PJ ? {
+    sec: { visao: "Visão geral", resultados: "Principais resultados", lancamos: "Campanhas", cx: "Indicadores", transformation: "Análises", aprendizados: "Aprendizados", foco: "Próximas iniciativas", agenda: "Vem aí" },
+    grupos: { numero: "Principais resultados", resultado: "Resultados da campanha em destaque (Campanhas)", cxt: "Indicadores do trimestre", lancamento: "Outras campanhas do mês (Campanhas)", transformation: "Análises", aprendizado: "Aprendizados", agenda: "Vem aí (agenda)" },
+    principal: "Visão geral · campanha", destaque: "Campanhas · destaque", foco: "Próximas iniciativas", compactos: "Outras campanhas", figPrincipal: "Peça da visão geral", figDestaque: "Peça da campanha em destaque",
+    numeroDe: "Resultado principal ", resultadoDe: " da campanha em destaque", cx: "Indicadores", sugestao: "os principais resultados", destaqueSec: PERFIL.nomes.destaque,
+    /* 5.2: fundo Rio, painéis Brancos (meta "report-layout" 3) */
+    cor: { numero1: "#000000", texto: "#000000", linha: "#FFFFFF", linhaBloco: "#F5DECF", transf: "#F5DECF", topico: "#EC0000", apr: { abertura_linha: "#F5DECF", linha: "#FFFFFF", grupo_aprendizado: "#CC0000", texto: "#000000" } },
+    /* Funil dos Principais resultados (5.4): as mesmas cores do motor (config/marca-pj.txt › marca e texto) */
+    funil: { fundo: "#EC0000", valor: "#EC0000", texto: "#000000" },
+    /* report PJ salvo na 5.0 ou na 5.1 (página Branca, blocos Rio; meta "report-layout" 2): as cores daquele layout */
+    corAntiga: { numero1: "#000000", texto: "#000000", linha: "#F5DECF", linhaBloco: "#FFFFFF", transf: "#F5DECF", topico: "#CC0000", apr: { abertura_linha: "#FFFFFF", linha: "#F5DECF", grupo_aprendizado: "#CC0000", texto: "#000000" } },
+    layoutAtual: "3"
+  } : {
+    sec: { visao: "Visão geral", resultados: "Principais resultados", lancamos: "O que lançamos", cx: "Creative X", transformation: "Transformation Hub", aprendizados: "O que aprendemos", foco: "Foco do próximo mês", agenda: "Também vem aí" },
+    grupos: { numero: "Principais resultados", resultado: "Resultados do destaque (O que lançamos)", cxt: "Creative X: indicadores do trimestre", lancamento: "Também neste mês (O que lançamos)", transformation: "Transformation Hub", aprendizado: "O que aprendemos", agenda: "Também vem aí (agenda)" },
+    principal: "Visão geral · campanha", destaque: "O que lançamos · destaque", foco: "Foco do próximo mês", compactos: "Também neste mês", figPrincipal: "Peça da visão geral", figDestaque: "Peça do destaque",
+    numeroDe: "Resultado principal ", resultadoDe: " do destaque", cx: "Creative X", sugestao: "os principais resultados", destaqueSec: "Destaque",
+    cor: { numero1: "#EC0000", texto: "#000000", linha: "#E2E2E2", linhaBloco: "#FFFFFF", transf: "#F5DECF", topico: "#127277", apr: { abertura_linha: "#FFFFFF", linha: "#E2E2E2", grupo_aprendizado: "#A6112F", texto: "#000000" } },
+    /* report PF salvo antes da 5.1 (layout de antes, sem a meta "report-layout"): as cores que o emulador usava nele */
+    corAntiga: { numero1: "#EC0000", texto: "#000000", linha: "#E2E2E2", linhaBloco: "#E2E2E2", transf: "#F5DECF", topico: "#127277", apr: null },
+    funil: { fundo: "#EC0000", valor: "#EC0000", texto: "#000000" },
+    layoutAtual: "2"
+  };
   var EDITOR_CSS =
     "[data-ed-campo]{outline:1px dashed rgba(236,0,0,.45);outline-offset:2px;border-radius:3px;cursor:text;transition:background-color .15s}" +
     "[data-ed-campo]:hover{outline:2px dashed #EC0000;background-color:rgba(255,225,185,.35)}" +
@@ -417,15 +538,19 @@
     ".ed-mais{margin:12px 0 0 0;text-align:left;line-height:1}" +
     ".ed-mais button{all:unset;cursor:pointer;display:inline-block;font:700 12px/1 Arial,sans-serif;color:#EC0000;background:#FFFFFF;border:1.5px dashed #EC0000;border-radius:999px;padding:8px 13px}" +
     ".ed-mais button:hover{background:#FFF1F1}.ed-mais button[disabled]{color:#767676;border-color:#BBBBBB;cursor:default;background:#FFFFFF}" +
+    ".ed-mais button[hidden]{display:none}" +
     "#ed-secao{position:absolute;z-index:98;display:flex;gap:4px;font:700 12px/1 Arial,sans-serif}#ed-secao[hidden]{display:none !important}" +
     "#ed-secao button{all:unset;background:#222;color:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);font:700 12px/1 Arial,sans-serif}" +
-    "#ed-secao button.pega{cursor:grab;touch-action:none;background:#EC0000}#ed-secao button[disabled]{opacity:.35;cursor:default}#ed-secao button:focus-visible{outline:2px solid #EC0000;outline-offset:2px}" +
+    "#ed-secao button.pega{cursor:grab;touch-action:none;background:#EC0000}#ed-secao button.tira{background:#5F5F5F}#ed-secao button[disabled]{opacity:.35;cursor:default}#ed-secao button:focus-visible{outline:2px solid #EC0000;outline-offset:2px}" +
     "#ed-solta{position:absolute;top:0;height:4px;background:#EC0000;border-radius:2px;z-index:100;pointer-events:none;box-shadow:0 0 0 3px rgba(236,0,0,.18);margin-top:18px}" +
     "#ed-solta span{position:absolute;left:0;top:-11px;background:#EC0000;color:#fff;font:700 12px/1 Arial,sans-serif;padding:6px 10px;border-radius:999px;white-space:nowrap}" +
     "#ed-solta.mesmo{background:#767676;box-shadow:none}#ed-solta.mesmo span{background:#767676}" +
     ".ed-arrastando{opacity:.3}.ed-movendo,.ed-movendo *{cursor:grabbing !important;user-select:none !important}.ed-movendo [data-item]:hover,.ed-movendo [data-ed-bloco]:hover{box-shadow:none}" +
     "tr.ed-movida>td{animation:ed-luz 1.6s ease-out}@keyframes ed-luz{0%{box-shadow:inset 0 0 0 3px #EC0000;background-color:rgba(255,225,185,.55)}100%{box-shadow:inset 0 0 0 3px rgba(236,0,0,0)}}" +
     ".ed-novo{outline:3px solid #EC0000 !important;outline-offset:4px;border-radius:6px;animation:ed-pulso 1.1s ease-in-out 3}@keyframes ed-pulso{50%{outline-color:rgba(236,0,0,.25)}}" +
+    /* 5.5: a linha de encaixe ao arrastar um item (5.6: também para outra seção do mesmo tipo) */
+    "#ed-vaga{position:absolute;z-index:42;background:#EC0000;border-radius:3px;pointer-events:none;box-shadow:0 0 0 3px rgba(236,0,0,.2)}#ed-vaga span{position:absolute;white-space:nowrap;background:#EC0000;color:#fff;font:700 12px/1 Arial,Helvetica,sans-serif;border-radius:999px;padding:6px 10px;left:50%;top:50%;transform:translate(-50%,-50%)}#ed-vaga.mesmo,#ed-vaga.mesmo span{background:#767676}" +
+    ".ed-itemMovido{outline:3px solid #21634F !important;outline-offset:3px;border-radius:6px}" +
     ".show-m{}";
   /* msg: o que acabou de acontecer (fica na linha de estado, antes do lembrete de salvar). */
   function marcarSujo(msg) {
@@ -433,7 +558,9 @@
     $("#estado").className = "estado sujo"; $("#estado").textContent = (msg ? msg + " · " : "") + "Alterações não salvas (a edição fica guardada neste navegador até salvar).";
     /* o status e as prévias acompanham logo (reconverter espera 0,6 s sem mudança); o rascunho é guardado a cada 1,2 s */
     reconverter();
-    clearTimeout(ED.timer); ED.timer = setTimeout(function () { guardarRascunho({ nome: ED.nome, origem: ED.origem, periodoInicial: ED.periodoInicial, html: htmlEdicao(), quando: Date.now() }); }, 1200);
+    /* rascunho 1,2 s depois da última mudança (5.4: não roda com outro report abrindo no quadro: o documento de antes já saiu) */
+    var docDaVez = ED.doc;
+    clearTimeout(ED.timer); ED.timer = setTimeout(function () { if (ED.doc !== docDaVez || !ED.doc || !ED.doc.documentElement || !ED.doc.defaultView) return; guardarRascunho({ nome: ED.nome, origem: ED.origem, periodoInicial: ED.periodoInicial, html: htmlEdicao(), quando: Date.now() }); }, 1200);
   }
   function camposDe(chave) { return Array.prototype.slice.call(ED.doc.querySelectorAll('[data-campo="' + chave + '"]')); }
 
@@ -446,15 +573,16 @@
     var minha = ++ED.abertura;
     $("#estado").className = "estado"; $("#estado").textContent = "Abrindo " + nome + "…";
     if (!jaSeparado) { soltarMidia(); GUARDADAS = {}; }
+    ED.resumo = lerResumoConfig(html) || { destaques: null }; DTQ.assinatura = ""; DTQ.cache = {};
     if (!jaSeparado) html = await separarMidia(html);
     if (minha !== ED.abertura) return;
     if ($("#link").dataset.auto === "1") { $("#link").value = ""; $("#linkInfo").textContent = ""; }
     $("#link").dataset.mexeu = "";
-    ED.nome = nome; ED.origem = origem; ED.desfazer = []; ED.vistas = null; ED.ocultas = {}; ED.alterados = {}; ED.sujo = false; ED.nomeSalvo = ""; CIENTES = {};
+    ED.nome = nome; ED.origem = origem; ED.desfazer = []; ED.refazer = []; atualizarRefazer(); ED.vistas = null; ED.ocultas = {}; ED.alterados = {}; ED.sujo = false; ED.nomeSalvo = ""; CIENTES = {};
     $("#bDesfazer").disabled = true;
     var fr = $("#edFrame");
     fr.onload = function () {
-      ED.doc = fr.contentDocument;
+      ED.doc = fr.contentDocument; coresDoLayout(ED.doc);
       /* Tópico novo ainda do modelo em branco (rótulo [entre colchetes]) sai ao abrir: os do modelo são a fonte do
          "+ Novo tópico", que pergunta o nome e o layout. */
       var tirou = IDS_TOPICO.filter(function (id) {
@@ -469,20 +597,98 @@
       /* "Resumo das campanhas" saiu do report (4.11): o report de antes que ainda tem a seção a perde ao abrir. */
       var resumo = marcaSecao(ED.doc, "resumo");
       if (resumo) { nosDaSecao("resumo").forEach(function (n) { n.remove(); }); resumo.remove(); }
+      var novo413 = atualizarFormato413(ED.doc);
       instrumentar(); ED.vistas = midiasNaPagina();
       if (tirou.length) renumerarPilulas();
       ED.periodoInicial = periodoInicial !== undefined ? periodoInicial : periodoAtual();
       $("#secEditar").hidden = false; $("#secLink").hidden = false; $("#secResumo").hidden = false; $("#secStatus").hidden = false;
       $("#estado").className = "estado"; $("#estado").textContent = "Aberto: " + nome + ". Clique num texto para editar.";
-      montarSecoes(); reconverter(true);
-      if (resumo) marcarSujo("A seção \"Resumo das campanhas\" saiu do report. Salve para gravar");
+      montarSecoes(); reconverter(true); topoFerramentas();
+      /* avisos de quando o report de antes muda ao abrir: juntos, numa mensagem só (um não apaga o outro) */
+      var mudou = [];
+      if (resumo) mudou.push("A seção \"Resumo das campanhas\" saiu do report");
+      if (novo413.length) mudou.push("Report atualizado para o formato novo: " + novo413.join("; "));
+      if (mudou.length) marcarSujo(mudou.join(". ") + ". Salve para gravar");
       otimizarAoAbrir().then(function (o) {
         /* as originais pesadas trocadas pelas otimizadas não voltam (otimizar não entra no Desfazer): saem da memória */
         var antes = ED.vistas; ED.vistas = midiasNaPagina(); soltarSemUso(Array.from(antes || []).filter(function (u) { return !ED.vistas.has(u); }));
         if (o.n) marcarSujo("Otimizei " + o.n + " imagem(ns) pesada(s) deste report (−" + kb(o.economia) + "): ele fica mais leve para abrir e enviar. Salve para gravar"); });
       document.querySelector(".ferramentas").scrollIntoView({ behavior: "smooth", block: "start" });
     };
+    clearTimeout(ED.timer);
     fr.srcdoc = paraEditar(html);
+  }
+  /* Report de antes (4.13): o rótulo "PROJETO PRINCIPAL" da capa vira "CAMPANHA" (editável) e os números ficam na
+     ordem do template (número → título → etiqueta e referência). Devolve o que mudou. */
+  function atualizarFormato413(d) {
+    var feito = [];
+    var nome = d.querySelector('[data-campo="principal.nome"]');
+    if (nome && !d.querySelector('[data-campo="principal.rotulo"]')) {
+      var ant = nome.previousElementSibling;
+      if (ant && ant.tagName === "P" && !ant.hasAttribute("data-campo") && /^projeto principal$/i.test(ant.textContent.replace(/\s+/g, " ").trim())) {
+        ant.setAttribute("data-campo", "principal.rotulo"); ant.textContent = "CAMPANHA"; feito.push("o rótulo da capa agora é CAMPANHA (clique para mudar)");
+      }
+    }
+    if (ordenarNumeros(d)) feito.push("os números agora se leem em ordem: o número, o que ele é e a comparação (etiqueta com a referência)");
+    /* PJ (5.4): a seção "Agenda · Próximas datas" passa a se chamar "Vem aí" (o nome do report do time) */
+    if (PJ) {
+      var ag = marcaSecao(d, "agenda"), w = ag && d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), t, trocou = false;
+      if (ag) {
+        var nosAg = []; for (var x = ag.nextSibling; x && !(x.nodeType === 8 && /^secao:/.test(x.nodeValue.trim())); x = x.nextSibling) nosAg.push(x);
+        nosAg.forEach(function (n) { if (n.nodeType !== 1 || trocou) return; var tw = d.createTreeWalker(n, NodeFilter.SHOW_TEXT); while ((t = tw.nextNode())) { if (/^AGENDA\s*·\s*PRÓXIMAS DATAS$/.test(t.nodeValue.replace(/\u00a0/g, " ").trim())) { t.nodeValue = "VEM AÍ"; trocou = true; break; } } });
+      }
+      if (trocou) feito.push("a seção Agenda agora se chama VEM AÍ");
+    }
+    /* o layout de celular entra até 700 px (antes 620): de 621 a 700 px a página rolava para o lado (ex.: celular deitado) */
+    var bp = 0; Array.prototype.forEach.call(d.querySelectorAll("style"), function (st) { var t = st.textContent; if (/\(max-width:620px\)/.test(t)) { st.textContent = t.replace(/\(max-width:620px\)/g, "(max-width:700px)"); bp++; } });
+    if (bp) feito.push("o layout de celular vale também para telas de até 700 px");
+    return feito;
+  }
+  /* Números (4.13), leitura em ordem: quanto (número) → o quê (título) → comparado com quê (etiqueta e a referência,
+     juntas), na capa, nos resultados do destaque, no Creative X trimestral e nos tópicos em Números. Converte o
+     formato de antes (título e referência no mesmo parágrafo, etiqueta no fim) e o da 4.13 intermediária (etiqueta
+     logo abaixo do número, com espaço reservado). Devolve se mudou algo. */
+  var ORDEM_NUM = {
+    numero: { tit: "6px 0px 0px", chip: "6px 0px 0px", det: ["3px 0px 0px", "0px"] },
+    resultado: { tit: "3px 0px 0px", chip: "5px 0px 0px", det: ["2px 0px 0px", "0px"] },
+    cxt: { tit: "3px 0px 0px", chip: "5px 0px 0px", det: ["2px 0px 0px", "0px"] },
+    topico: { tit: "4px 0px 0px", chip: "6px 0px 0px", det: ["3px 0px 0px", "3px 0px 0px"] }
+  };
+  function ordenarNumeros(d) {
+    var mudou = false;
+    Array.prototype.forEach.call(d.querySelectorAll("[data-item]"), function (it) {
+      var chave = it.getAttribute("data-item"), m = /^(numero|resultado|cxt|topico[a-z]?)-\d+$/.exec(chave); if (!m) return;
+      var tipo = /^topico/.test(m[1]) ? "topico" : m[1];
+      if (tipo === "topico" && !it.closest('[data-layout="numeros"]')) return;
+      var valor = it.querySelector('[data-campo="' + chave + '.valor"]'); if (!valor) return;
+      var este = false;
+      Array.prototype.forEach.call(it.querySelectorAll(".var-vazia"), function (v) { v.remove(); este = true; });
+      var tit = it.querySelector('[data-campo="' + chave + (tipo === "topico" ? ".nome" : ".titulo") + '"]');
+      var det = it.querySelector('[data-campo="' + chave + (tipo === "topico" ? ".texto" : ".detalhe") + '"]');
+      var chip = it.querySelector('[data-campo="' + chave + (tipo === "topico" ? ".status" : ".variacao") + '"]');
+      function par(el) { return el ? (el.tagName === "P" ? el : el.closest("p")) : null; }
+      var pTit = par(tit), pDet = par(det);
+      /* título e referência no mesmo parágrafo (<b>título</b><br><span>referência</span>): a referência ganha o seu */
+      if (pTit && pDet && pTit === pDet) {
+        var np = d.createElement("p"); np.className = pTit.className; np.setAttribute("style", pTit.getAttribute("style") || "");
+        var br = det.previousSibling; while (br && br.nodeType === 3 && !br.nodeValue.trim()) br = br.previousSibling;
+        if (br && br.nodeName === "BR") br.remove();
+        np.appendChild(det); pTit.parentNode.insertBefore(np, pTit.nextSibling); pDet = np; este = true;
+      }
+      var ref = valor;
+      [pTit, chip, pDet].forEach(function (el) {
+        if (!el || el.parentNode !== valor.parentNode) return;
+        if (ref.nextElementSibling !== el) { valor.parentNode.insertBefore(el, ref.nextElementSibling); este = true; }
+        ref = el;
+      });
+      if (!este) return;
+      var mg = ORDEM_NUM[tipo];
+      if (pTit) pTit.style.margin = mg.tit;
+      if (chip) chip.style.margin = mg.chip;
+      if (pDet) pDet.style.margin = chip ? mg.det[0] : mg.det[1];
+      mudou = true;
+    });
+    return mudou;
   }
   function periodoAtual() { var p = ED.doc && ED.doc.querySelector('[data-campo="periodo"]'); return p ? p.textContent.replace(/\s+/g, " ").trim() : ""; }
 
@@ -516,8 +722,10 @@
       var chip = el.matches("[data-tom]") ? el : el.querySelector("[data-tom]");
       if (chip) barraEtiqueta(el, chip);
     });
+    d.addEventListener("keydown", atalhos);
     d.addEventListener("input", function (e) {
       var el = e.target.closest && e.target.closest("[data-ed-campo]"); if (!el) return;
+      if (ED.refazer.length) limparRefazer();
       el.setAttribute("data-ed-alterado", "");
       var chave = el.getAttribute("data-campo"); ED.alterados[chave] = true;
       /* o período aparece em vários lugares: muda em todos */
@@ -533,10 +741,22 @@
       if (!e.target.closest || !e.target.closest("[data-ed-campo]")) return;
       e.preventDefault(); d.execCommand("insertText", false, (e.clipboardData || window.clipboardData).getData("text/plain").replace(/\s*\n\s*/g, " "));
     });
+    /* 5.6: nada se arrasta pelo jeito do navegador (uma imagem solta dentro de um texto ia junto com ele):
+       mudar de lugar é só pelo ⠿ Arrastar e pelas setas */
+    d.addEventListener("dragstart", function (e) { e.preventDefault(); }, true);
+    d.addEventListener("dragover", function (e) { e.preventDefault(); }, true);
+    d.addEventListener("drop", function (e) { e.preventDefault(); $("#estado").textContent = "Para mudar algo de lugar, use ⠿ Arrastar (na barra do item). Para trocar uma imagem: Trocar imagem."; }, true);
     /* links não navegam durante a edição */
     d.addEventListener("click", function (e) {
       if (!e.target.closest) return;
-      var mais = e.target.closest(".ed-mais button"); if (mais) { e.preventDefault(); if (!mais.disabled) adicionarItem(mais.getAttribute("data-grupo")); return; }
+      var mais = e.target.closest(".ed-mais button"); if (mais) {
+        e.preventDefault(); if (mais.disabled) return;
+        var acao = mais.getAttribute("data-acao");
+        if (acao === "funil") { if (emFunil("numero")) virarColunas(); else virarFunil(); }
+        else if (acao === "total") porTotalFunil();
+        else adicionarItem(mais.getAttribute("data-grupo"));
+        return;
+      }
       if (e.target.closest("a")) e.preventDefault();
     }, true);
     /* barra flutuante: imagem, link ou item */
@@ -545,27 +765,37 @@
     var esconder = null, w = d.defaultView;
     /* Um temporizador só: agendar de novo cancela o anterior (dois ao mesmo tempo deixavam um órfão, que escondia a barra do próximo item). */
     function agendarEsconder(ms) { clearTimeout(esconder); esconder = setTimeout(function () { barra.hidden = true; }, ms); }
-    var LINKS = 'a.cta, a[data-anexo], span[title="Link ainda não definido"]', ALVOS_BARRA = "img[data-img], " + LINKS + ", [data-item], [data-ed-bloco]";
+    var LINKS = 'a.cta, a[data-anexo], span[title="Link ainda não definido"]', ALVOS_BARRA = "img[data-img], " + LINKS + ", [data-apr], [data-item], [data-ed-bloco]";
     /* Dono da barra no ponto: imagem, link ou item (null: nada, ou dentro do campo em edição, onde a barra fica como está). */
     function alvoDe(t) {
       if (!t || !t.closest || t.closest("#ed-barra")) return null;
       var img = t.closest("img[data-img]") || t.closest(LINKS); if (img) return img;
       if (d.activeElement && d.activeElement.hasAttribute("data-ed-campo") && d.activeElement.contains(t)) return null;
-      return t.closest("[data-item], [data-ed-bloco]");
+      return t.closest("[data-apr], [data-item], [data-ed-bloco]");
     }
     function mostrarFerramentas(alvo) {
       if (alvo.tagName === "IMG") return mostrarBarra(alvo, ferramentasImagem(alvo), alvo.getBoundingClientRect().width < 200 ? "abaixo" : "");
       if (alvo.matches(LINKS)) return mostrarBarra(alvo, ferramentasLink(alvo));
-      var item = alvo, gi = grupoDe(item), numeros = gi ? GRUPOS[gi].layout === "numeros" || GRUPOS[gi].semMidia : item.getAttribute("data-item") === "cx-trimestre";
+      if (alvo.hasAttribute("data-apr")) return mostrarBarra(alvo, [["Tirar aprendizado", function () { tirarAprendizado(alvo); }, "cinza"]], "direita");
+      if (alvo.getAttribute("data-item") === "funil-total") return mostrarBarra(alvo, [["Tirar o total", function () { tirarTotalFunil(alvo); }, "cinza"]], "acima");
+      var item = alvo, gi = grupoDe(item), numeros = gi ? GRUPOS[gi].layout === "numeros" || GRUPOS[gi].semMidia || emFunil(gi) : item.getAttribute("data-item") === "cx-trimestre";
       var bi = numeros ? [] : [["+ Link", function () { adicionarLink(item); }]];
       if (!numeros) bi.push(["+ Imagem", function () { escolher("#fImagem", function (f) { adicionarImagem(item, f); }); }]);
       if (item.hasAttribute("data-item")) {
-        if (gi && itensDo(gi).length < GRUPOS[gi].max) bi.unshift(["+ Adicionar depois", function () { adicionarItem(gi, item); }]);
-        if (gi && itensDo(gi).length > 1) botoesMover(item, gi, bi);
+        if (gi && itensDo(gi).length < GRUPOS[gi].max) bi.unshift(["+ Novo item", function () { adicionarItem(gi, item); }]);
+        if (gi && itensDo(gi).length > 1) { botoesMover(item, gi, bi); bi.unshift(["⠿ Arrastar", function () { $("#estado").textContent = "Para mudar o item de lugar: segure \"⠿ Arrastar\" e solte na linha vermelha (no grupo ou em outra seção do mesmo tipo), ou use as setas."; }, "", function (e) { arrastarItem(item, gi, e); }]); }
+        /* 5.6: levar o item para outra seção do mesmo tipo (números com números, textos com textos) */
+        if (gi && itensDo(gi).length > 1 && destinosDe(item).length) bi.push(["Mover para outra seção", function () { escolherDestino(item); }, "cinza"]);
+        /* 5.6: a etiqueta (▲ +12%, ● No ar) que saiu pode voltar */
+        if (gi && !etiquetaDe(item) && modeloEtiqueta(gi)) bi.push(["+ Etiqueta", function () { porEtiqueta(item); }, "cinza"]);
         /* o último item de um grupo fica (a seção não fica vazia): para tirar o grupo todo, oculte a seção */
         if (!gi || itensDo(gi).length > 1) bi.push([item.getAttribute("data-item") === "cx-trimestre" ? "Tirar trimestral" : "Tirar item", function () { ocultarItem(item); }, "cinza"]);
       }
-      mostrarBarra(item, bi, item.getBoundingClientRect().width < 320 ? "acima" : "direita");
+      /* "O que aprendemos" da campanha: lançamento (no card), projeto principal (números) e destaque (resultados) */
+      var ca = chaveAprendizadoDe(item);
+      if (ca && !campoExiste(ca)) bi.splice(bi.length && /^Tirar/.test(bi[bi.length - 1][0]) ? bi.length - 1 : bi.length, 0, ["+ O que aprendemos", function () { criarAprendizado(ca, null, true); }]);
+      /* degrau do funil: a barra fica em cima (não cobre o número nem o título do degrau) */
+      mostrarBarra(item, bi, emFunil(gi) || item.getBoundingClientRect().width < 320 ? "acima" : "direita");
     }
     /* Caminho até a barra: indo do dono até ela, o mouse passa por cima de outras coisas (o cartão em volta da imagem,
        a imagem dentro do cartão, outro item). Se ele saiu do dono (ou da própria barra, escorregando ao ir de um botão
@@ -657,22 +887,42 @@
     var d = ED.doc, barra = d.getElementById("ed-barra"), r = alvo.getBoundingClientRect(), w = d.defaultView;
     barra.textContent = ""; barra.dono = alvo; barra.style.left = barra.style.top = "0px";
     var alca = d.getElementById("ed-secao"); if (alca) alca.hidden = true;
-    botoes.forEach(function (b) { var x = d.createElement("button"); x.type = "button"; x.textContent = b[0]; if (b[2]) x.className = b[2]; x.addEventListener("mousedown", function (e) { e.preventDefault(); }); x.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); b[1](); }); barra.appendChild(x); });
+    botoes.forEach(function (b) {
+      var x = d.createElement("button"); x.type = "button"; x.textContent = b[0]; if (b[2]) x.className = b[2];
+      x.addEventListener("mousedown", function (e) { e.preventDefault(); }); x.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); b[1](); });
+      /* botão de arrastar (5.5): segurar e arrastar começa na hora */
+      if (typeof b[3] === "function") { x.classList.add("pegaItem"); x.title = "Segure e arraste até a linha vermelha"; x.addEventListener("pointerdown", function (e) { if (e.button) return; e.preventDefault(); e.stopPropagation(); b[3](e); }); }
+      barra.appendChild(x);
+    });
     barra.hidden = false;
     /* "acima": a barra inteira fica em cima, mesmo quando quebra em duas linhas (não cobre a imagem do cartão) */
     var top = r.top + w.scrollY + (onde === "acima" ? -barra.offsetHeight - 7 : onde === "direita" ? 4 : onde === "abaixo" ? r.height + 4 : 8);
     var left = onde === "direita" ? r.right + w.scrollX - barra.offsetWidth - 4 : r.left + w.scrollX + 8;
     left = Math.max(4, Math.min(left, w.scrollX + d.documentElement.clientWidth - barra.offsetWidth - 4));
+    /* O quadro cresce com o report e quem rola é a página do emulador, cuja barra de ferramentas fica presa no alto da
+       janela: num item alto, com o começo já acima, a barra dele ia para baixo dessa barra (sem dar para clicar).
+       Ela fica na parte do quadro que se vê, logo abaixo da barra do emulador (e dentro do item). */
+    var fr = $("#edFrame").getBoundingClientRect(), fx = document.querySelector(".ferramentas");
+    var visivel = w.scrollY + Math.max(0, (fx ? fx.getBoundingClientRect().bottom : 0) - fr.top) + 4;
+    if (top < visivel) top = Math.min(visivel, r.bottom + w.scrollY - barra.offsetHeight - 4);
     barra.style.top = Math.max(w.scrollY + 4, top) + "px"; barra.style.left = left + "px";
   }
   function barraEtiqueta(campo, chip) {
-    mostrarBarra(campo, [["Cor: verde", function () { tom(chip, "verde"); }, "verde"], ["Cor: âmbar", function () { tom(chip, "ambar"); }, "ambar"]], "acima");
+    mostrarBarra(campo, [["Cor: verde", function () { tom(chip, "verde"); }, "verde"], ["Cor: âmbar", function () { tom(chip, "ambar"); }, "ambar"], ["Tirar etiqueta", function () { tirarEtiqueta(campo); }, "cinza"]], "acima");
   }
   var TONS = { verde: ["#A3E0CE", "#21634F"], ambar: ["#FFE1B9", "#945400"] };
+  /* Cor da etiqueta direto no texto do estilo, em #RRGGBB: pelo .style, o navegador regrava o estilo inteiro em rgb(), que o
+     Outlook para Windows não entende (5.0). */
+  function corDoChip(chip, t) {
+    var st = chip.getAttribute("style") || "";
+    st = /background:/i.test(st) ? st.replace(/background:\s*[^;]+/i, "background:" + TONS[t][0]) : "background:" + TONS[t][0] + ";" + st;
+    st = /(^|;)\s*color:/i.test(st) ? st.replace(/(^|;)(\s*)color:\s*[^;]+/i, "$1$2color:" + TONS[t][1]) : st.replace(/;?$/, ";color:" + TONS[t][1] + ";");
+    chip.setAttribute("style", st);
+  }
   function tom(chip, t) {
-    var antes = [chip.getAttribute("data-tom"), chip.style.background, chip.style.color];
-    chip.setAttribute("data-tom", t); chip.style.background = TONS[t][0]; chip.style.color = TONS[t][1];
-    pilha(function () { chip.setAttribute("data-tom", antes[0]); chip.style.background = antes[1]; chip.style.color = antes[2]; });
+    var antes = [chip.getAttribute("data-tom"), chip.getAttribute("style")];
+    chip.setAttribute("data-tom", t); corDoChip(chip, t);
+    pilha(function () { chip.setAttribute("data-tom", antes[0]); if (antes[1] === null) chip.removeAttribute("style"); else chip.setAttribute("style", antes[1]); });
     var c = chip.closest("[data-campo]"); if (c) { c.setAttribute("data-ed-alterado", ""); ED.alterados[c.getAttribute("data-campo")] = true; }
     marcarSujo();
   }
@@ -684,14 +934,60 @@
     ED.desfazer.push(fn);
     if (ED.desfazer.length > LIMITE_DESFAZER) soltarSemUso(ED.desfazer.shift().midias);
     $("#bDesfazer").disabled = false;
+    /* uma mudança nova apaga o que dava para refazer (como em qualquer editor) */
+    if (!ED.refazendo) limparRefazer();
   }
-  $("#bDesfazer").addEventListener("click", function () {
+  /* ---------- Refazer (5.5) ----------
+     Desfazer guarda uma cópia da página como ela estava antes de desfazer; Refazer põe essa cópia no lugar e guarda
+     a página de agora (os mesmos elementos, intactos), que volta com o Desfazer. Assim os passos mais antigos do
+     Desfazer continuam valendo depois de um Refazer. Digitar ou fazer outra mudança apaga o que dava para refazer. */
+  ED.refazer = [];
+  function nosDoReport() { return Array.prototype.filter.call(ED.doc.body.childNodes, function (n) { return !(n.nodeType === 1 && n.hasAttribute("data-editor")); }); }
+  function porNoReport(nos) { var b = ED.doc.body, ref = Array.prototype.filter.call(b.children, function (n) { return n.hasAttribute("data-editor"); })[0] || null; nos.forEach(function (n) { b.insertBefore(n, ref); }); }
+  function limparRefazer() { if (ED.refazer && ED.refazer.length) { var m = []; ED.refazer.forEach(function (r) { m = m.concat(r.midias); }); ED.refazer = []; soltarSemUso(m); } atualizarRefazer(); }
+  function atualizarRefazer() { var b = $("#bRefazer"); if (b) b.disabled = !(ED.refazer && ED.refazer.length); }
+  /* depois de trocar a página inteira: refaz os índices do emulador (grupos, seções ocultas, botões + Adicionar) */
+  function reindexar() {
+    SECOES_CACHE = null;
+    Array.prototype.forEach.call(ED.doc.querySelectorAll(".ed-mais, #ed-zonas"), function (x) { x.remove(); });
+    ED.ocultas = {};
+    secoesMoveis().forEach(function (id) { var nos = nosDaSecao(id).filter(function (n) { return n.nodeType === 1 && n.hasAttribute("data-ed-oculta"); }); if (nos.length) ED.ocultas[id] = nos; });
+    registrarTopicos(); localizarGrupos(); renumerarPilulas(); montarSecoes();
+    ["ed-barra", "ed-secao"].forEach(function (id) { var x = ED.doc.getElementById(id); if (x) x.hidden = true; });
+  }
+  function desfazerAcao() {
     var f = ED.desfazer.pop();
-    if (f) { var antes = ED.vistas; f(); ED.vistas = midiasNaPagina(); soltarSemUso(Array.from(antes || []).filter(function (u) { return !ED.vistas.has(u); })); marcarSujo("Desfeito."); }
+    if (f) {
+      var copia = nosDoReport().map(function (n) { return n.cloneNode(true); }), html = copia.map(function (n) { return n.outerHTML || ""; }).join("");
+      var antes = ED.vistas; f(); ED.vistas = midiasNaPagina();
+      ED.refazer.push({ nos: copia, midias: html.match(RE_BLOB) || [] }); atualizarRefazer();
+      soltarSemUso(Array.from(antes || []).filter(function (u) { return !ED.vistas.has(u); })); marcarSujo("Desfeito.");
+    }
     $("#bDesfazer").disabled = !ED.desfazer.length;
-  });
+  }
+  function refazerAcao() {
+    var r = ED.refazer.pop(); if (!r || !ED.doc) { atualizarRefazer(); return; }
+    var vivos = nosDoReport();
+    vivos.forEach(function (n) { n.remove(); }); porNoReport(r.nos); reindexar();
+    ED.refazendo = true;
+    pilha(function () { nosDoReport().forEach(function (n) { n.remove(); }); porNoReport(vivos); reindexar(); });
+    ED.refazendo = false;
+    atualizarRefazer(); marcarSujo("Refeito.");
+  }
+  $("#bDesfazer").addEventListener("click", desfazerAcao);
+  $("#bRefazer").addEventListener("click", refazerAcao);
+  /* atalhos fora de um texto: Ctrl+Z desfaz, Ctrl+Y ou Ctrl+Shift+Z refaz (dentro de um texto, valem os do próprio texto) */
+  function atalhos(e) {
+    if (!ED.doc || !(e.ctrlKey || e.metaKey) || e.altKey) return;
+    var t = e.target, emTexto = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if (emTexto) return;
+    var k = e.key.toLowerCase();
+    if (k === "z" && !e.shiftKey) { e.preventDefault(); if (ED.desfazer.length) desfazerAcao(); }
+    else if (k === "y" || (k === "z" && e.shiftKey)) { e.preventDefault(); if (ED.refazer.length) refazerAcao(); }
+  }
+  document.addEventListener("keydown", atalhos);
   function midiasNaPagina() { return new Set(ED.doc && ED.doc.documentElement ? ED.doc.documentElement.outerHTML.match(RE_BLOB) || [] : []); }
-  function emUso(u) { return (ED.vistas && ED.vistas.has(u)) || ED.desfazer.some(function (f) { return f.midias && f.midias.indexOf(u) >= 0; }); }
+  function emUso(u) { return (ED.vistas && ED.vistas.has(u)) || ED.desfazer.some(function (f) { return f.midias && f.midias.indexOf(u) >= 0; }) || (ED.refazer || []).some(function (r) { return r.midias.indexOf(u) >= 0; }); }
   function soltarSemUso(lista) {
     var sai = (lista || []).filter(function (u) { return MIDIA[u] && !MIDIA[u].fixa && !emUso(u); });
     /* espera um pouco: a prévia e o status da última conversão ainda podem estar mostrando a mídia */
@@ -704,12 +1000,53 @@
     var chave = img.getAttribute("data-img"), video = img.hasAttribute("data-video");
     if (video) b.push(["Trocar vídeo", function () { escolher("#fVideo", function (f) { trocarVideo(chave, f, false); }); }], ["Tirar o vídeo", function () { tirarVideo(chave); }, "cinza"]);
     else if (/^(principal|destaque|lancamento-\d+)$/.test(chave)) b.push(["Colocar vídeo", function () { escolher("#fVideo", function (f) { trocarVideo(chave, f, true); }); }, "cinza"]);
+    if (chave === "principal") b.splice(1, 0, [imagemEmbaixo() ? "Imagem ao lado" : "Imagem embaixo", function () { moverImagemPrincipal(); }]);
     if (/^(selo|transformation-\d+-logo)$|-print-\d+$/.test(chave)) b.push(["Tirar imagem", function () { tirarImagem(chave); }, "cinza"]);
     b.push(["Descrição", function () { var n = prompt("Descrição da imagem (o que ela mostra):", img.alt.replace(/^Vídeo: /, "")); if (n !== null) mesmasImagens(chave).forEach(function (i) { var antes = i.alt; i.alt = (i.hasAttribute("data-video") ? "Vídeo: " : "") + n; i.setAttribute("data-legenda", n); pilha(function () { i.alt = antes; }); }); marcarSujo(); }, "cinza"]);
     return b;
   }
   function escolher(sel, fn) { var i = $(sel); i.value = ""; i.onchange = function () { if (i.files[0]) fn(i.files[0]); }; i.click(); }
   function mesmasImagens(chave) { return Array.prototype.slice.call(ED.doc.querySelectorAll('img[data-img="' + chave + '"]')); }
+  /* Peça da visão geral embaixo do texto (5.4, PJ): na largura do report (600 px), inteira, sem recorte (a peça
+     horizontal, o KV com o selo da campanha à mostra). "Imagem ao lado" volta para o retângulo vertical (184 x 230 px).
+     A imagem é refeita a partir da versão inteira (a ampliada); depois é só Trocar imagem pela peça horizontal. */
+  function imagemEmbaixo() { var img = ED.doc.querySelector('img[data-img="principal"]'); return !!(img && img.closest("td[data-imagem-embaixo]")); }
+  async function moverImagemPrincipal() {
+    var img = ED.doc.querySelector('img[data-img="principal"]'), nome = ED.doc.querySelector('[data-campo="principal.nome"]'); if (!img || !nome) return;
+    var el = img.parentNode.tagName === "A" ? img.parentNode : img, tdImg = el.closest("td"), tdTexto = nome.closest("td"), trTexto = tdTexto.parentNode;
+    var antes = { src: img.getAttribute("src"), thumb: img.getAttribute("data-thumb"), w: img.getAttribute("width"), h: img.getAttribute("height"), cls: img.className, w2: img.style.width, tw: tdTexto.getAttribute("width"), tc: tdTexto.className, ts: tdTexto.style.width };
+    var origem = img.getAttribute("data-ampliar") || img.getAttribute("data-thumb") || img.getAttribute("src"), tipo = MIDIA[origem] ? MIDIA[origem].blob.type : (/^data:([^;,]+)/.exec(origem) || [])[1] || "";
+    var im; try { im = await carregar(origem); } catch (e) { $("#estado").textContent = e.message; return; }
+    var png = /png|webp|gif/.test(tipo), video = img.hasAttribute("data-video"), embaixo = !imagemEmbaixo(), w = embaixo ? 600 : PERFIL.foto_capa[0], h = embaixo ? 0 : PERFIL.foto_capa[1];
+    var desfaz;
+    if (embaixo) {
+      var esp = tdImg.previousElementSibling, tr = ED.doc.createElement("tr"), td = ED.doc.createElement("td");
+      td.className = "col"; td.setAttribute("width", "600"); td.setAttribute("valign", "top"); td.setAttribute("style", "width:600px;padding-top:24px;"); td.setAttribute("data-imagem-embaixo", "");
+      td.appendChild(el); tr.appendChild(td); trTexto.parentNode.insertBefore(tr, trTexto.nextSibling);
+      var espOk = esp && esp.classList.contains("hide-m"), prox = tdImg.nextSibling;
+      if (espOk) esp.remove(); tdImg.remove();
+      tdTexto.className = "col"; tdTexto.setAttribute("width", "600"); tdTexto.style.width = "600px";
+      desfaz = function () { if (espOk) trTexto.appendChild(esp); trTexto.appendChild(tdImg); tdImg.appendChild(el); tr.remove(); };
+    } else {
+      var trB = tdImg.parentNode, esp2 = ED.doc.createElement("td"), td2 = ED.doc.createElement("td");
+      esp2.className = "hide-m"; esp2.setAttribute("width", "24"); esp2.setAttribute("style", "width:24px;font-size:0;line-height:0;"); esp2.innerHTML = "&nbsp;";
+      td2.className = "col"; td2.setAttribute("width", "184"); td2.setAttribute("valign", "top"); td2.setAttribute("align", "center"); td2.setAttribute("style", "width:184px;");
+      td2.appendChild(el); trTexto.appendChild(esp2); trTexto.appendChild(td2); trB.remove();
+      tdTexto.className = "col gap"; tdTexto.setAttribute("width", "392"); tdTexto.style.width = "392px";
+      desfaz = function () { trTexto.parentNode.insertBefore(trB, trTexto.nextSibling); tdImg.appendChild(el); esp2.remove(); td2.remove(); };
+    }
+    img.setAttribute("width", String(w)); if (h) img.setAttribute("height", String(h)); else img.removeAttribute("height");
+    img.className = embaixo ? "fluid" : "fluid himg"; img.style.width = w + "px";
+    img.setAttribute("src", midiaDe(desenhar(im, w, h, png, video)));
+    if (video) img.setAttribute("data-thumb", midiaDe(desenhar(im, w, h, png, false)));
+    pilha(function () {
+      desfaz(); img.setAttribute("src", antes.src); if (antes.thumb !== null) img.setAttribute("data-thumb", antes.thumb);
+      img.setAttribute("width", antes.w); if (antes.h) img.setAttribute("height", antes.h); else img.removeAttribute("height"); img.className = antes.cls; img.style.width = antes.w2;
+      tdTexto.setAttribute("width", antes.tw); tdTexto.className = antes.tc; tdTexto.style.width = antes.ts;
+    });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo(embaixo ? "Peça da visão geral embaixo do texto, na largura do report e sem recorte. Use Trocar imagem para pôr a peça horizontal (ex.: o KV com o selo da campanha)" : "Peça da visão geral ao lado do texto de novo (retângulo vertical)");
+  }
   /* =================================================================== */
   /* MÍDIA FORA DO TEXTO (desempenho)                                     */
   /* Fotos, vídeos e PDFs ficam como arquivos na memória do navegador (Blob) e a página em edição guarda
@@ -958,13 +1295,13 @@
   /* Recorta (se a imagem tem altura fixa) e reduz para o dobro do tamanho na tela (nitidez em telas de alta resolução).
      Otimizada para o report e os e-mails não pesarem: JPEG sempre que a imagem não tem transparência (um print em PNG
      vira JPEG); PNG só quando há transparência (logo, selo) e fica menor. */
-  function desenhar(im, w, h, png, play) {
+  function desenhar(im, w, h, png, play, anc) {
     var W = w * 2, H = h ? h * 2 : Math.round(W * im.naturalHeight / im.naturalWidth);
     if (!h && im.naturalWidth < W) { W = im.naturalWidth; H = im.naturalHeight; }
     var c = document.createElement("canvas"); c.width = W; c.height = H; var g = c.getContext("2d");
     if (!png) { g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H); }
     var esc_ = Math.max(W / im.naturalWidth, H / im.naturalHeight), sw = W / esc_, sh = H / esc_;
-    g.drawImage(im, (im.naturalWidth - sw) / 2, (im.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
+    g.drawImage(im, (im.naturalWidth - sw) / 2, anc === "topo" ? 0 : anc === "base" ? im.naturalHeight - sh : (im.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
     if (play) desenharPlay(g, W, H, "#EC0000");
     return codificar(c, png);
   }
@@ -1193,6 +1530,56 @@
     marcarSujo("Link tirado. Para voltar: Desfazer.");
   }
 
+  /* ---------- "O que aprendemos" dentro da campanha (4.13) ---------- */
+  /* Uma ou duas frases logo depois dos resultados: projeto principal (abaixo dos números), destaque (abaixo dos
+     resultados) e cada lançamento (no fim do card). Report de antes (sem o bloco): "+ O que aprendemos" na barra do
+     item, ou a importação do Copilot com o campo "aprendizado" criam o bloco no lugar certo, igual ao do motor. */
+  function campoExiste(chave) { return !!ED.doc.querySelector('[data-campo="' + chave + '"]'); }
+  function chaveAprendizadoDe(item) {
+    var di = item.getAttribute("data-item") || "", bl = item.getAttribute("data-ed-bloco") || "";
+    if (/^lancamento-\d+$/.test(di)) return di + ".aprendizado";
+    if (/^numero-\d+$/.test(di) || bl === "principal") return "principal.aprendizado";
+    if (/^resultado-\d+$/.test(di) || bl === "destaque") return "destaque.aprendizado";
+    return "";
+  }
+  function alvoAprendizado(chave) {
+    var d = ED.doc, m;
+    if (chave === "principal.aprendizado") { var n = d.querySelector('[data-item^="numero-"]'), td = n && n.closest("td.px"); return td ? { pai: td, antes: null, variante: "capa" } : null; }
+    if (chave === "destaque.aprendizado") {
+      var t = d.querySelector('[data-campo="destaque.titulo"]'), col = t && t.closest("td"), nota = col && col.querySelector('[data-campo="destaque.nota"]');
+      return col ? { pai: col, antes: nota && nota.parentNode === col ? nota : null, variante: "destaque" } : null;
+    }
+    if ((m = /^lancamento-(\d+)\.aprendizado$/.exec(chave))) { var it = d.querySelector('[data-item="lancamento-' + m[1] + '"]'); return it ? { pai: it, antes: null, variante: "card" } : null; }
+    return null;
+  }
+  function fonteTextoDaPagina() {
+    var p = ED.doc.querySelector('p.fx[style*="font-family"]'), m = p && /font-family:\s*([^;]+)/.exec(p.getAttribute("style"));
+    return m ? m[1].trim() : "Arial, Helvetica, sans-serif";
+  }
+  /* textoHtml: o texto já pronto (importação); sem ele, o texto do modelo entre colchetes, selecionado para digitar por cima. */
+  function criarAprendizado(chave, textoHtml, mostrar) {
+    var a = alvoAprendizado(chave); if (!a) return null;
+    var modelo = '<span style="background:#FFE1B9;color:#945400;border-radius:3px;">[O que a campanha ensinou, em uma ou duas frases]</span>';
+    var tmp = ED.doc.createElement("div"); tmp.innerHTML = Motor.htmlAprendizado(textoHtml || modelo, chave, a.variante, COR.apr ? { fonte: fonteTextoDaPagina(), cor: COR.apr } : { fonte: fonteTextoDaPagina() });
+    var bloco = tmp.firstElementChild; a.pai.insertBefore(bloco, a.antes);
+    editavel(bloco);
+    pilha(function () { bloco.remove(); });
+    if (mostrar) {
+      ED.doc.getElementById("ed-barra").hidden = true;
+      bloco.scrollIntoView({ block: "center" });
+      var campo = bloco.querySelector("[data-campo]"); if (campo) campo.focus();
+      marcarSujo("O que aprendemos: escreva uma ou duas frases curtas. Para tirar: Desfazer ou Tirar aprendizado.");
+    }
+    return bloco;
+  }
+  function tirarAprendizado(bloco) {
+    var pai = bloco.parentNode, prox = bloco.nextSibling, chave = bloco.getAttribute("data-apr");
+    bloco.remove(); if (chave) delete ED.alterados[chave];
+    pilha(function () { pai.insertBefore(bloco, prox); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo("Aprendizado tirado. Para voltar: Desfazer.");
+  }
+
   /* ---------- mais links e mais imagens em qualquer item ---------- */
   /* Blocos que não são itens de grupo, mas também recebem links e imagens: destaque, projeto principal e foco. */
   function marcarBlocos() {
@@ -1348,7 +1735,17 @@
 
   /* ---------- itens: adicionar e ocultar, com a grade refeita como o motor faz ---------- */
   /* Cores da grade (as mesmas de config/marca.txt): 1º número da capa em vermelho; filete e separadores. */
-  var COR = { marca: "#EC0000", texto: "#000000", linha: "#E2E2E2", transf_linha: "#F5DECF" };
+  var COR = {};
+  /* Cores do que o emulador acrescenta (1º número, separadores, filetes, tópicos, "O que aprendemos"): as do layout do
+     report aberto. A partir da 5.1, PF e PJ têm o mesmo esqueleto (meta "report-layout": 2 no PF; 3 no PJ com fundo Rio,
+     a partir da 5.2); o report salvo num layout de antes segue com as cores daquele layout. */
+  function coresDoLayout(doc) {
+    /* sem documento (ao carregar): as cores do layout atual; com documento: as do layout em que ele foi salvo */
+    var m = doc && doc.querySelector('meta[name="report-layout"]'), lay = m ? m.getAttribute("content") : "";
+    var c = !doc || lay === UI.layoutAtual ? UI.cor : UI.corAntiga;
+    COR.marca = c.numero1; COR.texto = c.texto; COR.linha = c.linha; COR.linhaBloco = c.linhaBloco; COR.transf_linha = c.transf; COR.topico = c.topico; COR.apr = c.apr;
+  }
+  coresDoLayout(null);
   var GRUPOS = {
     numero: { max: 4, nome: "indicador" }, resultado: { max: 3, nome: "resultado" }, lancamento: { max: 6, nome: "lançamento" },
     cxt: { max: 3, nome: "indicador trimestral", semMidia: true },
@@ -1357,7 +1754,7 @@
   };
   /* Novos tópicos (até 4): o id da seção é o grupo dos itens (topico-1, topicob-1…), e o layout vem da página
      (tabela data-layout; sem ela, página da 4.6: lista). O máximo de itens é o do layout (Motor.LAYOUTS_TOPICO). */
-  var IDS_TOPICO = Motor.TOPICOS.map(function (t) { return t[1]; }), LAYOUTS = Motor.LAYOUTS_TOPICO, COR_TOPICO = "#127277";
+  var IDS_TOPICO = Motor.TOPICOS.map(function (t) { return t[1]; }), LAYOUTS = Motor.LAYOUTS_TOPICO;
   function layoutDaSecao(doc, id) {
     var rot = doc.querySelector('[data-campo="' + id + '.rotulo"]'), td = rot && rot.closest("td.px"), t = td && td.querySelector("table[data-layout]");
     return t ? t.getAttribute("data-layout") : "lista";
@@ -1390,18 +1787,23 @@
     if (g === "resultado") total = it.reduce(function (s2, x) { return s2 + (+x.getAttribute("width") || 0); }, 0) + 24 * (it.length - 1);
     ED.grupos[g] = { cont: cont, total: total };
     var div = ED.doc.createElement("div"); div.className = "ed-mais"; div.setAttribute("data-editor", ""); div.setAttribute("contenteditable", "false");
-    div.innerHTML = '<button type="button" data-grupo="' + g + '"></button>';
+    div.innerHTML = '<button type="button" data-grupo="' + g + '"></button>' +
+      /* PF e PJ (5.5; no PJ desde a 5.4): os Principais resultados viram funil (e voltam para colunas); no funil, o total pode sair e voltar */
+      (g === "numero" ? ' <button type="button" data-acao="funil"></button> <button type="button" data-acao="total" hidden></button>' : "");
     var tab = cont.closest("table"); tab.parentNode.insertBefore(div, tab.nextSibling);
   }
   function atualizarMais() {
-    Array.prototype.forEach.call(ED.doc.querySelectorAll(".ed-mais button"), function (b) {
+    Array.prototype.forEach.call(ED.doc.querySelectorAll(".ed-mais button[data-grupo]"), function (b) {
       var g = b.getAttribute("data-grupo"), n = itensDo(g).length, max = GRUPOS[g].max;
       b.disabled = n >= max; b.textContent = n >= max ? "Máximo de " + max + " (" + GRUPOS[g].nome + ")" : "+ Adicionar " + GRUPOS[g].nome;
     });
+    var f = ED.doc.querySelector('.ed-mais button[data-acao="funil"]'), t = ED.doc.querySelector('.ed-mais button[data-acao="total"]'), em = emFunil("numero");
+    if (f) { f.textContent = em ? "Ver em colunas" : "Ver como funil"; f.title = em ? "Os números voltam para as colunas (o nome e o total do funil saem)" : "Os números viram os degraus de um funil, com o nome da campanha e um total ao lado"; }
+    if (t) t.hidden = !em || !!ED.doc.querySelector('table[data-funil] [data-item="funil-total"]'), t.textContent = "+ Total ao lado";
   }
   function celula(attrs) { var x = ED.doc.createElement("td"); Object.keys(attrs).forEach(function (k) { x.setAttribute(k, attrs[k]); }); x.innerHTML = "&nbsp;"; return x; }
   function espaco(w, extra) { return celula({ "class": "hide-m", width: String(w), style: "width:" + w + "px;font-size:0;line-height:0;" + (extra || "") }); }
-  function separador() { var f = ED.doc.createDocumentFragment(); f.appendChild(espaco(12)); f.appendChild(espaco(11, "border-left:1px solid " + COR.linha + ";")); return f; }
+  function separador(cor) { var f = ED.doc.createDocumentFragment(); f.appendChild(espaco(12)); f.appendChild(espaco(11, "border-left:1px solid " + (cor || COR.linha) + ";")); return f; }
   function divide(total, n) { var base = Math.floor((total - 24 * (n - 1)) / n), resto = total - 24 * (n - 1) - base * n, r2 = []; for (var i = 0; i < n; i++) r2.push(base + (i < resto ? 1 : 0)); return r2; }
   function trocaCor(estilo, cor) { return (estilo || "").replace(/(^|;)\s*color:\s*#[0-9a-f]{3,6}/i, "$1color:" + cor); }
   function trocaFilete(estilo, cor) { return (estilo || "").replace(/border-top:\s*(\d+px)\s+solid\s+#[0-9a-f]{3,6}/i, "border-top:$1 solid " + cor); }
@@ -1411,8 +1813,8 @@
     itensDo(g).forEach(function (it, i) {
       var nova = g + "-" + (i + 1);
       it.setAttribute("data-item", nova);
-      [it].concat(Array.prototype.slice.call(it.querySelectorAll("[data-campo],[data-img],[data-bloco]"))).forEach(function (x) {
-        ["data-campo", "data-img", "data-bloco"].forEach(function (at) { var v = x.getAttribute(at); if (v && re.test(v)) x.setAttribute(at, v.replace(re, nova)); });
+      [it].concat(Array.prototype.slice.call(it.querySelectorAll("[data-campo],[data-img],[data-bloco],[data-apr]"))).forEach(function (x) {
+        ["data-campo", "data-img", "data-bloco", "data-apr"].forEach(function (at) { var v = x.getAttribute(at); if (v && re.test(v)) x.setAttribute(at, v.replace(re, nova)); });
       });
       if (g === "aprendizado" || GRUPOS[g].layout === "colunas") { var num = it.querySelector("p.ft"); if (num && /^\d+$/.test(num.textContent.trim())) num.textContent = String(i + 1); }
     });
@@ -1427,11 +1829,21 @@
       var lg = divide(600, Math.max(n, 1));
       it.forEach(function (x, i) {
         if (i) cont.insertBefore(lay === "colunas" ? separador() : espaco(24), x);
-        var cor = i === 0 ? COR_TOPICO : COR.texto;
+        var cor = i === 0 ? COR.topico : COR.texto;
         x.setAttribute("class", i === n - 1 ? "col" : "col gap"); x.setAttribute("width", String(lg[i]));
         x.setAttribute("style", "width:" + lg[i] + "px;" + (lay === "numeros" ? "border-top:2px solid " + cor + ";padding-top:12px;" : ""));
         var val = lay === "numeros" && x.querySelector('[data-campo$=".valor"]'); if (val) val.setAttribute("style", trocaCor(val.getAttribute("style"), cor));
         var cx = x.querySelector("table[data-imagens]"); if (cx && cx.querySelector("img[data-img]")) arrumarImagens(cx, lg[i], x.getAttribute("data-item"));
+      });
+      return;
+    }
+    if (emFunil(g)) {
+      /* funil: os degraus um embaixo do outro, cada um mais estreito (as larguras do motor: Motor.larguraDegrau) */
+      Array.prototype.slice.call(cont.children).forEach(function (c) { if (it.indexOf(c) < 0) c.remove(); });
+      it.forEach(function (x, i) {
+        var td = x.firstElementChild, t = x.querySelector("table[data-degrau]"), pct = Motor.larguraDegrau(i, n);
+        if (td) td.style.padding = i ? "6px 0px 0px" : "0px";
+        if (t) { t.setAttribute("width", pct + "%"); t.style.width = pct + "%"; }
       });
       return;
     }
@@ -1440,7 +1852,7 @@
       Array.prototype.slice.call(row.children).forEach(function (c) { if (it.indexOf(c) < 0) c.remove(); });
       var larg = g === "numero" ? (n <= 3 ? it.map(function () { return 184; }) : divide(600, n)) : divide(G.total, Math.max(n, 1));
       it.forEach(function (x, i) {
-        if (i) row.insertBefore(g === "numero" ? espaco(24) : separador(), x);
+        if (i) row.insertBefore(g === "numero" ? espaco(24) : separador(g === "cxt" ? COR.linhaBloco : ""), x);
         x.setAttribute("width", String(larg[i]));
         if (g === "numero") {
           x.setAttribute("class", n === 3 ? "third" : "half"); x.setAttribute("style", "width:" + larg[i] + "px;");
@@ -1491,6 +1903,86 @@
     }
   }
   /* Item novo: o do modelo em branco (textos [entre colchetes], imagem neutra), no fim do grupo ou depois do item escolhido. */
+  /* ---------- funil dos Principais resultados (5.4, PJ) ----------
+     "Ver como funil" (embaixo dos números): os números viram os degraus de um funil (Motor.blocoFunil, o mesmo bloco do
+     [FUNIL] nos dados), com o nome da campanha em cima e um total ao lado; tudo continua editável no clique. Os degraus
+     usam os mesmos campos (numero-N): o e-mail-resumo segue igual. "Ver em colunas" volta (o nome e o total saem).
+     + Adicionar, Tirar item e ↑/↓ funcionam nos degraus. Cada passo é um passo no Desfazer. */
+  function emFunil(g) { var G = g === "numero" && ED.grupos && ED.grupos.numero; return !!(G && G.cont && G.cont.closest && G.cont.closest("table[data-funil]")); }
+  var PEND_ED = "background:#FFE1B9;color:#945400;border-radius:3px;";
+  function pend(t) { return '<span style="' + PEND_ED + '">' + t + "</span>"; }
+  function fonteDe(el) { var m = el && /font-family:\s*([^;]+)/.exec(el.getAttribute("style") || ""); return m ? m[1].trim().replace(/"/g, "'") : ""; }
+  function fontesDaPagina() {
+    var v = ED.doc.querySelector('[data-campo="numero-1.valor"]'), t = ED.doc.querySelector('[data-campo="numero-1.titulo"]'), r = ED.doc.querySelector('[data-campo="principal.resumo"]');
+    return { titulos: fonteDe(v) || "Arial, Helvetica, sans-serif", texto: fonteDe(t && t.closest("p")) || fonteDe(r) || "Arial, Helvetica, sans-serif" };
+  }
+  function htmlDoCampo(it, c) { var e = it.querySelector('[data-campo="' + it.getAttribute("data-item") + "." + c + '"]'); return e ? e.innerHTML.trim() : ""; }
+  function deHtml(h) { var box = ED.doc.createElement("div"); box.innerHTML = h; return box; }
+  function virarFunil() {
+    var G = ED.grupos.numero; if (!G || emFunil("numero")) return;
+    var it = itensDo("numero"), tab = G.cont.closest("table"), mais = tab.nextElementSibling && tab.nextElementSibling.classList.contains("ed-mais") ? tab.nextElementSibling : null;
+    var nome = ED.doc.querySelector('[data-campo="principal.nome"]'), rot = nome ? nome.textContent.replace(/\s+/g, " ").trim().toLocaleUpperCase("pt-BR") : "";
+    var novo = deHtml(Motor.blocoFunil({
+      itens: it.map(function (x, i) { return { idx: i + 1, valor: htmlDoCampo(x, "valor"), titulo: htmlDoCampo(x, "titulo"), detalhe: htmlDoCampo(x, "detalhe"), variacao: htmlDoCampo(x, "variacao") }; }),
+      rotulo: rot && !/^\[.*\]$/.test(rot) ? esc(rot) : pend("[NOME DA CAMPANHA]"), total: pend("[Total]"), total_titulo: pend("[o que o total mede]"),
+      cor: UI.funil, fonte: fontesDaPagina()
+    })).firstElementChild;
+    tab.parentNode.replaceChild(novo, tab); if (mais) mais.remove();
+    delete ED.grupos.numero; editavel(novo); prepararGrupo("numero"); atualizarMais();
+    pilha(function () { novo.parentNode.replaceChild(tab, novo); refazerGrupo("numero"); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo("Principais resultados em funil: clique nos textos para editar (o nome em cima, cada degrau e o total ao lado). Para voltar: Ver em colunas ou Desfazer");
+  }
+  function virarColunas() {
+    var G = ED.grupos.numero; if (!emFunil("numero")) return;
+    var it = itensDo("numero"), funil = G.cont.closest("table[data-funil]");
+    var tab = deHtml('<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tbody><tr></tr></tbody></table>').firstElementChild, tr = tab.querySelector("tr");
+    for (var i = 0; i < it.length; i++) {
+      var m = modeloDoItem("numero"); if (!m) { perguntar("Modelo não encontrado", "<p>O modelo em branco não está junto deste emulador. Use a versão avulsa (kit/emulador-report-pj.html).</p>", "Entendi"); return; }
+      m.setAttribute("data-item", "numero-" + (i + 1));
+      Array.prototype.forEach.call(m.querySelectorAll("[data-campo]"), function (x) { x.setAttribute("data-campo", x.getAttribute("data-campo").replace(/^numero-\d+/, "numero-" + (i + 1))); });
+      var vals = { valor: htmlDoCampo(it[i], "valor"), titulo: htmlDoCampo(it[i], "titulo"), detalhe: htmlDoCampo(it[i], "detalhe"), variacao: htmlDoCampo(it[i], "variacao") };
+      ["valor", "titulo", "detalhe", "variacao"].forEach(function (c) {
+        var e = m.querySelector('[data-campo$=".' + c + '"]'); if (!e) return;
+        if (vals[c] || c === "valor" || c === "titulo") e.innerHTML = vals[c]; else (e.tagName === "P" ? e : e.closest("p")).remove();
+      });
+      var det = m.querySelector('[data-campo$=".detalhe"]'); if (det) det.closest("p").style.margin = vals.variacao ? "3px 0px 0px" : "0px";
+      tr.appendChild(m);
+    }
+    var mais = funil.querySelector(".ed-mais");
+    funil.parentNode.replaceChild(tab, funil);
+    delete ED.grupos.numero; editavel(tab); prepararGrupo("numero"); renumerar("numero"); refazer("numero"); atualizarMais();
+    pilha(function () { tab.parentNode.replaceChild(funil, tab); refazerGrupo("numero"); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo("Principais resultados em colunas de novo (o nome e o total do funil saíram). Para voltar: Desfazer");
+  }
+  /* o grupo mudou de forma (colunas ⇄ funil): o botão + Adicionar e o índice do grupo são refeitos */
+  function refazerGrupo(g) {
+    Array.prototype.forEach.call(ED.doc.querySelectorAll('.ed-mais button[data-grupo="' + g + '"]'), function (b) { b.parentNode.remove(); });
+    delete ED.grupos[g]; prepararGrupo(g); atualizarMais();
+  }
+  function degrauNovo() {
+    return deHtml(Motor.blocoFunil({ itens: [{ idx: 1, valor: pend("[Número]"), titulo: pend("[O que ele mede]"), detalhe: pend("[Referência]") }], cor: UI.funil, fonte: fontesDaPagina() })).querySelector("tr[data-item]");
+  }
+  function colunaDoFunil(f) { var t = f.querySelector("table[data-degraus]"); return t && t.closest("td"); }
+  function tirarTotalFunil(td) {
+    var f = td.closest("table[data-funil]"), esp = td.previousElementSibling, col = colunaDoFunil(f), linha = td.parentNode;
+    var w0 = col.getAttribute("width"), c0 = col.className, w = 600 - 2 * Motor.FUNIL.margem;
+    if (esp && esp.classList.contains("hide-m")) esp.remove(); else esp = null;
+    td.remove(); col.setAttribute("width", String(w)); col.style.width = w + "px"; col.className = "col";
+    pilha(function () { if (esp) linha.appendChild(esp); linha.appendChild(td); col.setAttribute("width", w0); col.style.width = w0 + "px"; col.className = c0; atualizarMais(); });
+    ED.doc.getElementById("ed-barra").hidden = true; atualizarMais();
+    marcarSujo("Total tirado do funil: os degraus usam a largura toda. Para voltar: + Total ao lado ou Desfazer");
+  }
+  function porTotalFunil() {
+    var f = ED.doc.querySelector("table[data-funil]"); if (!f || f.querySelector('[data-item="funil-total"]')) return;
+    var td = deHtml(Motor.blocoFunil({ itens: [], total: pend("[Total]"), total_titulo: pend("[o que o total mede]"), cor: UI.funil, fonte: fontesDaPagina() })).querySelector('[data-item="funil-total"]');
+    var esp = td.previousElementSibling, col = colunaDoFunil(f), linha = col.parentNode, w0 = col.getAttribute("width"), c0 = col.className;
+    linha.appendChild(esp); linha.appendChild(td); col.setAttribute("width", String(Motor.FUNIL.degraus)); col.style.width = Motor.FUNIL.degraus + "px"; col.className = "col gap";
+    editavel(td);
+    pilha(function () { esp.remove(); td.remove(); col.setAttribute("width", w0); col.style.width = w0 + "px"; col.className = c0; atualizarMais(); });
+    atualizarMais(); marcarSujo("Total ao lado do funil: troque os textos [entre colchetes]");
+  }
   /* Modelo em branco com a mídia separada (uma vez por sessão), fonte do + Adicionar e do + Novo tópico. */
   var CORINGA_LEVE = null;
   function coringaLeve() { if (!CORINGA_LEVE && window.CORINGA_HTML) CORINGA_LEVE = separarMidia(window.CORINGA_HTML, true); return CORINGA_LEVE; }
@@ -1512,13 +2004,13 @@
   async function adicionarItem(g, depois) {
     var G = ED.grupos[g], it = itensDo(g); if (!G) return;
     if (it.length >= GRUPOS[g].max) { $("#estado").textContent = "Este grupo já tem o máximo de " + GRUPOS[g].max + " (" + GRUPOS[g].nome + ")."; return; }
-    var novo = modeloDoItem(g);
+    var novo = emFunil(g) ? degrauNovo() : modeloDoItem(g);
     if (!novo) { await perguntar("Modelo não encontrado", "<p>O modelo em branco não está junto deste emulador. Use a versão avulsa (kit/emulador-report.html).</p>", "Entendi"); return; }
     var volta = desfazGrupo(G), ref = depois || it[it.length - 1];
     if (ref) ref.parentNode.insertBefore(novo, ref.nextSibling);
     else if (/^(numero|cxt|aprendizado|transformation)$/.test(g) || /^(lista|colunas|numeros)$/.test(GRUPOS[g].layout)) G.cont.appendChild(novo);
     else (g === "resultado" ? G.cont.lastElementChild : G.cont.appendChild(ED.doc.createElement("tr"))).appendChild(novo);
-    editavel(novo); renumerar(g); refazer(g); atualizarMais();
+    editavel(novo); renumerar(g); refazer(g); ordenarNumeros(ED.doc); atualizarMais();
     /* "[Item da agenda 1]" do modelo vira "[Item da agenda 3]": o número da posição nova */
     var pos = (novo.getAttribute("data-item").match(/\d+$/) || [""])[0], tw = ED.doc.createTreeWalker(novo, NodeFilter.SHOW_TEXT), tn;
     while ((tn = tw.nextNode())) tn.nodeValue = tn.nodeValue.replace(/\[([^\[\]]*?) \d+(\.?)\]/g, "[$1 " + pos + "$2]");
@@ -1542,9 +2034,9 @@
     ED.doc.getElementById("ed-barra").hidden = true;
     marcarSujo("Item tirado: a grade se ajustou. Para voltar: Desfazer.");
   }
-  /* ---------- mover itens: ← Antes / Depois → (ou ↑ / ↓) na barra do item ---------- */
+  /* ---------- mover itens: ← Mover / Mover → (ou ↑ / ↓) na barra do item ---------- */
   /* Grupos em coluna (um embaixo do outro) usam ↑/↓; os outros, ←/→. A grade é refeita como no + Adicionar. */
-  function grupoVertical(g) { return g === "transformation" || GRUPOS[g].layout === "lista"; }
+  function grupoVertical(g) { return g === "transformation" || GRUPOS[g].layout === "lista" || emFunil(g); }
   /* Leva o item para a posição destino (0 = primeiro) do grupo. Um passo no Desfazer. */
   function moverItem(item, destino) {
     var g = grupoDe(item), G = g && ED.grupos[g]; if (!G) return false;
@@ -1563,9 +2055,203 @@
       ED.doc.getElementById("ed-barra").hidden = true;
       marcarSujo("Item movido (" + GRUPOS[g].nome + ", agora na posição " + (destino + 1) + " de " + lista.length + "). Para voltar: Desfazer.");
     }
-    if (pos > 0) bi.push([v ? "↑ Subir" : "← Antes", function () { mover(pos - 1); }, "cinza"]);
-    if (pos < lista.length - 1) bi.push([v ? "↓ Descer" : "Depois →", function () { mover(pos + 1); }, "cinza"]);
+    if (pos > 0) bi.push([v ? "↑ Subir" : "← Mover", function () { mover(pos - 1); }, "cinza"]);
+    if (pos < lista.length - 1) bi.push([v ? "↓ Descer" : "Mover →", function () { mover(pos + 1); }, "cinza"]);
   }
+
+  /* =================================================================== */
+  /* 5.6 · ETIQUETA QUE SAI E VOLTA · ITEM QUE MUDA DE SEÇÃO             */
+  /* =================================================================== */
+  /* A etiqueta do item (▲ +12% nos números, ● No ar nos textos): o parágrafo dela, se existir. */
+  function etiquetaDe(item) {
+    var k = item.getAttribute("data-item"); if (!k) return null;
+    return item.querySelector('[data-campo="' + k + '.variacao"], [data-campo="' + k + '.status"]');
+  }
+  /* A etiqueta do modelo em branco para o grupo (para pôr de volta), ou null se o grupo não tem etiqueta. */
+  function modeloEtiqueta(g) { if (emFunil(g)) return null; var m = modeloDoItem(g); return m ? etiquetaDe(m) ? m : null : null; }
+  /* o espaço em cima da referência (3 px com a etiqueta, 0 sem ela), como no motor */
+  function margemReferencia(campo, comEtiqueta) {
+    var ts = campo.nextElementSibling; if (!ts || !ts.classList.contains("ts")) return null;
+    var antes = ts.getAttribute("style"); ts.setAttribute("style", (antes || "").replace(/margin:\s*\d+px 0 0 0/, "margin:" + (comEtiqueta ? "3px" : "0") + " 0 0 0"));
+    return function () { ts.setAttribute("style", antes); };
+  }
+  function tirarEtiqueta(campo) {
+    var pai = campo.parentNode, prox = campo.nextSibling, volta = margemReferencia(campo, false);
+    campo.remove();
+    pilha(function () { pai.insertBefore(campo, prox); if (volta) volta(); });
+    ED.doc.getElementById("ed-barra").hidden = true; if (ED.doc.activeElement && ED.doc.activeElement.blur) ED.doc.activeElement.blur();
+    marcarSujo("Etiqueta tirada. Para pôr de volta: + Etiqueta, na barra do item (ou Desfazer).");
+  }
+  /* Põe a etiqueta do modelo no mesmo lugar em que ela fica no modelo (mesmo caminho dentro do item). */
+  function porEtiqueta(item) {
+    var g = grupoDe(item), m = modeloEtiqueta(g); if (!m) return;
+    var chip = etiquetaDe(m), caminho = [], n = chip;
+    while (n.parentNode && n.parentNode !== m) { caminho.unshift(Array.prototype.indexOf.call(n.parentNode.children, n)); n = n.parentNode; }
+    caminho.unshift(Array.prototype.indexOf.call(m.children, n));
+    var pos = caminho.pop(), pai = item;
+    caminho.forEach(function (i) { if (pai) pai = pai.children[i]; });
+    if (!pai) { $("#estado").textContent = "Não deu para pôr a etiqueta neste item."; return; }
+    var k = item.getAttribute("data-item"), novo = ED.doc.importNode(chip, true);
+    novo.setAttribute("data-campo", k + "." + chip.getAttribute("data-campo").split(".").pop());
+    pai.insertBefore(novo, pai.children[pos] || null);
+    var volta = margemReferencia(novo, true);
+    editavel(item);
+    pilha(function () { novo.remove(); if (volta) volta(); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    marcarSujo("Etiqueta posta: clique nela para escrever (ex.: ▲ +12%) e escolher a cor.");
+    novo.focus();
+  }
+  /* Seções do mesmo tipo: números (valor, título, etiqueta, referência) e textos (nome, texto, status…). Os campos
+     passam pelo significado (nome ↔ título, texto ↔ detalhe); o que o lugar novo não tem fica de fora (avisado). */
+  var FAMILIA = { numero: "num", resultado: "num", cxt: "num", lancamento: "txt", transformation: "txt", aprendizado: "txt", agenda: "txt" };
+  var SENTIDO = { nome: "titulo", titulo: "titulo", texto: "texto", detalhe: "texto", valor: "valor", variacao: "etiqueta", status: "etiqueta", data: "data", resultado: "resultado", levamos: "levamos" };
+  var NOME_CAMPO = { titulo: "título", texto: "texto", valor: "número", etiqueta: "etiqueta", data: "data", resultado: "resultado", levamos: "o que levamos" };
+  function familiaDe(g) { if (!g || !GRUPOS[g]) return ""; if (FAMILIA[g]) return FAMILIA[g]; var lay = GRUPOS[g].layout; return lay === "numeros" ? "num" : lay ? "txt" : ""; }
+  /* Para onde o item pode ir: outro grupo do mesmo tipo, à vista, fora do funil e com lugar. */
+  function destinosDe(item) {
+    var g = grupoDe(item), f = familiaDe(g); if (!f || emFunil(g)) return [];
+    return Object.keys(ED.grupos || {}).filter(function (x) {
+      var it = itensDo(x);
+      return x !== g && familiaDe(x) === f && !emFunil(x) && it.length && it.length < GRUPOS[x].max && !secaoOculta(it[0]);
+    });
+  }
+  function camposDoItem(raiz) {
+    var k = raiz.getAttribute("data-item"), m = {};
+    Array.prototype.forEach.call(raiz.querySelectorAll("[data-campo]"), function (c) {
+      var dc = c.getAttribute("data-campo"); if (dc.indexOf(k + ".") !== 0) return;
+      var nome = dc.slice(k.length + 1), s2 = SENTIDO[nome] || nome; if (!m[s2]) m[s2] = c;
+    });
+    return m;
+  }
+  /* Leva o item para a posição k do grupo destino (os campos vão junto), num passo só do Desfazer. */
+  function moverParaGrupo(item, gd, k) {
+    var go = grupoDe(item), Go = ED.grupos[go], Gd = ED.grupos[gd];
+    if (!Go || !Gd || destinosDe(item).indexOf(gd) < 0) return false;
+    var novo = modeloDoItem(gd); if (!novo) return false;
+    var voltaO = desfazGrupo(Go), voltaD = desfazGrupo(Gd), it = itensDo(gd);
+    k = Math.max(0, Math.min(k === undefined ? it.length : k, it.length));
+    if (k > 0) it[k - 1].parentNode.insertBefore(novo, it[k - 1].nextSibling); else it[0].parentNode.insertBefore(novo, it[0]);
+    var de = camposDoItem(item), para = camposDoItem(novo), fora = [];
+    Object.keys(para).forEach(function (s2) {
+      if (de[s2]) para[s2].innerHTML = de[s2].innerHTML;
+      else if (s2 === "etiqueta") { var vm = margemReferencia(para[s2], false); para[s2].remove(); }
+      else para[s2].innerHTML = "";
+    });
+    Object.keys(de).forEach(function (s2) { if (!para[s2] && de[s2].textContent.trim()) fora.push(NOME_CAMPO[s2] || s2); });
+    if (item.querySelector("img[data-img]")) fora.push("imagem");
+    if (item.querySelector("a.cta[href], a[data-anexo]")) fora.push("link");
+    if (item.querySelector("[data-apr]")) fora.push("o que aprendemos");
+    item.remove();
+    renumerar(go); refazer(go); editavel(novo); renumerar(gd); refazer(gd); ordenarNumeros(ED.doc); atualizarMais();
+    pilha(function () { voltaD(); voltaO(); });
+    ED.doc.getElementById("ed-barra").hidden = true;
+    novo.classList.add("ed-itemMovido"); setTimeout(function () { novo.classList.remove("ed-itemMovido"); }, 1800);
+    novo.scrollIntoView({ block: "center" });
+    marcarSujo("Item movido para " + nomeGrupo(gd) + " (posição " + (k + 1) + ")" + (fora.length ? ". Não existe no lugar novo e ficou de fora: " + fora.join(", ") + "." : ".") + " Para voltar: Desfazer.");
+    return true;
+  }
+  /* "Mover para outra seção": a lista das seções do mesmo tipo; o item entra no fim da escolhida. */
+  async function escolherDestino(item) {
+    var ds = destinosDe(item); if (!ds.length) return;
+    ED.doc.getElementById("ed-barra").hidden = true;
+    var h = "<p>O item sai daqui e entra no fim da seção escolhida, com os textos e números dele. Imagem e link não vão junto: para recuperar, use Desfazer.</p>" +
+      '<div class="destinos" role="radiogroup" aria-label="Seção">' + ds.map(function (x, i) {
+        return '<label class="check"><input type="radio" name="destinoItem" value="' + x + '"' + (i ? "" : " checked") + "> " + esc(nomeGrupo(x)) + " <span class=\"muted\">(" + itensDo(x).length + " de " + GRUPOS[x].max + ")</span></label>";
+      }).join("") + "</div>";
+    if (!(await perguntar("Mover para outra seção", h, "Mover", "Cancelar"))) return;
+    var esc2 = document.querySelector('input[name="destinoItem"]:checked'); if (esc2) moverParaGrupo(item, esc2.value);
+  }
+
+  /* =================================================================== */
+  /* 5.5 · ARRASTAR COM ENCAIXE                                          */
+  /* A liberdade fica dentro da grade: um item muda de lugar no grupo dele ou vai para outra seção do mesmo tipo
+     (5.6); a linha vermelha mostra onde entra e a grade é refeita com as regras do motor. Nada fica solto por cima
+     do layout.                                                                                              */
+  /* =================================================================== */
+  /* Acompanha o ponteiro dentro e fora do quadro (quem rola é a janela de fora), com rolagem automática perto da
+     borda. cb.move(x, y) recebe a posição na página do report; cb.fim(soltou) quando solta (true) ou cancela. */
+  function seguirPonteiro(cb) {
+    var d = ED.doc, fr = $("#edFrame"), st = { vx: 0, vy: 0, raf: 0 }, topo = document.querySelector("#secEditar .ferramentas").getBoundingClientRect().bottom;
+    function passo() {
+      st.raf = 0;
+      var lim = Math.max(topo, 0) + 50, vel = st.vy < lim ? -Math.ceil((lim - st.vy) / 4) : st.vy > window.innerHeight - 50 ? Math.ceil((st.vy - window.innerHeight + 50) / 4) : 0;
+      if (vel) window.scrollBy(0, vel);
+      var q = fr.getBoundingClientRect(), w = d.defaultView; cb.move(st.vx - q.left + w.scrollX, st.vy - q.top + w.scrollY);
+      if (vel) st.raf = requestAnimationFrame(passo);
+    }
+    function agenda() { if (!st.raf) st.raf = requestAnimationFrame(passo); }
+    function dentro(e) { var q = fr.getBoundingClientRect(); st.vx = q.left + e.clientX; st.vy = q.top + e.clientY; agenda(); }
+    function fora(e) { st.vx = e.clientX; st.vy = e.clientY; agenda(); }
+    function solta() {
+      d.removeEventListener("pointermove", dentro); d.removeEventListener("pointerup", fim); document.removeEventListener("pointermove", fora); document.removeEventListener("pointerup", fim);
+      d.removeEventListener("keydown", tecla); document.removeEventListener("keydown", tecla); if (st.raf) cancelAnimationFrame(st.raf); d.documentElement.classList.remove("ed-movendo"); document.documentElement.classList.remove("ed-movendo-fora");
+    }
+    function fim(e) { solta(); var q = fr.getBoundingClientRect(), w = d.defaultView; if (e && e.type === "pointerup") cb.move(st.vx - q.left + w.scrollX, st.vy - q.top + w.scrollY); cb.fim(!!(e && e.type === "pointerup")); }
+    function tecla(e) { if (e.key === "Escape") { e.preventDefault(); solta(); cb.fim(false); } }
+    d.addEventListener("pointermove", dentro); d.addEventListener("pointerup", fim); document.addEventListener("pointermove", fora); document.addEventListener("pointerup", fim);
+    d.addEventListener("keydown", tecla); document.addEventListener("keydown", tecla); d.documentElement.classList.add("ed-movendo"); document.documentElement.classList.add("ed-movendo-fora");
+    try { window.getSelection().removeAllRanges(); d.getSelection().removeAllRanges(); } catch (e) {}
+    return { comeco: function (e, noQuadro) { if (noQuadro) dentro(e); else fora(e); } };
+  }
+  function retDe(el) { var r = el.getBoundingClientRect(), w = ED.doc.defaultView; return { l: r.left + w.scrollX, t: r.top + w.scrollY, r: r.right + w.scrollX, b: r.bottom + w.scrollY }; }
+  /* Os lugares entre os itens de um grupo (antes de cada um e depois do último; num grupo em linhas, também no fim de
+     cada linha). k = a posição que o item passa a ter. */
+  function vagasDoGrupo(g) {
+    var it = itensDo(g).filter(function (x) { return x.getBoundingClientRect().width > 0; }), vert = grupoVertical(g), v = [];
+    var R = it.map(retDe);
+    R.forEach(function (r, k) {
+      var prox = R[k + 1];
+      if (vert) { v.push({ k: k, x: r.l, y: r.t - 3, w: r.r - r.l, h: 0, o: "h" }); if (!prox) v.push({ k: k + 1, x: r.l, y: r.b + 3, w: r.r - r.l, h: 0, o: "h" }); }
+      else {
+        v.push({ k: k, x: r.l - 8, y: r.t, w: 0, h: r.b - r.t, o: "v" });
+        if (!prox || prox.t > r.t + 4) v.push({ k: k + 1, x: r.r + 8, y: r.t, w: 0, h: r.b - r.t, o: "v" });
+      }
+    });
+    return v;
+  }
+  function distVaga(z, x, y) {
+    var dx = x < z.x ? z.x - x : x > z.x + z.w ? x - z.x - z.w : 0, dy = y < z.y ? z.y - y : y > z.y + z.h ? y - z.y - z.h : 0;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  function maisPerto(lista, x, y) { var m = null, dm = Infinity; lista.forEach(function (z) { var dd = distVaga(z, x, y); if (dd < dm) { dm = dd; m = z; } }); return m ? { z: m, d: dm } : null; }
+
+  /* ---------- arrastar um item dentro do grupo ---------- */
+  function arrastarItem(item, g, e0) {
+    var d = ED.doc, it = itensDo(g), de = it.indexOf(item); if (de < 0 || it.length < 2) return;
+    d.getElementById("ed-barra").hidden = true;
+    var vagas = vagasDoGrupo(g).map(function (z) { z.g = g; return z; }), ind = d.createElement("div"), atual = null;
+    destinosDe(item).forEach(function (x) { vagasDoGrupo(x).forEach(function (z) { z.g = x; vagas.push(z); }); });
+    ind.id = "ed-vaga"; ind.setAttribute("data-editor", ""); ind.innerHTML = "<span></span>"; ind.hidden = true; d.body.appendChild(ind);
+    item.classList.add("ed-arrastando"); ED.arrastando = true;
+    var seg = seguirPonteiro({
+      move: function (x, y) {
+        var m = maisPerto(vagas, x, y); atual = m && m.z; if (!atual) return;
+        var mesmo = atual.g === g && (atual.k === de || atual.k === de + 1);
+        ind.hidden = false; ind.className = mesmo ? "mesmo" : "";
+        if (atual.o === "h") { ind.style.left = atual.x + "px"; ind.style.top = (atual.y - 2) + "px"; ind.style.width = Math.max(atual.w, 40) + "px"; ind.style.height = "4px"; }
+        else { ind.style.left = (atual.x - 2) + "px"; ind.style.top = atual.y + "px"; ind.style.width = "4px"; ind.style.height = Math.max(atual.h, 40) + "px"; }
+        ind.firstChild.textContent = mesmo ? "Fica onde está" : atual.g !== g ? "Soltar aqui · " + nomeGrupo(atual.g) : "Soltar aqui";
+      },
+      fim: function (soltou) {
+        item.classList.remove("ed-arrastando"); ind.remove(); ED.arrastando = false;
+        if (!soltou || !atual) { $("#estado").textContent = "Arrasto cancelado: o item ficou onde estava."; return; }
+        if (atual.g !== g) { moverParaGrupo(item, atual.g, atual.k); return; }
+        if (atual.k === de || atual.k === de + 1) { $("#estado").textContent = "Solto no mesmo lugar: o item ficou onde estava."; return; }
+        var destino = atual.k > de ? atual.k - 1 : atual.k;
+        if (moverItem(item, destino)) {
+          var novo = itensDo(g)[destino] || item; novo.classList.add("ed-itemMovido"); setTimeout(function () { novo.classList.remove("ed-itemMovido"); }, 1600);
+          marcarSujo("Item movido (" + GRUPOS[g].nome + ", agora na posição " + (destino + 1) + " de " + it.length + "): a grade se ajustou. Para voltar: Desfazer");
+        }
+      }
+    });
+    seg.comeco(e0, true);
+  }
+
+  /* atalho para o e-mail-resumo, e a altura da barra de ferramentas (o painel fica logo abaixo dela) */
+  $("#bVoltaEdicao").addEventListener("click", function () { $("#secEditar").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  $("#bIrResumo").addEventListener("click", function () { $("#secLink").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  function topoFerramentas() { var f = document.querySelector("#secEditar .ferramentas"); if (f) document.documentElement.style.setProperty("--topoFerr", Math.round(f.getBoundingClientRect().height + 10) + "px"); }
+  window.addEventListener("resize", topoFerramentas);
 
   /* ---------- ordem das seções: arrastar e soltar, subir/descer, escolher a posição ---------- */
   /* Mudam de lugar as seções entre a capa e o encerramento: a capa abre e o rodapé fecha o report (hierarquia). Cada
@@ -1663,7 +2349,7 @@
   }
   function ligarAlcaSecoes(d) {
     var alca = d.createElement("div"); alca.id = "ed-secao"; alca.setAttribute("data-editor", ""); alca.setAttribute("contenteditable", "false"); alca.hidden = true;
-    alca.innerHTML = '<button type="button" class="pega" title="Arraste para mudar a seção de lugar">&#10303; Mover seção</button><button type="button" data-a="sobe" title="Subir a seção" aria-label="Subir a seção">&#8593;</button><button type="button" data-a="desce" title="Descer a seção" aria-label="Descer a seção">&#8595;</button><button type="button" data-a="pos">Posição…</button>';
+    alca.innerHTML = '<button type="button" class="pega" title="Arraste para mudar a seção de lugar">&#10303; Mover seção</button><button type="button" data-a="sobe" title="Subir a seção" aria-label="Subir a seção">&#8593;</button><button type="button" data-a="desce" title="Descer a seção" aria-label="Descer a seção">&#8595;</button><button type="button" data-a="pos">Posição…</button><button type="button" data-a="tira" class="tira" title="Tirar a seção do report (Desfazer ou Seções do report trazem de volta)">Tirar seção</button>';
     d.body.appendChild(alca);
     var atual = "";
     /* a largura do quadro mudou (Computador/Celular): a alça sai; volta no próximo passar do mouse, já no lugar certo */
@@ -1694,6 +2380,7 @@
       if (b.dataset.a === "sobe" && i > 0) moverSecaoComAviso(id, ids[i - 1], true);
       else if (b.dataset.a === "desce" && i < ids.length - 1) moverSecaoComAviso(id, ids[i + 2] || null, true);
       else if (b.dataset.a === "pos") escolherPosicaoSecao(id);
+      else if (b.dataset.a === "tira") tirarSecao(id);
     });
     var arrasto = null;
     alca.querySelector(".pega").addEventListener("pointerdown", function (e) {
@@ -1713,7 +2400,7 @@
       var barraTopo = document.querySelector(".ferramentas").getBoundingClientRect().bottom;
       arrasto = { y: fr.getBoundingClientRect().top + e.clientY, zona: null, quadro: 0 };
       /* enquanto arrasta, a barra dos itens não reage (nada da página é refeito: só a linha anda) */
-      alca.hidden = true; d.documentElement.classList.add("ed-movendo"); ED.arrastando = true; d.getElementById("ed-barra").hidden = true;
+      alca.hidden = true; d.documentElement.classList.add("ed-movendo"); document.documentElement.classList.add("ed-movendo-fora"); ED.arrastando = true; d.getElementById("ed-barra").hidden = true;
       function passo() {
         arrasto.quadro = 0;
         /* rolagem automática perto da borda da janela (o quadro cresce com a página: quem rola é a janela de fora) */
@@ -1732,7 +2419,7 @@
         d.removeEventListener("keydown", tecla); document.removeEventListener("keydown", tecla);
         if (arrasto.quadro) cancelAnimationFrame(arrasto.quadro);
         var z = ev && ev.type === "pointerup" ? arrasto.zona : null;
-        meus.forEach(function (n) { n.classList.remove("ed-arrastando"); }); linha.remove(); d.documentElement.classList.remove("ed-movendo"); arrasto = null; atual = ""; ED.arrastando = false;
+        meus.forEach(function (n) { n.classList.remove("ed-arrastando"); }); linha.remove(); d.documentElement.classList.remove("ed-movendo"); document.documentElement.classList.remove("ed-movendo-fora"); arrasto = null; atual = ""; ED.arrastando = false;
         if (z && !z.mesmo) moverSecaoComAviso(id, z.antesDe, true); else if (!ev || z) $("#estado").textContent = (ev ? "Solta no mesmo lugar" : "Arrasto cancelado") + ": a seção ficou onde estava.";
       }
       function tecla(ev) { if (ev.key === "Escape") fim(null); }
@@ -1742,7 +2429,7 @@
     });
   }
 
-  var NOMES_SEC = { lancamos: "O que lançamos", cx: "Creative X", transformation: "Transformation Hub", aprendizados: "O que aprendemos", foco: "Foco do próximo mês", agenda: "Também vem aí" };
+  var NOMES_SEC = UI.sec;
   function marcaSecao(doc, id) { var w = doc.createTreeWalker(doc.body, NodeFilter.SHOW_COMMENT), n; while ((n = w.nextNode())) if (n.nodeValue.trim() === "secao:" + id) return n; return null; }
   function nosDaSecao(id) {
     var w = ED.doc.createTreeWalker(ED.doc.body, NodeFilter.SHOW_COMMENT), n, ini = null, prox = null;
@@ -1798,6 +2485,29 @@
     renumerarPilulas();
     if (!quieto) marcarSujo(mostrar ? "Seção à mostra: " + nomeSec(id) + "." : "Seção oculta: " + nomeSec(id) + " (não vai no arquivo salvo).");
   }
+  /* Tirar uma seção (alça "Tirar seção" ou [SECOES] tirar: na importação): sai do arquivo salvo; o Desfazer devolve. */
+  function tirarSecao(id) {
+    if (ED.ocultas[id]) return false;
+    mostrarSecao(id, false, true);
+    pilha(function () { mostrarSecao(id, true, true); montarSecoes(); });
+    montarSecoes();
+    marcarSujo("Seção tirada: " + nomeSec(id) + ". Para trazer de volta: Desfazer, ou marque em Seções do report.");
+    return true;
+  }
+  function voltarSecao(id) {
+    if (!ED.ocultas[id]) return false;
+    mostrarSecao(id, true, true);
+    pilha(function () { mostrarSecao(id, false, true); montarSecoes(); });
+    montarSecoes();
+    return true;
+  }
+  /* Seção pelo nome que aparece em "Seções do report" (sem diferença de acento e maiúscula), ou pelo id. */
+  function secaoPeloNome(nome) {
+    function n(t) { return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/^topico:\s*/, "").replace(/\s+/g, " ").trim(); }
+    var alvo = n(nome), ids = secoesMoveis();
+    return ids.filter(function (id) { return n(nomeSec(id)) === alvo || id === alvo; })[0] ||
+      ids.filter(function (id) { return alvo.length >= 5 && n(nomeSec(id)).indexOf(alvo) === 0; })[0] || "";
+  }
   /* Troca o id de um tópico nas chaves (topicoc-2.nome → topicob-2.nome) e na marca da seção. */
   function trocarChaves(raiz, de, para) {
     var re = new RegExp("^" + de + "(?=[.-])");
@@ -1817,13 +2527,16 @@
   };
   /* "+ Novo tópico": pergunta o nome e o layout (com a miniatura de cada um) e põe o tópico antes do Foco do próximo mês,
      vindo do modelo em branco (o tópico do mesmo layout, com as chaves trocadas para o id livre). */
-  async function novoTopico() {
+  /* Descrição do layout com os nomes das seções deste emulador (no PJ: Análises, Aprendizados, Outras campanhas do mês) */
+  function comoLayout(k) { return LAYOUTS[k].como.replace("o Transformation Hub", (PJ ? "as " : "o ") + UI.sec.transformation).replace("O que aprendemos", UI.sec.aprendizados).replace("Também neste mês", UI.compactos); }
+  async function novoTopico(opcoes) {
+    var antesDe = opcoes && typeof opcoes === "object" && "antesDe" in opcoes ? opcoes.antesDe : undefined;
     var livres = idsLivres();
     if (!livres.length) { await perguntar("Máximo de tópicos novos", "<p>Cabem até " + IDS_TOPICO.length + " tópicos novos. Desfaça um deles para criar outro.</p>", "Entendi"); return; }
     if (!window.CORINGA_HTML) { await perguntar("Modelo não encontrado", "<p>O modelo em branco não está junto deste emulador. Use a versão avulsa (kit/emulador-report.html).</p>", "Entendi"); return; }
-    var padrao = ["foco", "agenda"].filter(function (x) { return secoesMoveis().indexOf(x) >= 0; })[0] || "";
+    var padrao = antesDe !== undefined ? antesDe : ["foco", "agenda"].filter(function (x) { return secoesMoveis().indexOf(x) >= 0; })[0] || "";
     var opcoes = Object.keys(LAYOUTS).map(function (k, i) {
-      return '<label class="layout"><input type="radio" name="layoutTopico" value="' + k + '"' + (i ? "" : " checked") + '><svg viewBox="0 0 120 72" width="120" height="72" aria-hidden="true">' + MINI[k] + '</svg><b>' + LAYOUTS[k].nome + '</b><span>' + esc(LAYOUTS[k].como) + ' · até ' + LAYOUTS[k].max + ' itens</span></label>';
+      return '<label class="layout"><input type="radio" name="layoutTopico" value="' + k + '"' + (i ? "" : " checked") + '><svg viewBox="0 0 120 72" width="120" height="72" aria-hidden="true">' + MINI[k] + '</svg><b>' + LAYOUTS[k].nome + '</b><span>' + esc(comoLayout(k)) + ' · até ' + LAYOUTS[k].max + ' itens</span></label>';
     }).join("");
     var ok = await perguntar("Novo tópico", '<div class="campo" style="margin-top:0"><label for="nomeTopico">Nome do tópico (vai em MAIÚSCULAS no topo da seção)</label><input type="text" id="nomeTopico" placeholder="ex.: Testes" autocomplete="off"></div>' +
       '<p style="margin:12px 0 6px;font-size:14px;font-weight:600">Qual layout seguir?</p><div class="layouts">' + opcoes + '</div>' +
@@ -1862,7 +2575,7 @@
      com a grade refeita, como o "+ Adicionar" de cada grupo. Passos: tipo › onde (grupo e posição) › conteúdo ›
      prévia na própria página (o item novo fica destacado) › confirmar. Depois ele se edita, se move e se tira como
      qualquer outro. Cancelar ou "Voltar e ajustar" desfazem a prévia inteira de uma vez. */
-  var NOMES_GRUPO = { numero: "Números da capa", resultado: "Resultados do destaque (O que lançamos)", cxt: "Creative X: indicadores do trimestre", lancamento: "Também neste mês (O que lançamos)", transformation: "Transformation Hub", aprendizado: "O que aprendemos", agenda: "Também vem aí (agenda)" };
+  var NOMES_GRUPO = UI.grupos;
   var BLOCO_DO_GRUPO = { numero: "NUMERO", resultado: "RESULTADO", cxt: "CREATIVE X TRIMESTRE", lancamento: "LANCAMENTO", transformation: "TRANSFORMATION", aprendizado: "APRENDIZADO", agenda: "AGENDA" };
   Motor.TOPICOS.forEach(function (t) { BLOCO_DO_GRUPO[t[1]] = t[0]; });
   /* Campos que cada grupo recebe (os mesmos da importação do Copilot); ficam só os que o modelo do item tem. */
@@ -1895,7 +2608,7 @@
     });
     return gs.map(function (g) {
       var it = GRUPOS[g] ? itensDo(g) : [], nome = nomeGrupo(g);
-      if (g === "cxt" && !it.length) return ED.doc.querySelector('[data-campo="cx.atual"]') && temModeloTrimestre() ? { g: g, nome: nome + " (o bloco trimestral entra junto)", ok: true, novoBloco: true } : { g: g, nome: nome, ok: false, motivo: "este report não tem a seção Creative X" };
+      if (g === "cxt" && !it.length) return ED.doc.querySelector('[data-campo="cx.atual"]') && temModeloTrimestre() ? { g: g, nome: nome + " (o bloco trimestral entra junto)", ok: true, novoBloco: true } : { g: g, nome: nome, ok: false, motivo: "este report não tem a seção " + UI.cx };
       if (!it.length || !ED.grupos[g]) return { g: g, nome: nome, ok: false, motivo: "não está neste report" };
       if (secaoOculta(it[0])) return { g: g, nome: nome, ok: false, motivo: "a seção está oculta (Seções do report)" };
       if (it.length >= GRUPOS[g].max) return { g: g, nome: nome, ok: false, motivo: "já tem o máximo de " + GRUPOS[g].max };
@@ -1905,7 +2618,7 @@
   /* Itens que recebem imagem ou link a mais: destaque, projeto principal, foco e os itens com texto (não os números). */
   function alvosDeConteudo() {
     var r = [];
-    [["principal", "Capa · projeto principal"], ["destaque", "O que lançamos · destaque"], ["foco", "Foco do próximo mês"]].forEach(function (b) {
+    [["principal", UI.principal], ["destaque", UI.destaque], ["foco", UI.foco]].forEach(function (b) {
       var el = ED.doc.querySelector('[data-ed-bloco="' + b[0] + '"]'); if (el && !secaoOculta(el)) r.push({ el: el, nome: b[1] + (b[0] === "foco" ? "" : ": " + rotuloItem(el)) });
     });
     Array.prototype.forEach.call(ED.doc.querySelectorAll("[data-item]"), function (el) {
@@ -1915,10 +2628,10 @@
     return r;
   }
   function alvosDeVideo() {
-    var nomes = { principal: "Capa · projeto principal", destaque: "O que lançamos · destaque" };
+    var nomes = { principal: UI.principal, destaque: UI.destaque };
     return Array.prototype.filter.call(ED.doc.querySelectorAll("img[data-img]"), function (i) { return /^(principal|destaque|lancamento-\d+)$/.test(i.getAttribute("data-img")) && !secaoOculta(i); }).map(function (i) {
       var k = i.getAttribute("data-img"), it = i.closest("[data-item]");
-      return { img: i, nome: (nomes[k] || "Também neste mês: " + (it ? rotuloItem(it) : k)) + (i.hasAttribute("data-video") ? " (trocar o vídeo)" : "") };
+      return { img: i, nome: (nomes[k] || UI.compactos + ": " + (it ? rotuloItem(it) : k)) + (i.hasAttribute("data-video") ? " (trocar o vídeo)" : "") };
     });
   }
   function disponivel(tipo) {
@@ -2138,22 +2851,29 @@
   $("#bFecharImportar").addEventListener("click", function () { $("#painelImportar").hidden = true; });
   $("#bAplicar").addEventListener("click", function () {
     var r = Motor.importarDados($("#txtImportar").value), a = aplicarCampos(r.campos), feitos = a.feitos, faltam = a.faltam;
+    /* [SECOES] tirar / mostrar */
+    var tiradas = [], voltaram = [], semSecao = [], sc = r.secoes || { tirar: [], mostrar: [] };
+    sc.tirar.forEach(function (nome) { var id = secaoPeloNome(nome); if (!id) semSecao.push(nome); else if (tirarSecao(id)) tiradas.push(nomeSec(id)); });
+    sc.mostrar.forEach(function (nome) { var id = secaoPeloNome(nome); if (!id) semSecao.push(nome); else if (voltarSecao(id)) voltaram.push(nomeSec(id)); });
     var msg = feitos.length + " campo(s) preenchido(s)." + (faltam.length ? " Não existem nesta página (ficaram de fora): " + faltam.join(", ") + "." : "") +
+      (tiradas.length ? " Seção tirada: " + tiradas.join(", ") + " (Desfazer traz de volta)." : "") + (voltaram.length ? " Seção de volta: " + voltaram.join(", ") + "." : "") +
+      (semSecao.length ? " Seção não encontrada: " + semSecao.join(", ") + " (veja os nomes em Seções do report)." : "") +
       (r.problemas.length ? " Observações: " + r.problemas.map(function (p) { return p.msg; }).join(" ") : "");
     $("#importarInfo").textContent = msg; log("Importação: " + msg);
-    if (feitos.length) marcarSujo();
+    if (feitos.length || tiradas.length || voltaram.length) marcarSujo();
   });
   /* Campos no formato do Motor.importarDados ({ chave: { texto, tipo, tom } }) aplicados na página (importar e "+ Adicionar item"). */
   function aplicarCampos(campos) {
     var feitos = [], faltam = [];
     Object.keys(campos).forEach(function (chave) {
       var c = campos[chave], els = camposDe(chave);
+      if (!els.length && /\.aprendizado$/.test(chave) && criarAprendizado(chave, esc(c.texto).replace(/&lt;br\s*\/?&gt;/gi, "<br>"))) { feitos.push(chave); ED.alterados[chave] = true; return; }
       if (!els.length) { faltam.push(chave); return; }
       els.forEach(function (el) {
         var antes = el.innerHTML;
         if (c.tipo === "etiqueta") {
           var chip = el.matches("[data-tom]") ? el : el.querySelector("[data-tom]");
-          if (chip) { chip.textContent = c.texto; chip.setAttribute("data-tom", c.tom); chip.style.background = TONS[c.tom][0]; chip.style.color = TONS[c.tom][1]; }
+          if (chip) { chip.textContent = c.texto; chip.setAttribute("data-tom", c.tom); corDoChip(chip, c.tom); }
           else el.textContent = c.texto;
         } else {
           var cta = el.querySelector("a.cta"), html = esc(c.texto).replace(/&lt;br\s*\/?&gt;/gi, "<br>");
@@ -2176,10 +2896,10 @@
     var doc = ED.doc.cloneNode(true);
     Array.prototype.forEach.call(doc.querySelectorAll("[data-editor], #ed-css"), function (n) { n.remove(); });
     Array.prototype.forEach.call(doc.querySelectorAll("[data-ed-oculta]"), function (n) { n.remove(); });
-    Array.prototype.forEach.call(doc.querySelectorAll(".ed-novo, .ed-movida, .ed-arrastando, .ed-movendo"), function (n) { n.classList.remove("ed-novo", "ed-movida", "ed-arrastando", "ed-movendo"); if (!n.className) n.removeAttribute("class"); });
-    /* ícone da aba: sempre o Santander + PF atual (report antigo, sem ícone ou com a chama da 4.8, é atualizado ao salvar) */
+    Array.prototype.forEach.call(doc.querySelectorAll(".ed-novo, .ed-movida, .ed-arrastando, .ed-movendo, .ed-itemMovido"), function (n) { n.classList.remove("ed-novo", "ed-movida", "ed-arrastando", "ed-movendo", "ed-itemMovido"); if (!n.className) n.removeAttribute("class"); });
+    /* ícone da aba: sempre o Santander + PF (ou + PJ, no Emulador Report PJ) atual (report antigo, sem ícone ou com a chama da 4.8, é atualizado ao salvar) */
     Array.prototype.forEach.call(doc.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="shortcut icon"]'), function (l) { l.remove(); });
-    if (doc.head) { var t = doc.createElement("template"); t.innerHTML = Motor.ICONE_TAG; var tt = doc.head.querySelector("title"), ref = tt ? tt.nextSibling : null; Array.prototype.slice.call(t.content.children).forEach(function (l) { doc.head.insertBefore(l, ref); }); }
+    if (doc.head) { var t = doc.createElement("template"); t.innerHTML = PERFIL.icone; var tt = doc.head.querySelector("title"), ref = tt ? tt.nextSibling : null; Array.prototype.slice.call(t.content.children).forEach(function (l) { doc.head.insertBefore(l, ref); }); }
     Array.prototype.forEach.call(doc.querySelectorAll("[contenteditable], [data-ed-campo], [data-ed-alterado], [spellcheck], [data-ed-bloco]"), function (n) {
       n.removeAttribute("contenteditable"); n.removeAttribute("data-ed-campo"); n.removeAttribute("data-ed-alterado"); n.removeAttribute("spellcheck"); n.removeAttribute("data-ed-bloco");
     });
@@ -2192,9 +2912,11 @@
     } else if (mt && (lkS.erro || $("#link").dataset.mexeu === "1")) mt.remove();
     /* título (assunto) e texto da caixa de entrada acompanham o período e a frase */
     var per = doc.querySelector('[data-campo="periodo"]'), frase = doc.querySelector('[data-campo="frase"]'), prev = doc.querySelector('[data-campo="previa"]');
-    if (per) { var periodo = per.textContent.replace(/\s+/g, " ").trim(), mes = periodo.charAt(0) + periodo.slice(1).toLocaleLowerCase("pt-BR"); doc.title = "Creative Strategy PF | Report de " + mes.replace(/(\d{4})$/, "$1"); }
+    if (per) { var periodo = per.textContent.replace(/\s+/g, " ").trim(), mes = periodo.charAt(0) + periodo.slice(1).toLocaleLowerCase("pt-BR"); doc.title = PERFIL.area + " | Report de " + mes.replace(/(\d{4})$/, "$1"); }
     var fraseFinal = doc.querySelector('[data-campo="frase_final"]');
     if (frase && prev && Object.keys(ED.alterados).some(function (k) { return /^frase/.test(k); })) prev.textContent = (frase.textContent + " " + (fraseFinal ? fraseFinal.textContent : "")).replace(/\s+/g, " ").trim();
+    /* destaques do e-mail-resumo (4.13): num bloco que a página não mostra e que os e-mails não levam */
+    gravarResumoConfig(doc);
     var html = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
     return Motor.renumerarSecoes(html);
   }
@@ -2204,8 +2926,8 @@
   /* Nome do campo para gente (no lugar da chave técnica). */
   function rotuloNumero(k) {
     var m = /^(numero|resultado)-(\d+)\.(\w+)$/.exec(k), parte = { valor: "valor", detalhe: "base de comparação", variacao: "variação", anterior: "anterior", atual: "atual" };
-    if (m) return (m[1] === "numero" ? "Número " + m[2] + " da capa" : "Resultado " + m[2] + " do destaque") + " (" + parte[m[3]] + ")";
-    m = /^cx\.(\w+)$/.exec(k); if (m) return "Creative X (" + (parte[m[1]] || m[1]) + ")";
+    if (m) return (m[1] === "numero" ? UI.numeroDe + m[2] : "Resultado " + m[2] + UI.resultadoDe) + " (" + parte[m[3]] + ")";
+    m = /^cx\.(\w+)$/.exec(k); if (m) return UI.cx + " (" + (parte[m[1]] || m[1]) + ")";
     return k;
   }
   async function conferirAntesDeSalvar() {
@@ -2277,6 +2999,14 @@
       return;
     }
     if (!/<html[\s>]/i.test(html) || !/<body[\s>]/i.test(html)) { await perguntar("Arquivo não reconhecido", "<p>" + nome + " não parece um report (.html).</p>", "Entendi"); return; }
+    /* PF e PJ não se misturam: cada emulador abre só os reports do seu segmento (o report aberto continua como estava). */
+    var segArq = Motor.segmentoDoHtml(html);
+    if (segArq !== SEG) {
+      var outro = Motor.perfil(segArq);
+      await perguntar("Este é um report " + outro.sigla, "<p><b>" + nome + "</b> é um report <b>" + outro.sigla + "</b> (" + esc(outro.area) + "). Este é o <b>" + esc(PERFIL.emulador) + "</b>.</p><p>Abra o arquivo no <b>" + esc(outro.emulador) + "</b> (" + (segArq === "pj" ? "kit/emulador-report-pj.html" : "kit/emulador-report.html") + "). Nada foi alterado.</p>", "Entendi");
+      log("Não aberto: " + file.name + " é um report " + outro.sigla + ".");
+      return;
+    }
     if (sep) {
       soltarMidia(); GUARDADAS = {};
       var urls = sep.midias.map(function (b) { return guardarMidia(b); });
@@ -2307,6 +3037,8 @@
   function modoCelular(cel) {
     Array.prototype.forEach.call(document.querySelectorAll("[data-ew], .tabs button[data-w]"), function (x) { x.setAttribute("aria-pressed", String(/390/.test(x.dataset.ew || x.dataset.w || "") === cel)); });
     var ed = ED.doc && ED.doc.getElementById("ed-secao"); if (ed) ed.hidden = true;
+    /* a barra do item fica na posição da largura de antes: fecha (no celular, ela empurrava a página para o lado) */
+    var eb = ED.doc && ED.doc.getElementById("ed-barra"); if (eb) eb.hidden = true;
     $("#edFrame").style.width = cel ? "390px" : "100%"; $("#prev").style.width = cel ? "390px" : "100%";
     setTimeout(function () { if (typeof alturaEdicao === "function") alturaEdicao(); if (typeof alturaPrevia === "function") alturaPrevia(); }, 60);
   }
@@ -2319,7 +3051,7 @@
     { id: "ler", nome: "Ler o report" },
     { id: "origem", nome: "Reconhecer o report" },
     { id: "limpar", nome: "Tirar o que o e-mail não aceita" },
-    { id: "resumir", nome: "Montar o e-mail-resumo (até 3 indicadores)" },
+    { id: "resumir", nome: "Montar o e-mail-resumo (até 4 destaques)" },
     { id: "imagens", nome: "Colocar as imagens dentro dos e-mails" },
     { id: "completo", nome: "Montar o e-mail completo (.eml)" },
     { id: "resumido", nome: "Montar o e-mail-resumo (.eml)" }
@@ -2375,29 +3107,171 @@
   function nomeDoSrc(src) { try { src = decodeURIComponent(src); } catch (e) {} return src.split(/[?#]/)[0].split(/[\\/]/).pop(); }
   function hostDe(u) { try { return new URL(u).host || u.slice(0, 60); } catch (e) { return u.slice(0, 60); } }
 
-  /* Indicadores candidatos: caixas (até 3). */
-  function atualizarIndicadores(cand, escolha) {
-    var box = $("#indicadores"), chave = cand.map(function (x) { return x.chave + x.valor + x.titulo + x.origem + x.na_frase; }).join("|");
-    if (box.dataset.chave === chave) return;
-    var antes = {}; Array.prototype.forEach.call(box.querySelectorAll("input"), function (c) { antes[c.value] = c.checked; });
-    box.dataset.chave = chave; box.textContent = "";
-    if (!cand.length) { box.innerHTML = '<span class="muted">Este report não tem indicadores marcados.</span>'; return; }
-    cand.forEach(function (x) {
-      var l = document.createElement("label"), c = document.createElement("input"); l.className = "check"; c.type = "checkbox"; c.value = x.chave;
-      c.checked = x.chave in antes ? antes[x.chave] : escolha.indexOf(x.chave) >= 0;
-      /* o nome do projeto (ex.: Alfa), não "Projeto principal"; sem repetir o nome que o título já tem */
-      var de = x.origem && x.origem !== x.titulo && x.titulo.indexOf(x.origem) < 0 ? " (" + x.origem + ")" : "";
-      l.appendChild(c); l.appendChild(document.createTextNode(" " + x.valor + " · " + x.titulo + de));
-      if (x.na_frase) { var av = document.createElement("span"); av.className = "muted"; av.textContent = " · já está na frase do mês"; l.appendChild(av); l.title = "A frase do mês já diz este número: no e-mail ele apareceria duas vezes."; }
-      box.appendChild(l);
+  /* ---------- e-mail-resumo: destaques escolhidos (4.13) ---------- */
+  /* ED.resumo.destaques: null = a sugestão do motor (os números do projeto principal); depois que a pessoa mexe,
+     a lista dela, na ordem dela (até 4). Cada destaque: { origem, titulo?, texto?, imagem?, link?, link_texto?,
+     novo?, valor?, etiqueta?, tom?, revisado? }. Vai gravado no report salvo, num bloco que a página não mostra
+     (<script type="application/json" id="resumo-email">) e que os e-mails não levam. O valor dos números vem
+     sempre da página: muda lá, muda aqui. */
+  var DTQ = { cand: [], sug: [], fora: [], figuras: {}, cache: {}, assinatura: "" };
+  var MAX_DTQ = Motor.RESUMO_REGRAS.destaques;
+  function lerResumoConfig(html) {
+    var m = /<script type="application\/json" id="resumo-email">([\s\S]*?)<\/script>/.exec(html || "");
+    if (!m) return null;
+    try { var o = JSON.parse(m[1]); return o && Array.isArray(o.destaques) ? { destaques: o.destaques.slice(0, MAX_DTQ) } : null; } catch (e) { return null; }
+  }
+  function gravarResumoConfig(doc) {
+    Array.prototype.forEach.call(doc.querySelectorAll("#resumo-email"), function (n) { n.remove(); });
+    if (!ED.resumo || !ED.resumo.destaques || !doc.body) return;
+    var sc = doc.createElement("script"); sc.type = "application/json"; sc.id = "resumo-email";
+    sc.textContent = JSON.stringify({ versao: 1, destaques: ED.resumo.destaques }).replace(/</g, "\\u003c");
+    doc.body.appendChild(sc);
+  }
+  function porOrigem(o) { for (var i = 0; i < DTQ.cand.length; i++) if (DTQ.cand[i].origem === o) return DTQ.cand[i]; return null; }
+  function listaDtq() { return ED.resumo && ED.resumo.destaques ? ED.resumo.destaques : DTQ.sug.map(function (x) { return { origem: x.origem }; }); }
+  /* a primeira mudança transforma a sugestão na lista da pessoa */
+  function minhaLista() { if (!ED.resumo) ED.resumo = { destaques: null }; if (!ED.resumo.destaques) ED.resumo.destaques = listaDtq().map(function (x) { return JSON.parse(JSON.stringify(x)); }); return ED.resumo.destaques; }
+  function mudouDtq(msg, refazer) { if (refazer) desenharDestaques(true); if (ED.doc) marcarSujo(msg); else reconverter(); }
+  var NOMES_FIG = { principal: UI.figPrincipal, destaque: UI.figDestaque };
+  function nomeFigura(k) {
+    if (NOMES_FIG[k]) return NOMES_FIG[k];
+    var c = porOrigem(k); return c ? (/^lancamento/.test(k) ? "Card: " : /^transformation/.test(k) ? "Projeto: " : "") + c.titulo : k;
+  }
+  function figurasUteis() { return Object.keys(DTQ.figuras).filter(function (k) { return k !== "logo" && DTQ.figuras[k].src; }); }
+  function rotuloCand(c) { return (c.valor ? c.valor + " · " : "") + (c.aprendizado ? (c.titulo && c.titulo !== "O que aprendemos" ? c.titulo : "O que aprendemos · " + c.grupo) : c.titulo) + (c.tipo === "texto" && c.texto && !c.aprendizado ? " — " + c.texto.slice(0, 70) + (c.texto.length > 70 ? "…" : "") : c.aprendizado ? " — " + c.texto.slice(0, 70) + (c.texto.length > 70 ? "…" : "") : "") + (c.na_frase ? " · já está na frase do mês" : ""); }
+  function el(tag, at, filhos) {
+    var e = document.createElement(tag);
+    Object.keys(at || {}).forEach(function (k) { if (k === "texto") e.textContent = at[k]; else if (k === "classe") e.className = at[k]; else if (k.slice(0, 2) === "on") e.addEventListener(k.slice(2), at[k]); else if (at[k] !== null && at[k] !== undefined && at[k] !== false) e.setAttribute(k, at[k] === true ? "" : at[k]); });
+    (filhos || []).forEach(function (f) { if (f) e.appendChild(typeof f === "string" ? document.createTextNode(f) : f); });
+    return e;
+  }
+  function campoTexto(rotulo, valor, dica, aoMudar, area, larga, max) {
+    var i = el(area ? "textarea" : "input", area ? { rows: "2", maxlength: max || 180, placeholder: dica || "" } : { type: "text", maxlength: max || 90, placeholder: dica || "" });
+    i.value = valor || ""; i.addEventListener("input", function () { aoMudar(i.value); });
+    return el("label", { classe: "f" + (larga ? " larga" : "") }, [rotulo, i]);
+  }
+  /* Lista dos escolhidos (cartões editáveis) e do que o report oferece. forcar: refaz mesmo sem mudar a estrutura. */
+  function desenharDestaques(forcar) {
+    var lista = listaDtq(), auto = !(ED.resumo && ED.resumo.destaques);
+    var ass = JSON.stringify([lista.map(function (x) { return [x.origem, !!x.imagem, x.imagem && x.imagem.posicao, x.imagem && x.imagem.inteira, x.imagem && x.imagem.video, x.imagem && x.imagem.recorte, !!x.novo, !!x.revisado]; }), DTQ.cand.map(function (c) { return c.origem + c.valor + c.titulo + c.texto; }), auto, DTQ.fora, figurasUteis()]);
+    if (!forcar && ass === DTQ.assinatura) return;
+    DTQ.assinatura = ass;
+    var box = $("#dtqEscolhidos"), n = lista.length; box.textContent = "";
+    $("#dtqConta").textContent = n + " de " + MAX_DTQ + (auto && n ? " · sugestão" : "");
+    $("#dtqDica").textContent = !DTQ.cand.length ? "Este report não tem itens para destacar." : auto ? "Sugestão: " + UI.sugestao + ". Troque, tire, reordene ou inclua o que quiser (até " + MAX_DTQ + ")." : "Na ordem do e-mail. Com número ímpar, o primeiro ocupa a largura toda.";
+    $("#bDtqNovo").disabled = n >= MAX_DTQ || !DTQ.cand.length && !ED.doc; $("#bDtqSugestao").disabled = auto;
+    lista.forEach(function (cf, i) {
+      var c = cf.novo ? null : porOrigem(cf.origem), fora = !cf.novo && !c, ind = cf.novo ? !!cf.valor : c && c.tipo === "indicador";
+      var largo = Motor.layoutDestaques(n)[i].largo;
+      var topo = el("div", { classe: "topo" }, [el("span", { classe: "num", texto: String(i + 1) }),
+        el("span", { classe: "tag", texto: cf.novo ? "INFORMAÇÃO NOVA" : fora ? "SAIU DO REPORT" : (c.secao + (c.grupo && c.grupo !== c.secao ? " · " + c.grupo : "")).toUpperCase() }),
+        cf.novo ? el("span", { classe: "selo " + (cf.revisado ? "ok" : "novo"), texto: cf.revisado ? "revisada" : "precisa de revisão" }) : null,
+        fora ? el("span", { classe: "selo fora", texto: "não vai no e-mail" }) : null,
+        !cf.novo && c && ((cf.titulo && cf.titulo !== c.titulo) || (cf.texto !== undefined && cf.texto !== null && cf.texto !== c.texto)) ? el("span", { classe: "selo ed", texto: "texto ajustado para o e-mail" }) : null,
+        largo ? el("span", { classe: "selo", texto: "largura toda" }) : null,
+        el("span", { classe: "acoes" }, [
+          el("button", { type: "button", texto: "↑", title: "Subir", "aria-label": "Subir o destaque " + (i + 1), disabled: i === 0, onclick: function () { var l = minhaLista(); l.splice(i - 1, 0, l.splice(i, 1)[0]); mudouDtq("Destaques: nova ordem", true); } }),
+          el("button", { type: "button", texto: "↓", title: "Descer", "aria-label": "Descer o destaque " + (i + 1), disabled: i === n - 1, onclick: function () { var l = minhaLista(); l.splice(i + 1, 0, l.splice(i, 1)[0]); mudouDtq("Destaques: nova ordem", true); } }),
+          el("button", { type: "button", texto: "Tirar", "aria-label": "Tirar o destaque " + (i + 1), onclick: function () { minhaLista().splice(i, 1); mudouDtq("Destaque tirado do e-mail", true); } })])]);
+      var card = el("div", { classe: "dtq" + (cf.novo ? " novo" : "") + (fora ? " fora" : ""), "data-origem": cf.origem }, [topo]);
+      if (fora) { card.appendChild(el("p", { classe: "muted", texto: "Este item não está mais no report (" + cf.origem + "): tire o destaque ou escolha outro." })); box.appendChild(card); return; }
+      function muda(k, v) { var l = minhaLista(), x = l[i]; if (v === null) delete x[k]; else x[k] = v; mudouDtq(); }
+      var grade = el("div", { classe: "grade" });
+      if (cf.novo) {
+        grade.appendChild(campoTexto("Número (opcional)", cf.valor, "ex.: 1.234 ou 12%", function (v) { muda("valor", v.trim()); }, false, false, 14));
+        grade.appendChild(campoTexto("Etiqueta (opcional)", cf.etiqueta, "ex.: ▲ 2x maior", function (v) { muda("etiqueta", v.trim()); }, false, false, 30));
+      } else if (ind) card.appendChild(el("div", { classe: "valor", texto: c.valor + (c.etiqueta ? "  ·  " + c.etiqueta : "") }));
+      grade.appendChild(campoTexto("Título", cf.novo ? cf.titulo : cf.titulo !== undefined && cf.titulo !== null ? cf.titulo : c.titulo, cf.novo ? "O que aconteceu, em poucas palavras" : c.titulo, function (v) { muda("titulo", cf.novo || v.trim() !== c.titulo ? v : null); }, false, true, 70));
+      grade.appendChild(campoTexto("Descrição curta", cf.novo ? cf.texto : cf.texto !== undefined && cf.texto !== null ? cf.texto : c.texto, cf.novo ? "Uma frase: por que isso importa" : "Uma frase (vazio: sem descrição)", function (v) { muda("texto", cf.novo || v !== c.texto ? v : null); }, true, true, 180));
+      grade.appendChild(campoTexto("Link do destaque (opcional)", cf.link, "https://… (o botão principal continua sendo o do report)", function (v) { muda("link", v.trim() || null); }, false, false, 400));
+      grade.appendChild(campoTexto("Texto do link", cf.link_texto, "Saiba mais", function (v) { muda("link_texto", v.trim() || null); }, false, false, 30));
+      card.appendChild(grade);
+      /* imagem: do computador ou do report; posição; capa de vídeo (▶) */
+      var im = cf.imagem, imgBox = el("div", { classe: "img" });
+      if (im) {
+        var mini = el("img", { alt: "Imagem do destaque " + (i + 1) }); mini.src = im.fonte === "report" ? (DTQ.figuras[im.figura] || {}).src || "" : im.orig || "";
+        imgBox.appendChild(mini);
+        imgBox.appendChild(el("label", { classe: "f" }, ["Posição", (function () {
+          var sl = el("select", {}, [el("option", { value: "acima", texto: "Acima do texto" }), el("option", { value: "lado", texto: largo ? "Ao lado do texto" : "Ao lado do texto (só no destaque de largura toda)" })]);
+          sl.value = im.posicao || "acima"; sl.addEventListener("change", function () { minhaLista()[i].imagem.posicao = sl.value; mudouDtq("Imagem do destaque: posição", true); }); return sl; })()]));
+        if (!im.inteira) imgBox.appendChild(el("label", { classe: "f" }, ["Recorte", (function () {
+          var sr = el("select", {}, [el("option", { value: "", texto: "Centro" }), el("option", { value: "topo", texto: "Topo" }), el("option", { value: "base", texto: "Base" })]);
+          sr.value = im.recorte || ""; sr.addEventListener("change", function () { var x = minhaLista()[i].imagem; if (sr.value) x.recorte = sr.value; else delete x.recorte; mudouDtq("Imagem do destaque: recorte " + (sr.value || "no centro"), true); }); return sr; })()]));
+        var inteira = el("input", { type: "checkbox" }); inteira.checked = !!im.inteira;
+        inteira.addEventListener("change", function () { minhaLista()[i].imagem.inteira = inteira.checked; mudouDtq("Imagem do destaque: " + (inteira.checked ? "inteira" : "recortada"), true); });
+        imgBox.appendChild(el("label", { classe: "check" }, [inteira, "Inteira (sem cortar)"]));
+        if (im.fonte !== "report" || !(DTQ.figuras[im.figura] || {}).video) {
+          var vid = el("input", { type: "checkbox" }); vid.checked = !!im.video;
+          vid.addEventListener("change", function () { minhaLista()[i].imagem.video = vid.checked; mudouDtq(vid.checked ? "Capa de vídeo: o ▶ vai desenhado na imagem (o vídeo fica no report)" : "Imagem sem o ▶", true); });
+          imgBox.appendChild(el("label", { classe: "check" }, [vid, "Capa de vídeo (▶)"]));
+        } else imgBox.appendChild(el("span", { classe: "muted", texto: "Capa do vídeo do report, com o ▶ (o vídeo fica no report)." }));
+        imgBox.appendChild(el("button", { type: "button", texto: "Tirar imagem", onclick: function () { delete minhaLista()[i].imagem; mudouDtq("Imagem tirada do destaque", true); } }));
+      }
+      imgBox.appendChild(el("button", { type: "button", texto: im ? "Trocar: do computador" : "+ Imagem do computador", onclick: function () { escolher("#fDtqImg", function (f) { imagemDoComputador(i, f); }); } }));
+      var figs = figurasUteis();
+      if (figs.length) {
+        var sf = el("select", { "aria-label": "Imagem do report para o destaque " + (i + 1) }, [el("option", { value: "", texto: im ? "Trocar: do report…" : "+ Imagem do report…" })].concat(figs.map(function (k) { return el("option", { value: k, texto: nomeFigura(k) + (DTQ.figuras[k].video ? " (vídeo)" : "") }); })));
+        sf.addEventListener("change", function () { if (!sf.value) return; var l = minhaLista(); l[i].imagem = { fonte: "report", figura: sf.value, posicao: (l[i].imagem && l[i].imagem.posicao) || "acima", alt: DTQ.figuras[sf.value].alt || "" }; mudouDtq("Imagem do report no destaque", true); });
+        imgBox.appendChild(sf);
+      }
+      card.appendChild(imgBox);
+      if (cf.novo) {
+        var rv = el("input", { type: "checkbox" }); rv.checked = !!cf.revisado;
+        rv.addEventListener("change", function () { minhaLista()[i].revisado = rv.checked; mudouDtq(rv.checked ? "Informação nova revisada" : "Informação nova: precisa de revisão", true); });
+        card.appendChild(el("label", { classe: "check", style: "margin-top:10px" }, [rv, "Revisei: confere com os resultados (sem isso, o e-mail não sai)"]));
+      }
+      box.appendChild(card);
     });
-    limitar();
+    /* o que o report oferece, por seção */
+    var disp = $("#dtqLista"); disp.textContent = "";
+    var usados = {}; lista.forEach(function (x) { usados[x.origem] = 1; });
+    var secoes = []; DTQ.cand.forEach(function (c) { if (secoes.indexOf(c.secao) < 0) secoes.push(c.secao); });
+    secoes.forEach(function (sec) {
+      /* o nome da campanha junto da seção (ex.: "Campanha · Campanha Exemplo A") */
+      var dono = DTQ.cand.some(function (c) { return c.secao === sec && c.capa; }) ? porOrigem("principal") : sec === UI.destaqueSec ? porOrigem("destaque") : null;
+      var g = el("div", { classe: "grupo" }, [el("b", { texto: sec + (dono && dono.titulo ? " · " + dono.titulo : "") })]);
+      DTQ.cand.filter(function (c) { return c.secao === sec; }).forEach(function (c) {
+        var ja = !!usados[c.origem];
+        g.appendChild(el("button", { type: "button", "data-origem": c.origem, disabled: ja || n >= MAX_DTQ, title: ja ? "Já está no e-mail" : n >= MAX_DTQ ? "O e-mail já tem " + MAX_DTQ + " destaques" : "Incluir no e-mail", texto: (ja ? "✓ " : "+ ") + rotuloCand(c),
+          onclick: function () { var l = minhaLista(); if (l.length >= MAX_DTQ) return; var nv = { origem: c.origem }; if (c.figura && DTQ.figuras[c.figura] && c.tipo === "texto") nv.imagem = { fonte: "report", figura: c.figura, posicao: "acima", alt: DTQ.figuras[c.figura].alt || "" }; l.push(nv); mudouDtq("Destaque incluído: " + c.titulo, true); } }));
+      });
+      disp.appendChild(g);
+    });
   }
-  function limitar() {
-    var cs = Array.prototype.slice.call(document.querySelectorAll("#indicadores input")), n = cs.filter(function (c) { return c.checked; }).length;
-    cs.forEach(function (c) { c.disabled = !c.checked && n >= Motor.RESUMO_REGRAS.indicadores; });
+  $("#bDtqNovo").addEventListener("click", function () {
+    var l = minhaLista(); if (l.length >= MAX_DTQ) return;
+    var id = 1; while (l.some(function (x) { return x.origem === "novo-" + id; })) id++;
+    l.push({ origem: "novo-" + id, novo: true, titulo: "", texto: "", valor: "", etiqueta: "", revisado: false });
+    mudouDtq("Informação nova: preencha e marque \"Revisei\" para liberar o e-mail", true);
+    var c = $("#dtqEscolhidos").lastElementChild, t = c && c.querySelectorAll("input")[2]; if (t) t.focus();
+  });
+  $("#bDtqSugestao").addEventListener("click", function () { if (ED.resumo) ED.resumo.destaques = null; mudouDtq("Destaques: de volta à sugestão", true); });
+  /* imagem do computador: guardada reduzida (até 1200 px) no report; o recorte do e-mail é feito na hora, no tamanho do espaço */
+  async function imagemDoComputador(i, file) {
+    if (!/^image\//.test(file.type)) { await perguntar("Arquivo não é uma imagem", "<p>Escolha um arquivo <b>.jpg</b> ou <b>.png</b>.</p>", "Entendi"); return; }
+    var im = await carregarArquivo(file), l = minhaLista();
+    if (!l[i]) return;
+    l[i].imagem = { fonte: "arquivo", orig: desenhar(im, 600, 0, /png|webp|gif/.test(file.type), false), alt: (l[i].titulo || (porOrigem(l[i].origem) || {}).titulo || "").slice(0, 120), posicao: (l[i].imagem && l[i].imagem.posicao) || "acima", video: false };
+    mudouDtq("Imagem do computador no destaque " + (i + 1), true);
   }
-  $("#indicadores").addEventListener("change", function () { limitar(); reconverter(); });
+  /* Destaques prontos para o motor: as imagens recortadas no tamanho do espaço (o dobro, para telas nítidas). */
+  async function destaquesProntos() {
+    var lista = ED.resumo && ED.resumo.destaques; if (!lista) return null;
+    var n = Math.min(lista.length, MAX_DTQ), out = [];
+    for (var i = 0; i < n; i++) {
+      var cf = JSON.parse(JSON.stringify(lista[i])), im = cf.imagem; delete cf.imagem;
+      if (im) { try { var pr = await imagemPronta(im, i, n); if (pr) cf.imagem = pr; } catch (e) { log("Imagem do destaque " + (i + 1) + ": " + e.message); } }
+      out.push(cf);
+    }
+    return out;
+  }
+  async function imagemPronta(im, i, n) {
+    var fig = im.fonte === "report" ? DTQ.figuras[im.figura] : null, src = fig ? fig.src : im.orig; if (!src) return null;
+    var tam = Motor.tamanhoImagemDestaque(i, n, im.posicao), w = tam[0], h = im.inteira ? 0 : tam[1], play = !!im.video && !(fig && fig.video);
+    var chave = [src.length, src.slice(0, 64), src.slice(-64), w, h, play, im.recorte || ""].join("|");
+    if (!DTQ.cache[chave]) { var e = await carregar(src); DTQ.cache[chave] = { src: desenhar(e, w, h, false, play, im.recorte), w: w, h: h || Math.round(w * e.naturalHeight / e.naturalWidth) }; }
+    var c = DTQ.cache[chave]; return { src: c.src, w: c.w, h: c.h, alt: im.alt || (fig && fig.alt) || "", posicao: im.posicao || "acima" };
+  }
 
   var adiar = null;
   function reconverter(agora) {
@@ -2417,7 +3291,7 @@
     function parou() { return minha !== execucao; }
     var erros = [], avisos = [];
     resultado = null; resumido = null; previas = {};
-    $("#bEml").disabled = true; $("#bEmlRes").disabled = true; $("#emlInfo").textContent = ""; $("#emlResInfo").textContent = "";
+    $("#bEml").disabled = true; $("#bEmlRes").disabled = true; $("#bPngRes").disabled = true; $("#emlInfo").textContent = ""; $("#emlResInfo").textContent = "";
     urls.forEach(URL.revokeObjectURL); urls = [];
     $("#secStatus").hidden = false; montarEtapas(); progresso(0); relogio(true);
     banner("run", "Preparando o e-mail de " + file.name + "…");
@@ -2429,6 +3303,7 @@
     etapa("origem", "rodando", "Procurando a marca da ferramenta…"); await respira();
     var org = Motor.origemDoHtml(html), titulo = Motor.assuntoDoHtml(html);
     var dr = Motor.dadosDoResumo(html), per = dr.ok ? dr.d.periodo : "";
+    if (dr.ok) DTQ.figuras = dr.d.figuras || {};
     if (org || dr.ok) etapa("origem", "ok", "Report " + (per ? "de " + per : "") + (org ? " · gerado pela versão " + org.versao : "") + ".");
     else etapa("origem", "ok", "Report sem a marca da ferramenta (feito fora dela ou antes da 4.2): o e-mail é montado do mesmo jeito; confira a prévia.");
     var meta = /<meta name="report-completo" content="([^"]*)"/.exec(html);
@@ -2447,26 +3322,32 @@
       else if (lk.info && !/Caminho de arquivo|Endereço relativo/.test($("#linkInfo").textContent)) $("#linkInfo").textContent += " " + lk.info;
       $("#linkInfo").style.color = "";
     }
-    etapa("resumir", "rodando", "Escolhendo os indicadores…"); await respira();
-    var marcados = Array.prototype.filter.call(document.querySelectorAll("#indicadores input"), function (c) { return c.checked; }).map(function (c) { return c.value; });
-    var res = Motor.emailResumo(html, { link: linkOk ? link : "", botao: botao, indicadores: marcados, assunto: titulo }), itens = [];
+    etapa("resumir", "rodando", "Montando os destaques…"); await respira();
+    var prontos = await destaquesProntos(); if (parou()) return;
+    var res = Motor.emailResumo(html, { link: linkOk ? link : "", botao: botao, destaques: prontos, assunto: titulo }), itens = [];
     if (res.erro) { resErro = res.erro; etapa("resumir", "erro", res.erro); erros.push("resumo"); }
     else {
-      atualizarIndicadores(res.candidatos, res.indicadores);
-      res.indicadores.forEach(function (k) { var x = res.candidatos.filter(function (c) { return c.chave === k; })[0]; itens.push(x.valor + " · " + x.titulo + (x.origem && x.titulo.indexOf(x.origem) < 0 ? " (" + x.origem + ")" : "")); });
-      if (!res.indicadores.length) itens.push("Nenhum indicador na página: o e-mail sai só com a frase do mês e a chamada.");
-      var repetidos = res.candidatos.filter(function (x) { return x.na_frase && res.indicadores.indexOf(x.chave) >= 0; });
-      if (repetidos.length) itens.push({ t: "Repete a frase do mês: " + repetidos.map(function (x) { return x.valor + " · " + x.titulo; }).join(" | ") + ". Troque o indicador ou a frase.", aviso: true, ir: irPara("#indicadores"), ciente: "rep|" + repetidos.map(function (x) { return x.chave + x.valor; }).join() });
+      DTQ.cand = res.candidatos; DTQ.sug = res.sugestao; DTQ.fora = res.fora; desenharDestaques();
+      res.destaques.forEach(function (x) { itens.push((x.valor ? x.valor + " · " : "") + (x.aprendizado ? "O que aprendemos" + (x.grupo ? " · " + x.grupo : "") : x.titulo || "O que aprendemos") + (x.novo ? " (informação nova)" : "") + (x.imagem ? " · com imagem" : "") + (x.link ? " · com link" : "")); });
+      if (!res.destaques.length) itens.push("Sem destaques: o e-mail sai só com a frase do mês e a chamada.");
+      res.fora.forEach(function (o) { itens.push({ t: "Um destaque não está mais no report (" + o + "): tire ou troque na etapa 4.", aviso: true, ir: irPara("#dtq") }); });
+      var semRevisao = res.destaques.filter(function (x) { var cf = (ED.resumo.destaques || []).filter(function (y) { return y.origem === x.origem; })[0]; return x.novo && !(cf && cf.revisado); });
+      var vazios = res.destaques.filter(function (x) { return x.novo && !x.titulo; });
+      if (vazios.length) resErro = "Informação nova sem título (etapa 4): escreva o título ou tire o destaque.";
+      else if (semRevisao.length) resErro = "Informação nova para revisar (etapa 4): " + semRevisao.map(function (x) { return x.titulo; }).join(", ") + ". Marque \"Revisei\" para liberar o e-mail.";
+      var repetidos = res.repetidos;
+      if (repetidos.length) itens.push({ t: "Repete a frase do mês: " + repetidos.map(function (x) { return x.valor + " · " + x.titulo; }).join(" | ") + ". Troque o destaque ou a frase.", aviso: true, ir: irPara("#dtq"), ciente: "rep|" + repetidos.map(function (x) { return x.origem + x.valor; }).join() });
       /* cada texto do modelo que falta trocar, com "Ir até lá" (leva ao campo, com o cursor dentro) */
       res.pendencias.slice(0, 6).forEach(function (pd) { var k = pd.indexOf(": "); itens.push({ t: "Ainda é texto do modelo: " + pd.slice(k + 2), aviso: true, ir: irParaCampo(pd.slice(0, k)) }); });
       if (res.pendencias.length > 6) itens.push({ t: "E mais " + (res.pendencias.length - 6) + " texto(s) do modelo no report.", aviso: true });
       if (lk.erro) resErro = "O link do report completo (passo 3) " + lk.erro;
       else if (!link) resErro = "Falta o link do report completo (passo 3).";
-      if (linkOk && lk.tipo === "arquivo") itens.push("Link: caminho de arquivo. Abre no Outlook para Windows de quem tem esse arquivo (ou a mesma pasta); para os outros, use o link de compartilhamento.");
+      res.destaques.forEach(function (x) { if (x.link && /^(javascript|data|vbscript):/i.test(x.link)) resErro = "Link de destaque não permitido: " + x.titulo; });
+      if (linkOk && lk.tipo === "arquivo") itens.push({ t: "Link: caminho de arquivo. No e-mail recebido, o Outlook bloqueia esse link (e um caminho C:\\… só existe no seu computador). Para quem recebe, cole o link do OneDrive: botão direito no arquivo › Compartilhar › Copiar link.", aviso: true, ir: irPara("#link"), ciente: "arq|" + link });
       if (linkOk && lk.tipo === "relativo") itens.push({ t: "Link: só o nome do arquivo não abre no e-mail. Cole o caminho completo (C:\\…) ou o link de compartilhamento.", aviso: true, ir: irPara("#link"), ciente: "rel|" + link });
       if (!resErro && !res.temLink) resErro = "O botão ficou sem o link: confira o endereço no passo 3.";
       var abR = abertos(itens); if (abR.length) avisos.push("resumo");
-      etapa("resumir", resErro || abR.length ? "aviso" : "ok", resErro ? resErro + " A prévia mostra o aviso no lugar do botão." : res.indicadores.length + " indicador(es) · botão \"" + botao + "\" para " + (lk.tipo === "arquivo" ? "o arquivo " + decodeURIComponent(link.split("/").pop().replace(/%(?![0-9a-f]{2})/gi, "%25")) : hostDe(link)) + " (o único link do e-mail).", itens);
+      etapa("resumir", resErro || abR.length ? "aviso" : "ok", resErro ? resErro + (/link do report/.test(resErro) ? " A prévia mostra o aviso no lugar do botão." : "") : res.destaques.length + " destaque(s) · botão \"" + botao + "\" para " + (lk.tipo === "arquivo" ? "o arquivo " + decodeURIComponent(link.split("/").pop().replace(/%(?![0-9a-f]{2})/gi, "%25")) : hostDe(link)) + " (o único link do e-mail).", itens);
     }
     var completo = { html: limpo.html };
     progresso(32); await respira(); if (parou()) return;
@@ -2525,7 +3406,8 @@
     else {
       previas.resumido = Motor.trocarSrc(res.html, mapaPrev);
       var rr = montar(res.html, base + "-resumo.eml"), nl = (res.html.match(/<a\b[^>]*href=/gi) || []).length;
-      if (nl > 1) rr.notas.push("O e-mail-resumo tem " + nl + " links; o esperado é um.");
+      var nld = res.destaques.filter(function (x) { return x.link; }).length;
+      if (nl > 1 + nld) rr.notas.push("O e-mail-resumo tem " + nl + " links; o esperado é o do botão" + (nld ? " e os " + nld + " dos destaques" : "") + ".");
       if (erros.length) etapa("resumido", "erro", "Não montei: há imagens com problema.");
       else if (resErro) etapa("resumido", "aviso", resErro + " (prévia pronta: " + kb(rr.tam) + ").");
       else {
@@ -2539,7 +3421,7 @@
     if (erros.length) { progresso(100); banner("err", "Não deu para preparar o e-mail. Veja a etapa com ✕."); return; }
     progresso(100, true);
     banner(resumido && !avisos.length ? "ok" : "warn", resumido ? "Pronto: e-mail-resumo." + (avisos.length ? " Há pontos para olhar (!)." : "") : lk.erro ? "Quase: o link do report completo (passo 3) não é permitido. Sem um link, o e-mail-resumo não sai." : "Quase: falta o link do report completo (passo 3) para liberar o e-mail-resumo.");
-    $("#bEml").disabled = !resultado; $("#bEmlRes").disabled = !resumido;
+    $("#bEml").disabled = !resultado; $("#bEmlRes").disabled = !resumido; $("#bPngRes").disabled = !previas.resumido;
     $("#emlInfo").textContent = resultado ? resultado.nome + " · " + kb(resultado.tam) : "";
     $("#emlResInfo").textContent = resumido ? resumido.nome + " · " + kb(resumido.tam) : "Precisa do link do report completo (passo 3): o caminho do arquivo ou o link de compartilhamento.";
   }
@@ -2575,6 +3457,45 @@
   var alturaEdicao = ajustarAltura($("#edFrame")), alturaPrevia = ajustarAltura($("#prev"));
   $("#bEml").addEventListener("click", function () { baixarEml(resultado, "#emlInfo"); });
   $("#bEmlRes").addEventListener("click", function () { baixarEml(resumido, "#emlResInfo"); });
+  /* Imagem (.png) do e-mail-resumo (4.13): a prévia desenhada numa imagem, em dobro (nítida), sem programa externo.
+     Complementa o .eml (não o substitui): o e-mail continua em texto, legível e com o botão clicável. */
+  async function pngDoResumo(html, largura) {
+    /* a foto é a do e-mail no computador: em 680 px a regra de celular (até 700 px) empilharia os cartões na medida
+       da altura e não no desenho; sem ela, medida e desenho ficam iguais */
+    html = html.replace(/\(max-width:\s*\d+px\)/g, "(max-width:1px)");
+    var fr = document.createElement("iframe"); fr.setAttribute("aria-hidden", "true"); fr.tabIndex = -1;
+    fr.style.cssText = "position:fixed;left:-10000px;top:0;width:" + largura + "px;height:400px;border:0;visibility:hidden";
+    document.body.appendChild(fr);
+    try {
+      await new Promise(function (ok) { fr.onload = ok; fr.srcdoc = html; });
+      var d = fr.contentDocument;
+      await Promise.all(Array.prototype.map.call(d.images, function (im) { return im.complete ? 0 : new Promise(function (ok) { im.onload = im.onerror = ok; }); }));
+      /* imagens em blob: (mídia separada) viram data: (a imagem do SVG não busca nada de fora) */
+      for (var i = 0; i < d.images.length; i++) {
+        var im = d.images[i];
+        if (/^blob:/.test(im.src)) im.src = await lerComo(await (await fetch(im.src)).blob(), "readAsDataURL");
+      }
+      var H = Math.ceil(d.documentElement.scrollHeight), W = largura, esc2 = 2;
+      var caixa = d.createElement("div"); caixa.setAttribute("style", (d.body.getAttribute("style") || "") + ";width:" + W + "px;");
+      Array.prototype.forEach.call(d.querySelectorAll("style"), function (st) { caixa.appendChild(st.cloneNode(true)); });
+      Array.prototype.forEach.call(d.body.childNodes, function (n) { caixa.appendChild(n.cloneNode(true)); });
+      var xhtml = new XMLSerializer().serializeToString(caixa);
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W * esc2 + '" height="' + H * esc2 + '" viewBox="0 0 ' + W + " " + H + '"><foreignObject x="0" y="0" width="' + W + '" height="' + H + '">' + xhtml + "</foreignObject></svg>";
+      var img = new Image(); img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg); await img.decode();
+      var c = document.createElement("canvas"); c.width = W * esc2; c.height = H * esc2;
+      var g = c.getContext("2d"); g.fillStyle = "#FBF1EA"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      return await new Promise(function (ok, falha) { c.toBlob(function (b) { b ? ok(b) : falha(new Error("não deu para gerar a imagem")); }, "image/png"); });
+    } finally { fr.remove(); }
+  }
+  $("#bPngRes").addEventListener("click", async function () {
+    if (!previas.resumido) return;
+    $("#pngResInfo").textContent = "Gerando a imagem…";
+    try {
+      var b = await pngDoResumo(previas.resumido, 680), nome = (resumido ? resumido.nome : (ED.nomeSalvo || "report") + "-resumo.eml").replace(/\.eml$/, ".png");
+      baixar(nome, b, "image/png");
+      $("#pngResInfo").textContent = "Baixada: " + nome + " · " + kb(b.size) + ". É uma foto do e-mail: para enviar, use o .eml."; log("Baixada: " + nome + ".");
+    } catch (e) { $("#pngResInfo").textContent = "Não deu para gerar a imagem: " + e.message; }
+  });
   /* a prévia só recarrega quando muda (editar um texto que não entra no resumo não refaz o quadro do resumo) */
   function mostrarPrevia() { var h = previas[qualPrev] || '<p style="font:15px Arial;padding:24px;color:#5F5F5F">A prévia aparece quando o report estiver aberto.</p>'; if ($("#prev").srcdoc !== h) $("#prev").srcdoc = h; }
   Array.prototype.forEach.call(document.querySelectorAll(".tabs button[data-qual]"), function (b) {

@@ -1,0 +1,163 @@
+# ======================================================================
+#  CONFIGURAÇÃO DE MARCA · REPORT MENSAL PJ (SANTANDER EMPRESAS)
+# ======================================================================
+#  O mesmo formato de config/marca.txt (o do PF), com as escolhas do
+#  Brand Guide Santander Brasil (maio/2026), capítulo 6 · Santander
+#  Empresas. O template é o mesmo do PF (template/report.html, o mesmo
+#  esqueleto nos dois segmentos): o que muda no PJ vem daqui.
+#
+#  Como editar: cada linha é "campo: valor". Troque só o que vem depois
+#  dos ":". Linhas que começam com # são explicações.
+# ======================================================================
+
+
+# ======================================================================
+#  FONTES (Brand Guide 6.2 · Tipografia do Santander Empresas)
+# ======================================================================
+#    Santander Condensed  títulos e mensagens de impacto (voz do banco):
+#                         frase do mês e títulos das seções  -> impacto
+#    Santander Headline   títulos de peso médio, ambientes digitais e
+#                         aplicações pequenas: números, nomes  -> titulos
+#    Santander Micro Text textos de apoio, balões e botão      -> texto
+#  Cada campo é uma LISTA: o aparelho usa a 1ª fonte que encontrar
+#  (arquivo .otf em assets/fonts/ ou fonte instalada). Arial é só a
+#  alternativa do sistema, NÃO é a fonte oficial.
+#  Outlook para Windows: uma fonte só (VALIDAR COM TI, como no PF).
+# ======================================================================
+[FONTES]
+titulos: 'Santander Headline', Arial, Helvetica, sans-serif
+texto: 'Santander Micro Text', Arial, Helvetica, sans-serif
+impacto: 'Santander Condensed', 'Santander Headline', Arial, Helvetica, sans-serif
+titulos_outlook_windows: Arial
+texto_outlook_windows: Arial
+
+
+# ======================================================================
+#  CHAMA DO SANTANDER (só o símbolo)
+# ======================================================================
+#  No Empresas os fundos são Rio e Branco, então a chama vai na versão
+#  POSITIVA, em Vermelho Santander (Brand Guide 6.2 · Logotipo: "o
+#  logotipo e o símbolo devem ser apresentados preferencialmente em sua
+#  versão positiva"; "a cor do logotipo não pode ser alterada").
+#  É o mesmo arquivo oficial do PF (assets/marca/), sem redesenho.
+#  O logotipo completo "Santander Empresas" fica no Portal da Marca: não
+#  foi recriado aqui.
+# ======================================================================
+[LOGO]
+arquivo: assets/marca/chama-santander.png
+largura: 32
+descricao: Santander
+
+
+# ======================================================================
+#  CORES · Brand Guide 6.2 · Cores (paleta do Santander Empresas)
+# ======================================================================
+#  Paleta: Rio #F5DECF (fundo, balão), Branco #FFFFFF (fundo, balão),
+#  Vermelho Santander #EC0000 (Botão de Início, texto do balão, logotipo),
+#  Boston #CC0000 (texto do balão sobre Rio) e Preto #000000 (títulos e
+#  textos de apoio). "Destaque para o tom Rio, garantindo maior
+#  distintividade."
+#  Hierarquia de cores (Brand Guide 6.2 · Paleta e proporção):
+#    principal (destaque) Rio · base Branco · acento Vermelho Santander
+#    (logotipo, Botão de Início, texto do balão Branco) · Boston (texto do
+#    balão Rio) · Preto (títulos e textos de apoio).
+#  Regras aplicadas no report PJ (5.3):
+#   - FUNDO só Rio ou Branco (nenhum fundo vermelho), em três níveis que
+#     nunca se encostam: o fundo do HTML (em volta do report) é Branco; o
+#     fundo do conteúdo (o report) é Rio, a cor principal; os painéis
+#     (abertura, principais resultados, indicadores, próximas iniciativas
+#     e encerramento) e o cartão das análises são Brancos, recuados dentro
+#     do report (sempre há Rio entre o painel e o fundo do HTML).
+#   - Títulos e textos em Preto; vermelho só na chama, nos links, nos
+#     números de destaque e no botão. Balões: Branco com texto Vermelho
+#     Santander (sobre Rio) ou Rio com texto Boston (sobre Branco). Textos
+#     pequenos sobre o Rio em Boston (contraste de 4,5:1 ou mais).
+#   - Etiquetas de variação (verde/âmbar): só nos dados, como no PF
+#     (paleta de apoio institucional, uso pontual em indicadores).
+[CORES]
+marca: #EC0000
+titulo: #000000
+texto: #000000
+texto_corpo: #000000
+texto_apoio: #000000
+positivo: #21634F
+positivo_fundo: #A3E0CE
+atencao: #945400
+atencao_fundo: #FFE1B9
+fundo_pagina: #FFFFFF
+fundo_email: #F5DECF
+
+
+# ======================================================================
+#  CORES DE APOIO (elementos do report PJ)
+# ======================================================================
+[CORES DE APOIO]
+# Balão sobre o Rio (número da seção, rótulo da campanha): fundo Branco,
+# texto Vermelho Santander.
+grupo_resultados: #EC0000
+grupo_resultados_fundo: #FFFFFF
+grupo_evolucao: #EC0000
+grupo_evolucao_fundo: #FFFFFF
+# Aprendizados e agenda (números, datas e rótulos pequenos sobre o Rio):
+# Boston, com o balão Branco.
+grupo_aprendizado: #CC0000
+grupo_aprendizado_fundo: #FFFFFF
+# Rótulos pequenos sobre o Rio (categoria do destaque, "Outras
+# campanhas do mês"): Boston.
+rotulo_texto: #CC0000
+# Balão sobre os painéis Brancos (período na abertura, número da seção,
+# contato): fundo Rio, texto Boston. Filete da abertura: Rio.
+capa_selo: #F5DECF
+selo_texto: #CC0000
+capa_filete: #F5DECF
+# Segunda parte da frase do mês: Preto, mais leve (peso normal).
+capa_destaque: #000000
+# Painéis Brancos (abertura, resultados, indicadores, próximas
+# iniciativas e encerramento), com texto Preto e filetes e trilho em Rio.
+abertura_fundo: #FFFFFF
+abertura_texto: #000000
+bloco_fundo: #FFFFFF
+foco_fundo: #FFFFFF
+abertura_linha: #F5DECF
+# Divisórias finas e contorno das imagens sobre o Rio: Branco.
+linha: #FFFFFF
+# Indicadores: barra (Boston) e valor anterior (Preto).
+creative_x: #CC0000
+creative_x_anterior: #000000
+# Análises: cartão Branco sobre o Rio, com divisórias Rio.
+transformation: #000000
+transformation_titulo: #000000
+cartao_fundo: #FFFFFF
+transformation_fundo: #FFFFFF
+transformation_linha: #F5DECF
+transformation_placeholder_fundo: #F5DECF
+transformation_placeholder_borda: #CC0000
+# Textos dos painéis Brancos: Preto.
+foco_rotulo: #000000
+foco_texto: #000000
+# Encerramento: painel Branco, filete Rio, assinatura com a chama vermelha.
+rodape_claro: #F5DECF
+rodape_fundo: #FFFFFF
+# Espaço de imagem ainda não escolhida (só no rascunho): Branco sobre o Rio.
+placeholder_fundo: #FFFFFF
+placeholder_borda: #CC0000
+
+
+# ======================================================================
+#  IMAGENS e LINKS: as mesmas regras do PF (config/marca.txt).
+# ======================================================================
+[IMAGENS]
+modo: embutidas
+endereco_base:
+qualidade_jpg: 82
+
+[LINKS]
+dominios_permitidos:
+
+
+# ======================================================================
+#  FORMIGUINHA: não usada no PJ (é personagem do Creative Strategy PF).
+# ======================================================================
+[FORMIGUINHA]
+arquivo:
+descricao:

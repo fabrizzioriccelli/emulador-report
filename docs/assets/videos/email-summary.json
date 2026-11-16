@@ -1,0 +1,36 @@
+{
+ "duracao": 34.2672860622406,
+ "marcas": [
+  {
+   "n": 1,
+   "t": "Report pronto: agora o e-mail-resumo, a porta de entrada do report",
+   "s": 0.4742860794067383
+  },
+  {
+   "n": 2,
+   "t": "O link do report completo (aqui, um endereço de exemplo)",
+   "s": 8.140285968780518
+  },
+  {
+   "n": 3,
+   "t": "Destaques: até 4, escolhidos do próprio report; a prévia muda na hora",
+   "s": 12.026285886764526
+  },
+  {
+   "n": 4,
+   "t": "Prévia: no computador e no celular",
+   "s": 20.197285890579224
+  },
+  {
+   "n": 5,
+   "t": "Baixar e-mail-resumo (.eml): dois cliques no arquivo abrem a mensagem no Outlook",
+   "s": 26.85628604888916
+  },
+  {
+   "n": 6,
+   "t": "Primeiro para você, testar o botão; depois para a área",
+   "s": 31.460285902023315
+  }
+ ],
+ "erros": []
+}

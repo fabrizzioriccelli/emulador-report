@@ -1,0 +1,26 @@
+{
+  "_aviso": "DADOS FICTÍCIOS. Base numérica da demonstração do portfólio. Nenhum número representa resultado real.",
+  "periodo": { "atual": "Abril 2099", "referencia": "Março 2099" },
+  "pf": {
+    "campanha_horizonte": {
+      "atual": { "impressoes": 2400000, "cliques": 42000, "conversoes": 3150, "investimento": 94500 },
+      "referencia": { "impressoes": 2250000, "cliques": 31500, "conversoes": 2700, "investimento": 97200 }
+    },
+    "projeto_aurora": {
+      "atual": { "alcance": 860000, "visualizacoes_completas": 215000, "investimento": 25800 },
+      "referencia": { "alcance": 800000, "visualizacoes_completas": 180000, "investimento": 25200 }
+    },
+    "qualidade_criativa": { "atual": 74, "referencia": 68 }
+  },
+  "pj": {
+    "programa_vertice": {
+      "atual": { "impressoes": 1200000, "cliques": 18000, "leads": 3600, "contas": 720 },
+      "referencia": { "impressoes": 1100000, "cliques": 15000, "leads": 2700, "contas": 600 }
+    },
+    "conecta_negocios": {
+      "atual": { "inscritos": 1240, "participantes": 806, "nps": 72 },
+      "referencia": { "participantes": 700, "nps": 64 }
+    },
+    "qualidade_criativa": { "atual": 76, "referencia": 70 }
+  }
+}

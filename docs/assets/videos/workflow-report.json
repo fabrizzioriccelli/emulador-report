@@ -1,0 +1,56 @@
+{
+ "duracao": 78.00077104568481,
+ "marcas": [
+  {
+   "n": 1,
+   "t": "Começar um mês novo: o modelo em branco já traz todas as seções",
+   "s": 0.4927711486816406
+  },
+  {
+   "n": 2,
+   "t": "Clique e escreva: o período muda em todos os lugares da página",
+   "s": 5.27777099609375
+  },
+  {
+   "n": 3,
+   "t": "Frase do mês e projeto principal",
+   "s": 9.380770921707153
+  },
+  {
+   "n": 4,
+   "t": "Indicadores: valor, nome, variação e referência (fictícios: CTR = cliques ÷ impressões)",
+   "s": 20.589771032333374
+  },
+  {
+   "n": 5,
+   "t": "Imagem: Trocar imagem abre o Explorador de Arquivos (a janela não aparece na gravação)",
+   "s": 33.358771085739136
+  },
+  {
+   "n": 6,
+   "t": "+ Novo item: um lançamento a mais, logo depois do atual",
+   "s": 40.13077092170715
+  },
+  {
+   "n": 7,
+   "t": "Arrastar: segure ⠿ Arrastar e solte na linha de encaixe",
+   "s": 48.393770933151245
+  },
+  {
+   "n": 8,
+   "t": "Mover para outra seção: o item vai com os textos e os números",
+   "s": 55.50977110862732
+  },
+  {
+   "n": 9,
+   "t": "Vídeo no card: Colocar vídeo e escolher o arquivo (a janela não aparece na gravação)",
+   "s": 64.96877098083496
+  },
+  {
+   "n": 10,
+   "t": "Salvar report: um .html só, com imagens e vídeos dentro",
+   "s": 72.04677104949951
+  }
+ ],
+ "erros": []
+}

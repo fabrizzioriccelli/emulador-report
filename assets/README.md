@@ -8,6 +8,8 @@
 | `marca/` | Chama do Santander e paleta. [README](marca/README.md) | Sim | Não |
 | `formiguinha/` | A personagem (arquivo original). [README](formiguinha/README.md) | Sim | Não |
 | `icones/` | Ícones do Creative Transformation (traço vermelho) | Sim | Não |
+| `coringa/` · `coringa-pj/` | Espaços neutros do modelo em branco do PF e do PJ (o do PJ em Rio, peça da visão geral vertical) | Sim (sem dado real) | Não |
+| `exemplo/` · `exemplo-pj/` | Peças **fictícias** dos exemplos de treino do PF e do PJ (sem logotipo, sem pessoas) | Sim (fictício) | Não |
 
 ## Imagens do mês
 
@@ -18,7 +20,7 @@
 
 | Espaço no e-mail | Formato (o recorte é automático) |
 |---|---|
-| Peça do projeto principal | Quadrado (184 × 184 na tela; 180 px no celular) |
+| Peça do projeto principal (Visão geral) | Retângulo vertical (184 × 230 na tela; envie com 368 × 460 px ou mais; 216 px no celular), no PF e no PJ |
 | Peça do projeto em destaque | Vertical 184 × 300 no computador; horizontal na largura da tela no celular |
 | Miniatura de lançamento | Faixa horizontal (~2,5 : 1) |
 | Print de Creative Transformation | Horizontal (~4 : 3) |

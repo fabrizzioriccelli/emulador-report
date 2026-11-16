@@ -1,5 +1,5 @@
 /*
- * MOTOR DO REPORT · Creative Strategy PF
+ * MOTOR DO REPORT · Creative Strategy PF e PJ (Santander Empresas)
  * ======================================================================
  * Código técnico. Você NÃO precisa abrir este arquivo no dia a dia.
  * No dia a dia, edite dados/AAAA-MM.txt (conteúdo) e, raramente,
@@ -23,7 +23,7 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
   /* Versão do projeto (veja CHANGELOG.md). Aparece na página de geração e nos arquivos gerados. */
-  var VERSAO = "4.12 (2026-10-28)";
+  var VERSAO = "5.6 (2026-11-11)";
 
   /* =================================================================== */
   /* 1. LEITURA DOS ARQUIVOS "campo: valor"                               */
@@ -81,14 +81,17 @@
   /* [FOI BEM] e [A MELHORAR] eram o "Resumo das campanhas", que saiu do report na 4.11. */
   var RESUMO_SAIU = /^(FOI BEM|A MELHORAR)$/, RESUMO_AVISO = "[FOI BEM] e [A MELHORAR] (Resumo das campanhas) saíram do report na versão 4.11 e foram ignorados. Pode apagar esses blocos.";
   var ESQUEMA_DADOS = [
-    { bloco: "EDICAO", obrigatorio: true, campos: { mes: 1, ano: 1, proximo_mes: 1, pasta_imagens: 1, contato: 0, link_report_completo: 0 } },
+    { bloco: "EDICAO", obrigatorio: true, campos: { mes: 1, ano: 1, proximo_mes: 1, pasta_imagens: 1, contato: 0, link_report_completo: 0, segmento: 0 } },
     { bloco: "ABERTURA", obrigatorio: true, campos: { frase: 1, frase_final: 0, previa: 0 } },
-    { bloco: "PROJETO PRINCIPAL", obrigatorio: true, campos: junta({ nome: 1, resumo: 0 }, PECA) },
+    { bloco: "PROJETO PRINCIPAL", obrigatorio: true, campos: junta({ rotulo: 0, nome: 1, resumo: 0, aprendizado: 0, posicao_imagem: 0 }, PECA) },
     { bloco: "NUMERO", max: 4, campos: NUM },
+    /* Funil (5.4): com este bloco, os números de [NUMERO 1..4] viram os degraus de um funil (o 1º é o mais largo), num
+       bloco Vermelho, com o nome em cima (rotulo) e um total ao lado (total, total_titulo). Sem ele, colunas, como sempre. */
+    { bloco: "FUNIL", campos: { rotulo: 0, total: 0, total_titulo: 0 } },
     { bloco: "LANCAMOS", campos: { titulo: 0 } },
-    { bloco: "DESTAQUE", campos: junta({ categoria: 0, titulo: 1, texto: 0, nota: 0 }, PECA) },
+    { bloco: "DESTAQUE", campos: junta({ categoria: 0, titulo: 1, texto: 0, nota: 0, aprendizado: 0 }, PECA) },
     { bloco: "RESULTADO", max: 3, campos: NUM },
-    { bloco: "LANCAMENTO", max: 6, campos: junta({ status: 0, status_cor: 0, nome: 1, texto: 0 }, PECA) },
+    { bloco: "LANCAMENTO", max: 6, campos: junta({ status: 0, status_cor: 0, nome: 1, texto: 0, aprendizado: 0 }, PECA) },
     { bloco: "CREATIVE X", campos: { subtitulo: 0, rotulo: 0, anterior: 0, atual: 1, variacao: 0, periodo: 0, referencia: 0, significado: 0, nota: 0 } },
     /* Creative X trimestral (opcional, no mês que fecha o trimestre): entra na mesma seção, abaixo do resultado do mês. */
     { bloco: "CREATIVE X TRIMESTRE", campos: { rotulo: 0, titulo: 0, texto: 0, estimativa: 0 } },
@@ -106,13 +109,64 @@
      o mesmo do emulador. Só na aba (cabeçalho da página): o conteúdo do report não muda, e o e-mail não leva o ícone
      (paraEmail, limparHtmlEditado e emailResumido tiram). */
   var ICONE_TAG = "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADO0lEQVR4nMRXXUgUURT+xt1ZDVtHXYNAKMqULO1Rw0BIHyzTMAIVgp6Cgv40Kcyi8CEKohDxwR57CZceIpAkXxUy8clNJKlAfCrbdjcpdN1t+u7sVcxtZ2faIT+4nDt3zj33u+ece+aOG1uMLDvKQeAcHIZiVfELsJ1swyqwXwM+wCFY9kA2sJPCtQo8hoOwTCBmOMFAM0PRAIeQlsB3oEgH3D6ji+di7BfQzzEVDiAtgRXg0jfgtOi7gW6KKBOn7CtwFQ4gLQEuVsPdPmLLyQc+cahPjt9ZAnYgQ1jJAXFSihn3K+KBoeglmUV2vcvATWQIKwQmpLwl8oFsfrJdl2PNyBBJdYCxraI4w3a0CDjERX1R4COfefwxwLHLUu8dxUG2GbaX9MpTxmMONrHuARrIpZsH2X2LhLsrQ8DuPBZAsrwr1S7Q92Wy/0xKQaKHOjMk1aPbrK5ZcnGVi49Snt/4Mi6fC7lzivdsbi70UIxRft5ki4cE92inH3YJcFIvRc1f3ncJL3CxuCKTkDjJsVrK4hQ2L/LYHocdAtx5a4r3nrg8dr6Eh4ZFn1XxBvttqYxyzlnYIUB4TXRa1kovle8LSW+coDhgMkeDHQI0+NpMiaV3QOQJc2EKFqBIT1kmwC9dl56ocqkM7qMXrrHrQhrQziuG6wkswiBA/y9ykVox2cTwbSZXrdrUBG18HIWhEHy6ntSKdL0Ruh7TUyPENs7WJDf3J7jIESZRN18cQ+JorcPT2hr0+v0+xGKIjowgHghAj0ZhFYrHA1dlJTwNTCn2iVOKyY5zSaaG8d9LpV183lMQCDS6Sku1cFUV4tPT+Fe4KiqQP8V0ys6esHwlM0jpejjq92tL7e3IFN6hIXja2iK2yiahxWZn4QSkHc0ugSQUzM+vJ2BhMAjmCLBtmyE3J6haX5803w0HsNzXhx+dnVDr6pA3OoqcicQXPDY5iUh1telcRwisIb6wwDvcChTV+nUx4xAI5HR0GC4umJvD6tgYlgcHjXE3T8vGEGSVlCTNdTQEm2ElBHY9EHGXl8MJSDsRu3XgDWN8eCsLUQvFi/9Sik1IiI+I+EERd8F82EcYiYvsA0VRhn8DAAD///RxfWoAAAAGSURBVAMAdkE0NBPwdJsAAAAASUVORK5CYII=\">\n<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABtElEQVR4nJxSTUsCURQ9b2b6wMySEloIGcFYUGAE9QeKIMofELVoI7RsUZs+IGpVQbRoI7SMgqho1V9oFwiJYlCQbcwy0yDxYzqOIqYjWg/uvPPu3HPm3PtGgsF6A+xocElGyRzgeQVG8R8BDTAx+SyAIzSwqgRof48OzijUHwUW/ixAYi+3GcYGY62egMg/YoAjUygOysB9FjgmdjJCLHjivtsNXBoKfNAqyXfE7fz6IwsH2cY1iT6eR5ifKDpbsQH7VS2QPJUnF+30vQOr3Lc4hyWmxspq54wcSFS+YkTLZrDOiFHEzKOlVFjjVkozYN87hLN5krBYAmavd0AZHkY2EqkmyTKU8fEgmps39VuwclDsfb4L6OTRbjk9PcnF44gNDUFWVUg2GzK3tzoWJhNS5+eIqaoTicS2UmGH7vGiTU8rSZeLJw1Zvx+fbjc6bm4KeHKyVJ+6uFANf2W9Z6u1sNvtMB8e4tvr1XHbwQGaiiKSwwEFdVYuHEbS49Fxy+IivpaXf3+oBi/AIemg3HI55gChuFwhYcTWNM2MdPo46/O5c4lEa+V7IQRkp/NB9PSs/QAAAP//Vu1NDgAAAAZJREFUAwDKA33QsZYOOgAAAABJRU5ErkJggg==\">\n<link rel=\"icon\" type=\"image/svg+xml\" sizes=\"any\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg transform='translate(2,2) scale(0.95)'%3E%3Cpath transform='translate(0,-0.4)' fill='%23EC0000' d='M 31.5,19.5 C 31.4,18 31,16.5 30.2,15.2 L 23.4,3.3 C 22.9,2.4 22.5,1.4 22.3,0.4 L 22,0.9 c -1.7,2.9 -1.7,6.6 0,9.5 l 5.5,9.5 c 1.7,2.9 1.7,6.6 0,9.5 l -0.3,0.5 c -0.2,-1 -0.6,-2 -1.1,-2.9 l -5,-8.7 -3.2,-5.6 C 17.4,11.8 17,10.8 16.8,9.8 l -0.3,0.5 c -1.7,2.9 -1.7,6.5 0,9.5 v 0 l 5.5,9.5 c 1.7,2.9 1.7,6.6 0,9.5 l -0.3,0.5 c -0.2,-1 -0.6,-2 -1.1,-2.9 L 13.7,24.5 C 12.8,22.9 12.4,21.1 12.4,19.3 5.1,21.2 0,25.3 0,30 0,36.6 9.8,41.9 21.9,41.9 34,41.9 43.8,36.6 43.8,30 43.9,25.5 38.9,21.4 31.5,19.5 Z'/%3E%3C/g%3E%3Crect x='22' y='36' width='42' height='28' rx='8' fill='%23FFFFFF'/%3E%3Crect x='25' y='39' width='36' height='22' rx='6' fill='%23EC0000'/%3E%3Ctext x='43' y='57' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-size='19' fill='%23FFFFFF'%3EPF%3C/text%3E%3C/svg%3E\">\n<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"data:image/png;base64,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\">";
+  /* Ícone da aba do report PJ (5.0): Santander + PJ (assets/marca/svg/santander-pj.svg e os PNG de 16, 32 e 180 px). A mesma
+     chama do PF, sem redesenho; o selo "PJ" tem o contorno em Rio, a cor de destaque do Santander Empresas. */
+  var ICONE_TAG_PJ = "<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADoklEQVR4nMRXXUgUURT+ZnZnNcw12oJoISnLsijqpcIyqIf+/EFJ7CESgiChP0wKNSh9CIsoQn2oHoQezAcfMtAwRdKHyCAqMDHDHxBf+rHUVltdd6fv7k7m37gz7FAfXM6dc88995tz7jk7K+M/QzZjPASchsWQjBp+AZaS7bACbIoDemARDEcgClhFYfMBd2EhDBOYCgYhiHSm4hAsQlgCo8AKFbC7glPUCl0AKKdOgQUIS2ACOPcdOCbmdqCQYpIXJ/EbcBEWICwBHpbMt73DEb0M6KPqnqa/9hNYiQhh5A6ISnEz7xfEA1NRSjJfOY31AkWIEEYItGvyqrgPZDPOcVnTpSNCzOsDzO1OihMc+1cA23ioaxLo5TPLH5XUndfsPlBs4ejkeMqoPGI+PsEkpiNABzEM831OXyMU7q0/gHgnGyBZXtfM8hj7RG3+WJOCRDFtOkmqWDXZXWXtcIWHN1Gembno156X880pujnsPOi20FF+nuOLRYIb9FMOswS4qZQieYH1AhEFHuaXtEtIZFC3j9Kt4/Msy/YIzBDgm+forDv8Wtm5QhGqF3N2xSucH9dzyj25MEOAiF3EJvNP66VxmZCMRirF5kX2xMEMATp8vpgRW2+luCe8C29gAJIWKcME+EtXoIa6nJ7D9YzCJU5tCAP6ecZ0PYBBTPcBlpCbmx9ScVTHsYdss6UD+xqVvFOQEhMgOWNhFvQzLKmid0g3YxK2189rRLzBe3iJCrlwGKHSmoYt7eCQo/yWC1NT8Le9hNrdA9Xng1FIigJp43rYUlhwDkW8fpa0CNMYkklm/tfRaA2f10Y31h6V49fEebNOQv1ouulNQyaJqLpq5l5pt+uyBcYommfqPBsShv0NTREdLhBg5PzNLyCnHkyym9koSVJcoLd/li4qNxf2HTuCc9Xjga+1Fb6WltBidDRiyoKVi6mODkxUVf0lQT82+jPVtxeCIzUVjpxQH5Pj4+FsaMCS4uLZNtnZcGRkLLg/YgICgcFBjOXnw8No+Nra4DikfTJ6vUF9YGBAd6+pFOhBcjrhyMyELSkJyt698M4IdThYQkB2u7GkKPRxNFFTg/GSEsN7LSHg7+rCyK5ds3RLq6shu1wYzcqCvHp10GYhmLoDqqqOyAlrDdlO1tVBSUmBa3xclA9+VVTMPph+hD/Df80ExvrevsKEb7eVjcgcgf53mWyRT/5JK9Yl0fs+jckoVCVs4eZlMIm5P0a/AQAA//9bX7NXAAAABklEQVQDAGWsFPWJgRmdAAAAAElFTkSuQmCC\">\n<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABw0lEQVR4nJxSSyiEURT+7jX/hOYfGyzkGXkURcpOyiMlZquUhY2ysmJjTHltsFKWrCwYRVakrGwsRIkyRlFIeY3IKPM/fDM0M5lfM5w6/z333O989zvnvxIW9gjkI0WTVkkD6L8H6vEfAhPIZPJKAPNIwRIIKH+GCpZJVPoA9P6ZgIVFXDrpo/SRZAQi/AkAxdoX2JcGnOjAAuMKup+AS67T2cCaJcEzpbL4kLHK2y8IrGIbGyw84r6O+dZvZUM5wGxCCyxuDxd/yyl5Aoa5jnEOA0w1xGF7rBRIMq/TH+Jm4KYHSOLg1hkF/vJXojNg35MMu8JFQnWcKlPuSllRBuMxkFiUJiFqa3xSsXtE/AFvFuw/L2Nxrk+7vZsIuaegdHQAuo7Q7i7w/g67ywXt4ACmHkLG5uqZ/CHH5BBv0NRo05a83JnI9HggCwrg9HojGKWlBUpzM8ybW2hbO+WWTznSc9ZX+8LphK26Gh/b23zjBnSfLwbKz4MNScy4vsbb4GAkVldWIFQVwfHx6LklgZDmKYcE7O3jpa0tmn/t7o6B7ApEVblfWBGYd8eOt0BwAWd+l/EaTE+4QAjIksJzkZs78gkAAP//lBSIQQAAAAZJREFUAwAF+IZkHW0juAAAAABJRU5ErkJggg==\">\n<link rel=\"icon\" type=\"image/svg+xml\" sizes=\"any\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg transform='translate(2,2) scale(0.95)'%3E%3Cpath transform='translate(0,-0.4)' fill='%23EC0000' d='M 31.5,19.5 C 31.4,18 31,16.5 30.2,15.2 L 23.4,3.3 C 22.9,2.4 22.5,1.4 22.3,0.4 L 22,0.9 c -1.7,2.9 -1.7,6.6 0,9.5 l 5.5,9.5 c 1.7,2.9 1.7,6.6 0,9.5 l -0.3,0.5 c -0.2,-1 -0.6,-2 -1.1,-2.9 l -5,-8.7 -3.2,-5.6 C 17.4,11.8 17,10.8 16.8,9.8 l -0.3,0.5 c -1.7,2.9 -1.7,6.5 0,9.5 v 0 l 5.5,9.5 c 1.7,2.9 1.7,6.6 0,9.5 l -0.3,0.5 c -0.2,-1 -0.6,-2 -1.1,-2.9 L 13.7,24.5 C 12.8,22.9 12.4,21.1 12.4,19.3 5.1,21.2 0,25.3 0,30 0,36.6 9.8,41.9 21.9,41.9 34,41.9 43.8,36.6 43.8,30 43.9,25.5 38.9,21.4 31.5,19.5 Z'/%3E%3C/g%3E%3Crect x='22' y='36' width='42' height='28' rx='8' fill='%23F5DECF'/%3E%3Crect x='25' y='39' width='36' height='22' rx='6' fill='%23EC0000'/%3E%3Ctext x='43' y='57' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-size='19' fill='%23FFFFFF'%3EPJ%3C/text%3E%3C/svg%3E\">\n<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"data:image/png;base64,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\">";
+  /* Segmentos (5.0): PF (Creative Strategy PF) e PJ (Santander Empresas). O mesmo motor, o mesmo emulador, as mesmas
+     funções e, a partir da 5.1, o mesmo template (o mesmo esqueleto de página); muda o que é de cada um: nome da área,
+     ícone da aba, nomes das seções, cores (config/marca.txt e config/marca-pj.txt) e as do e-mail-resumo. O segmento vem dos dados ([EDICAO] segmento: PJ) e fica na página
+     (meta "report-segmento"). Sem ele, é PF, como sempre foi. */
+  var PERFIS = {
+    pf: {
+      id: "pf", sigla: "PF", area: "Creative Strategy PF", area_linha: "CUSTOMER INTERACTIONS", icone: ICONE_TAG,
+      template: "template/report.html", marca: "config/marca.txt", emulador: "Emulador Report PF", foto_capa: [184, 230], layout: "2", painel_recuo: 0,
+      secoes: { capa: "Abertura", visao: "Visão geral", resultados: "Principais resultados", lancamos: "O que lançamos", cx: "Creative X", transformation: "Transformation Hub",
+        aprendizados: "O que aprendemos", foco: "Foco do próximo mês", agenda: "Também vem aí", rodape: "Encerramento e assinatura" },
+      nomes: { destaque: "Destaque", lancamentos: "Lançamentos", cx: "Creative X", cxt: "Creative X trimestral", transformation: "Transformation Hub",
+        aprendizados: "O que aprendemos", foco: "Foco", agenda: "Também vem aí", rotulo_texto: "CREATIVE X", topo_lancamos: "O QUE LANÇAMOS",
+        topo_transformation: "TRANSFORMATION HUB", topo_aprendizados: "O QUE APRENDEMOS", topo_foco: "FOCO DE ", topo_agenda: "TAMBÉM VEM AÍ" },
+      /* rótulos das seções na página (template/report.html › {{rot.*}}) */
+      rotulos: { visao: "VISÃO GERAL", resultados: "PRINCIPAIS RESULTADOS", lancamos: "O QUE LANÇAMOS", outras: "TAMBÉM NESTE MÊS", cx: "CREATIVE X",
+        transformation: "TRANSFORMATION HUB", aprendizados: "O QUE APRENDEMOS", foco: "FOCO DE ", agenda: "TAMBÉM VEM AÍ" },
+      links: { principal: "Visão geral · ", destaque: "Destaque · ", lancamento: "Lançamento ", transformation: "Transformation " }
+    },
+    pj: {
+      id: "pj", sigla: "PJ", area: "Creative Strategy PJ", area_linha: "SANTANDER EMPRESAS", icone: ICONE_TAG_PJ,
+      template: "template/report.html", marca: "config/marca-pj.txt", emulador: "Emulador Report PJ", foto_capa: [184, 230], layout: "3", painel_recuo: 20,
+      secoes: { capa: "Abertura", visao: "Visão geral", resultados: "Principais resultados", lancamos: "Campanhas", cx: "Indicadores", transformation: "Análises",
+        aprendizados: "Aprendizados", foco: "Próximas iniciativas", agenda: "Vem aí", rodape: "Encerramento" },
+      nomes: { destaque: "Campanha em destaque", lancamentos: "Campanhas", cx: "Indicadores", cxt: "Indicadores do trimestre", transformation: "Análises",
+        aprendizados: "Aprendizados", foco: "Próximas iniciativas", agenda: "Vem aí", rotulo_texto: "INDICADORES", topo_lancamos: "CAMPANHAS",
+        topo_transformation: "ANÁLISES", topo_aprendizados: "APRENDIZADOS", topo_foco: "PRÓXIMAS INICIATIVAS · ", topo_agenda: "VEM AÍ" },
+      rotulos: { visao: "VISÃO GERAL", resultados: "PRINCIPAIS RESULTADOS", lancamos: "CAMPANHAS", outras: "OUTRAS CAMPANHAS DO MÊS", cx: "INDICADORES",
+        transformation: "ANÁLISES", aprendizados: "APRENDIZADOS", foco: "PRÓXIMAS INICIATIVAS&nbsp;&nbsp;·&nbsp;&nbsp;", agenda: "VEM AÍ" },
+      links: { principal: "Visão geral · ", destaque: "Campanha em destaque · ", lancamento: "Campanha ", transformation: "Análise " }
+    }
+  };
+  function perfil(seg) { return PERFIS[String(seg || "").toLowerCase()] || PERFIS.pf; }
+  /* Painéis (abertura, resultados, indicadores, foco, encerramento). No PJ (5.3), recuados dentro do report: uma borda na
+     cor do conteúdo (fundo_email) afasta o painel da borda do report, para ele nunca encostar no fundo do HTML; o raio
+     externo cresce o mesmo tanto (o canto do painel fica com 24 px) e a margem interna diminui o mesmo tanto (a grade de
+     600 px não muda). No celular, recuo de 8 px. No PF (recuo 0), os valores de sempre: a página sai igual. */
+  function painelDaPagina(perf, cor) {
+    var r = perf.painel_recuo || 0;
+    if (!r) return { classe: "", raio: 34, lado: 40, borda: "", css: "" };
+    return { classe: " painel", raio: 24 + r, lado: 40 - r, borda: seguro("border:" + r + "px solid " + cor.fundo_email.s + ";"),
+      css: seguro('\n<style id="painel-celular">\n  @media screen and (max-width:700px){\n    .painel{border-width:8px !important;border-radius:28px !important;padding-left:12px !important;padding-right:12px !important;}\n  }\n</style>') };
+  }
+  /* Rótulos das seções para o template (já em HTML: o "·" do PJ leva espaços que não quebram). */
+  function rotulosDaPagina(perf) { var o = {}; Object.keys(perf.rotulos).forEach(function (k) { o[k] = seguro(perf.rotulos[k]); }); return o; }
+  /* Segmento de uma página do report: a meta "report-segmento" (PJ); sem ela, PF. */
+  function segmentoDoHtml(html) { var m = /<meta name="report-segmento" content="([a-z]+)"/.exec(String(html || "")); return m && PERFIS[m[1]] ? m[1] : "pf"; }
+  /* Segmento de um arquivo de dados: "segmento: PJ" no bloco [EDICAO]; sem ele, PF. */
+  function segmentoDosDados(texto) { var m = /^\s*segmento\s*:\s*(\S+)/im.exec(String(texto || "")); return m && PERFIS[m[1].toLowerCase()] ? m[1].toLowerCase() : "pf"; }
   /* Ajuste de largura (4.10): nada passa da largura do celular. Vai no report (template, {{css_celular}}) e o emulador
      acrescenta em reports antigos (paginaInterativa). Palavras longas sem espaço quebram; no celular, cada indicador tem
      a largura do seu valor (o título acompanha, sem alargar a coluna): valores curtos ficam lado a lado, um valor longo
      vai sozinho para a linha de baixo, e um valor maior que a tela quebra no espaço. */
   var CSS_CELULAR = '<style id="ajuste-celular">\n' +
     '  .container td,.container p{overflow-wrap:anywhere;word-break:break-word;}\n' +
-    '  @media screen and (max-width:620px){\n' +
+    '  @media screen and (max-width:700px){\n' +
     '    .third,.half{width:auto !important;max-width:100% !important;}\n' +
     '    .third{min-width:32% !important;}\n' +
     '    .half{min-width:49% !important;}\n' +
@@ -144,14 +198,18 @@
   var CORES_APOIO = ["grupo_resultados", "grupo_resultados_fundo", "grupo_evolucao", "grupo_evolucao_fundo", "grupo_aprendizado", "grupo_aprendizado_fundo",
     "capa_selo", "capa_filete", "capa_destaque", "abertura_fundo", "abertura_linha", "linha", "creative_x", "creative_x_anterior", "transformation", "transformation_titulo",
     "transformation_fundo", "transformation_linha", "transformation_placeholder_fundo", "transformation_placeholder_borda", "foco_rotulo", "foco_texto", "rodape_claro", "rodape_fundo",
-    "placeholder_fundo", "placeholder_borda"];
+    "placeholder_fundo", "placeholder_borda", "abertura_texto", "bloco_fundo", "foco_fundo", "selo_texto", "cartao_fundo", "rotulo_texto"];
+  /* Cores do esqueleto da 5.1 (PF e PJ no mesmo layout) e do fundo Rio do PJ (5.2). Numa marca de antes, valem estas
+     (o que a página já usava): texto dos balões dos painéis = marca, cartão das análises = fundo do e-mail, rótulos
+     pequenos = cor do grupo Resultados. */
+  var CORES_PADRAO = { abertura_texto: "texto", bloco_fundo: "abertura_fundo", foco_fundo: "abertura_fundo", selo_texto: "marca", cartao_fundo: "fundo_email", rotulo_texto: "grupo_resultados" };
   function obrig(lista) { var o = {}; lista.forEach(function (k) { o[k] = 1; }); return o; }
 
   var ESQUEMA_MARCA = [
     { bloco: "FONTES", obrigatorio: true, campos: { titulos: 1, texto: 1, impacto: 0, titulos_outlook_windows: 1, texto_outlook_windows: 1 } },
     { bloco: "LOGO", campos: { arquivo: 0, largura: 0, descricao: 0 } },
     { bloco: "CORES", obrigatorio: true, campos: obrig(CORES) },
-    { bloco: "CORES DE APOIO", obrigatorio: true, campos: obrig(CORES_APOIO) },
+    { bloco: "CORES DE APOIO", obrigatorio: true, campos: (function () { var o = obrig(CORES_APOIO); Object.keys(CORES_PADRAO).forEach(function (k) { o[k] = 0; }); return o; })() },
     { bloco: "IMAGENS", obrigatorio: true, campos: { modo: 1, endereco_base: 0, qualidade_jpg: 0 } },
     { bloco: "LINKS", campos: { dominios_permitidos: 0 } },
     { bloco: "FORMIGUINHA", campos: { arquivo: 0, descricao: 0 } }
@@ -287,19 +345,19 @@
     else if (/^[a-z][a-z0-9+.-]*:/i.test(s) && !/^[^:]+:\d+(\/|$)/.test(s)) { url = espacos(s); tipo = "outro"; }
     else if (/^www\./i.test(s) || /^[\w-]+:\d+/.test(s) || (/^[\w-]+(\.[\w-]+)*\.[a-z]{2,24}(:\d+)?([\/?#]|$)/i.test(s) && !/^[^\/?#]*\.(html?|pdf|eml|msg|txt|csv|png|jpe?g|gif|svg|webp|mp4|zip|docx?|xlsx?|pptx?)([?#]|$)/i.test(s))) { url = "https://" + espacos(s); tipo = "web"; }
     else { url = espacos(s.replace(/\\/g, "/")); tipo = "relativo"; info = "Endereço relativo: abre a partir da pasta onde o report estiver publicado."; }
-    if (tipo === "arquivo") info = "Caminho de arquivo: abre onde esse arquivo existe (neste computador, ou para quem tem a mesma pasta sincronizada ou de rede).";
+    if (tipo === "arquivo") info = "Caminho de arquivo: abre onde esse arquivo existe (neste computador, ou na mesma pasta de rede). No e-mail recebido, o Outlook pode bloquear link para arquivo: para quem recebe, prefira o link de compartilhamento (https://…).";
     return { url: url, tipo: tipo, avisos: [], info: info, erro: "" };
   }
 
   /* Link do report completo (o botão do e-mail-resumo e a meta "report-completo"): vale qualquer link, como nos itens:
      o link de compartilhamento (https://…) ou o caminho do arquivo (C:\…, \\servidor\…, file:///…, ex.: a pasta do OneDrive
      no computador), que vai para o botão no formato que o Outlook abre (normalizarLink). Só o que executa código é recusado.
-     A nota (info) diz onde o caminho de arquivo abre; sem link, o e-mail-resumo não sai (nunca um botão vazio). Nada é
+     A nota (info) avisa que o caminho de arquivo não abre no e-mail recebido (o Outlook bloqueia; 4.12.1); sem link, o e-mail-resumo não sai (nunca um botão vazio). Nada é
      publicado por aqui: o report fica onde a pessoa salvou ou publicou. */
   function linkDoReport(entrada) {
     var nl = normalizarLink(entrada);
     return { url: nl.erro ? "" : nl.url, erro: nl.erro ? "não é permitido (pode executar código)." : "", tipo: nl.tipo,
-      info: nl.tipo === "arquivo" ? "Caminho de arquivo: o botão do e-mail abre o report onde esse arquivo existe (neste computador, ou para quem tem a mesma pasta sincronizada ou de rede). O Outlook na Web, o novo Outlook e o celular não abrem link de arquivo: para eles, use o link de compartilhamento (https://…)." :
+      info: nl.tipo === "arquivo" ? "Caminho de arquivo: no e-mail recebido, o Outlook para Windows bloqueia esse link (aviso \"O Outlook bloqueou o acesso a links para os arquivos de zona da Internet\"), e um caminho C:\\… só existe no seu computador. O Outlook na Web, o novo Outlook e o celular também não abrem link de arquivo. Para quem recebe, use o link do OneDrive: botão direito no arquivo › Compartilhar › Copiar link (https://…)." :
         nl.tipo === "relativo" ? "Endereço relativo: no e-mail, só o nome do arquivo não abre o report. Cole o caminho completo (C:\\…) ou o link de compartilhamento (https://…)." : "" };
   }
 
@@ -311,6 +369,18 @@
   Seguro.prototype.toString = function () { return this.s; };
   function seguro(s) { return new Seguro(s); }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  /* "O que aprendemos" dentro da campanha (4.13): rótulo na cor do grupo Aprendizado, filete fino e uma ou duas frases.
+     O mesmo HTML sai do motor (template) e do emulador (quando a pessoa cria o aprendizado num report de antes).
+     variante: "capa" (faixa dos números do projeto principal), "destaque" (texto do destaque) ou "card" (lançamento). */
+  function htmlAprendizado(textoHtml, campo, variante, f) {
+    var card = variante === "card", c = f.cor || {};
+    var filete = variante === "capa" ? (c.abertura_linha || CR.mexico) : (c.linha || CR.linha);
+    return '<table role="presentation" class="apr" data-apr="' + campo + '" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-top:' + (card ? 12 : variante === "capa" ? 20 : 16) + 'px;">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ' + filete + ';padding-top:' + (card ? 10 : 12) + 'px;">' +
+      '<p class="fx" style="margin:0;font-family:' + f.fonte + ';font-size:' + (card ? 9 : 10) + 'px;line-height:14px;font-weight:bold;color:' + (c.grupo_aprendizado || CR.rosa) + ';letter-spacing:1.5px;">O QUE APRENDEMOS</p>' +
+      '<p class="fx tm" data-campo="' + campo + '" style="margin:' + (card ? 3 : 4) + 'px 0 0 0;font-family:' + f.fonte + ';font-size:' + (card ? 12 : 13) + 'px;line-height:' + (card ? 17 : 19) + 'px;color:' + (c.texto || CR.texto) + ';">' + textoHtml + '</p>' +
+      '</td></tr></table></td></tr></table>';
+  }
   /* Texto do usuário → HTML. Só <br> é aceito como marcação. */
   function textoSeguro(s) { return seguro(esc(s || "").replace(/&lt;br\s*\/?&gt;/gi, "<br>")); }
   function semBr(s) { return String(s || "").replace(/<br\s*\/?>/gi, " ").replace(/\s+/g, " ").trim(); }
@@ -391,9 +461,8 @@
   /* GRADE do e-mail (computador): 600 px de conteúdo = 3 colunas de 184 px + 2 espaços de 24 px.
      Todas as seções usam essas linhas, para tudo ficar alinhado de cima a baixo. */
   var COL = 184, ESP = 24, LARGURA = 600;
-  /* Foto da capa (projeto principal): 20% maior que a coluna (184 → 220 px), quadrada.
-     O texto ao lado fica com o resto da linha: 600 − 24 − 220 = 356 px. */
-  var FOTO_CAPA = 220;
+  /* Peça da visão geral (projeto principal, 5.1): retângulo vertical de 184 x 230 px (PERFIS.*.foto_capa), na coluna da
+     direita; o texto fica com o resto da linha: 600 − 24 − 184 = 392 px. */
   /* Imagem ampliada (só na página do navegador, clique na peça): até 1400 px de largura, sem recorte. */
   var AMPLIADA = 1400;
   /* Divide "total" em n colunas com espaços de 24 px entre elas (a soma fecha exata). */
@@ -401,6 +470,43 @@
     var base = Math.floor((total - ESP * (n - 1)) / n), sobra = total - ESP * (n - 1) - base * n, r = [];
     for (var i = 0; i < n; i++) r.push(base + (i < sobra ? 1 : 0));
     return r;
+  }
+
+  /* FUNIL (5.4) · Principais resultados como funil: um bloco Vermelho (cantos de 20 px) com o nome da campanha em
+     cima, os degraus (os números de [NUMERO 1..4], cada um num retângulo Branco, centrado e mais estreito que o de cima)
+     e, ao lado, o total (ex.: a produção financeira). Grade de 600 px: margem de 24 px, degraus em 344 px, espaço de
+     24 px e o total em 184 px (sem total, os degraus usam os 552 px). No celular, o total desce para baixo do funil.
+     Os campos são os mesmos dos números (numero-N.valor, .titulo, .detalhe, .variacao): o e-mail-resumo e a importação
+     seguem iguais. O emulador monta o mesmo bloco (Motor.blocoFunil) ao virar as colunas em funil. */
+  var FUNIL = { margem: 24, degraus: 344, total: 184 };
+  /* largura de cada degrau, em % da coluna do funil: 100, 88 (2 degraus); 100, 88, 76 (3); 100, 90, 80, 70 (4) */
+  function larguraDegrau(i, n) { var passo = n > 1 ? Math.min(12, Math.floor(30 / (n - 1))) : 0; return 100 - i * passo; }
+  /* o: { itens: [{ idx, valor, titulo, detalhe, variacao }] (HTML pronto), rotulo, total, total_titulo, cor: { fundo, valor, texto },
+     fonte: { titulos, texto } }. Devolve o HTML do bloco. */
+  function blocoFunil(o) {
+    var c = o.cor, f = o.fonte, itens = o.itens || [], temTotal = !!(o.total || o.total_titulo);
+    var wf = temTotal ? FUNIL.degraus : LARGURA - 2 * FUNIL.margem;
+    var degraus = itens.map(function (x, i) {
+      var k = "numero-" + x.idx, pct = larguraDegrau(i, itens.length);
+      return '<tr data-item="' + k + '"><td align="center" style="padding:' + (i ? "6px" : "0") + ' 0 0 0;">' +
+        '<table role="presentation" width="' + pct + '%" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#FFFFFF" data-degrau="" style="width:' + pct + '%;background:#FFFFFF;border-radius:12px;">' +
+        '<tr><td align="center" style="padding:9px 12px 10px 12px;text-align:center;">' +
+        '<p class="fx" style="margin:0;font-family:' + f.texto + ';font-size:13px;line-height:26px;color:' + c.texto + ';"><span class="ft num" data-campo="' + k + '.valor" style="font-family:' + f.titulos + ';font-weight:bold;font-size:22px;line-height:26px;color:' + c.valor + ';white-space:nowrap;">' + x.valor + '</span>&nbsp;&nbsp; <b data-campo="' + k + '.titulo" style="display:inline-block;color:' + c.texto + ';line-height:18px;">' + (x.titulo || "") + "</b></p>" +
+        (x.variacao ? '<p class="fx" data-campo="' + k + '.variacao" style="margin:2px 0 0 0;font-family:' + f.texto + ';font-size:10px;line-height:16px;">' + x.variacao + "</p>" : "") +
+        (x.detalhe ? '<p class="fx ts" style="margin:0;font-family:' + f.texto + ';font-size:11px;line-height:15px;color:' + c.texto + ';"><span data-campo="' + k + '.detalhe">' + x.detalhe + "</span></p>" : "") +
+        "</td></tr></table></td></tr>";
+    }).join("");
+    var total = !temTotal ? "" : '<td class="hide-m" width="' + ESP + '" style="width:' + ESP + 'px;font-size:0;line-height:0;">&nbsp;</td>' +
+      '<td class="col" data-item="funil-total" width="' + FUNIL.total + '" valign="middle" align="center" style="width:' + FUNIL.total + 'px;text-align:center;">' +
+      '<p class="ft num" data-campo="funil.total" style="margin:0;font-family:' + f.titulos + ';font-weight:bold;font-size:30px;line-height:34px;color:#FFFFFF;white-space:nowrap;">' + (o.total || "") + "</p>" +
+      '<p class="fx" data-campo="funil.total_titulo" style="margin:4px 0 0 0;font-family:' + f.texto + ';font-size:13px;line-height:18px;color:#FFFFFF;">' + (o.total_titulo || "") + "</p></td>";
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" data-funil="" bgcolor="' + c.fundo + '" class="ra" style="background:' + c.fundo + ';border-radius:20px;">' +
+      '<tr><td style="padding:22px ' + FUNIL.margem + "px " + FUNIL.margem + "px " + FUNIL.margem + 'px;">' +
+      (o.rotulo ? '<p class="fx" data-campo="funil.rotulo" style="margin:0 0 16px 0;font-family:' + f.texto + ';font-size:11px;line-height:15px;font-weight:bold;color:#FFFFFF;letter-spacing:1.5px;">' + o.rotulo + "</p>" : "") +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>' +
+      '<td class="col' + (temTotal ? " gap" : "") + '" width="' + wf + '" valign="middle" style="width:' + wf + 'px;">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" data-degraus="">' + degraus + "</table></td>" + total +
+      "</tr></table></td></tr></table>";
   }
 
   function lerNumero(s) { var m = String(s || "").replace(/\s/g, "").match(/^(-?\d+(?:[.,]\d+)?)%?$/); return m ? parseFloat(m[1].replace(",", ".")) : null; }
@@ -414,7 +520,7 @@
    */
   function montar(entrada) {
     var prob = [];
-    var arqD = entrada.arquivoDados || "dados", arqM = "config/marca.txt";
+    var arqD = entrada.arquivoDados || "dados", arqM = entrada.arquivoMarca || "config/marca.txt";
     var lidoD = ler(entrada.dados, arqD), lidoM = ler(entrada.marca, arqM);
     prob = prob.concat(lidoD.problemas, lidoM.problemas);
     var D = conferirEsquema(lidoD, ESQUEMA_DADOS, prob), M = conferirEsquema(lidoM, ESQUEMA_MARCA, prob);
@@ -426,6 +532,7 @@
     var todas = junta(M.simples.CORES, M.simples["CORES DE APOIO"]);
     CORES.concat(CORES_APOIO).forEach(function (k) {
       var v = todas[k];
+      if (!v && CORES_PADRAO[k]) v = todas[CORES_PADRAO[k]];
       if (!/^#[0-9a-f]{6}$/i.test(v)) problema(prob, "erro", arqM, todas._linhas[k], "Cor \"" + k + "\" inválida (" + v + "). Use # e 6 dígitos hexadecimais, ex.: #9E1218.");
       cor[k] = seguro(String(v).toUpperCase());
     });
@@ -484,6 +591,10 @@
 
     /* ---- Imagens ---- */
     var E = D.simples.EDICAO, pasta = E.pasta_imagens.replace(/\\/g, "/").replace(/^\.?\/+|\/+$/g, "");
+    /* Segmento (5.0): PF (padrão) ou PJ, pelo [EDICAO] segmento. Muda a área, o ícone e os nomes; o template e a marca vêm de quem chama. */
+    var segD = chaveCampo(E.segmento || entrada.segmento || "pf");
+    if (!PERFIS[segD]) { problema(prob, "aviso", arqD, E._linhas.segmento, "[EDICAO] segmento deve ser PF ou PJ. Usei PF."); segD = "pf"; }
+    var PERF = PERFIS[segD];
     var imagens = [], porCaminho = {}, videos = [], anexos = [];
     function caminhoImagem(nome) { return nome.indexOf("/") >= 0 ? nome.replace(/^\.?\/+/, "") : pasta + "/" + nome; }
     /* Registra uma imagem do e-mail. w/h = tamanho na tela (px). recorte = encaixa exatamente em w × h.
@@ -593,6 +704,13 @@
       var s = semBr(v[campo]);
       if (s.length > max && !ehPendencia(s)) problema(prob, "aviso", arqD, v._linhas[campo], "[" + nomeBloco + "] " + campo + " com " + s.length + " caracteres (recomendado até " + max + "). Pode quebrar em mais linhas.");
     }
+    /* "O que aprendemos" da campanha: só sai com texto (nada de bloco vazio); uma ou duas frases curtas. */
+    function aprendizado(v, nomeBloco, campo, variante) {
+      if (!v || !v.aprendizado) return null;
+      curto(v, "aprendizado", variante === "card" ? 100 : 180, nomeBloco);
+      return seguro(htmlAprendizado(texto(v.aprendizado).s, campo, variante, { fonte: fonte.texto.s,
+        cor: { abertura_linha: cor.abertura_linha.s, linha: cor.linha.s, grupo_aprendizado: cor.grupo_aprendizado.s, texto: cor.texto.s } }));
+    }
     /* Formiguinha (config/marca.txt, bloco [FORMIGUINHA]): o arquivo original, no encerramento (rodapé). */
     var FM = M.simples.FORMIGUINHA || {}, camFormiga = (FM.arquivo || "").replace(/\\/g, "/").replace(/^\.?\/+/, "");
     if (camFormiga && !existe(camFormiga)) { problema(prob, "erro", arqM, FM._linhas.arquivo, "Formiguinha não encontrada: " + camFormiga + ". Confira o nome do arquivo em config/marca.txt."); camFormiga = ""; }
@@ -626,26 +744,44 @@
     function proxSecao() { secoes++; return (secoes < 10 ? "0" : "") + secoes; }
 
     /* 01 · Abertura */
-    var pp = peca(P, "PROJETO PRINCIPAL", FOTO_CAPA, FOTO_CAPA, 20, { dica: "440 x 440 px", fluida: true, corCta: "#FFFFFF", corCtaPendente: "#F5DECF" });
+    /* Visão geral (PF e PJ, 5.1): a peça fica em fundo branco, num retângulo vertical (nunca quadrado). */
+    /* posicao_imagem: embaixo (5.4): a peça desce para baixo do texto, na largura do report (600 px), inteira, sem
+       recorte (para a peça horizontal, o KV com o selo da campanha à mostra). Sem o campo: ao lado, como sempre. */
+    var posImg = chaveCampo(P.posicao_imagem || "ao lado"), embaixo = posImg === "embaixo" || posImg === "abaixo";
+    if (!embaixo && ["ao_lado", "lado", "direita"].indexOf(posImg) < 0) problema(prob, "aviso", arqD, P._linhas.posicao_imagem, "[PROJETO PRINCIPAL] posicao_imagem deve ser \"ao lado\" ou \"embaixo\". Usei ao lado.");
+    var pp = embaixo ? peca(P, "PROJETO PRINCIPAL", LARGURA, 0, 20, { dica: "1200 px de largura (horizontal)", fluida: true })
+      : peca(P, "PROJETO PRINCIPAL", PERF.foto_capa[0], PERF.foto_capa[1], 20, { dica: (PERF.foto_capa[0] * 2) + " x " + (PERF.foto_capa[1] * 2) + " px", fluida: true });
+    if (embaixo && pp.placeholder) pp.placeholder = placeholder(LARGURA, 300, "1200 x 600 px (horizontal)", 20, pp.tipo === "video");
     var nums = (L.NUMERO || []);
     /* Grade: até 3 números, um por coluna de 184 px (alinhados com as seções de baixo); 4 números, 4 colunas iguais. */
     var larg = nums.length <= 3 ? nums.map(function () { return COL; }) : colunas(LARGURA, nums.length);
     var sobra = nums.length && nums.length < 3 ? LARGURA - nums.length * COL - (nums.length - 1) * ESP : 0;
     var abertura = {
-      n: proxSecao(), frase: texto(A.frase), frase_final: texto(A.frase_final),
-      nome: texto(P.nome), resumo_cta: comCta(P.resumo, pp), peca: pp,
+      n: proxSecao(), n2: proxSecao(), frase: texto(A.frase), frase_final: texto(A.frase_final),
+      /* rótulo acima do nome (4.13): "CAMPANHA" por padrão, editável (o do mês nem sempre é um "projeto principal") */
+      rotulo: texto(maiusculas(semBr(P.rotulo || "") || "Campanha")),
+      nome: texto(P.nome), resumo_cta: comCta(P.resumo, pp), peca: pp, aprendizado: aprendizado(P, "PROJETO PRINCIPAL", "principal.aprendizado", "capa"),
+      imagem_embaixo: embaixo, imagem_ao_lado: !embaixo, funil: false,
       numeros: nums.map(function (v, i) {
         curto(v, "valor", 11, "NUMERO " + (i + 1));
         return {
           valor: numero(v.valor), titulo: texto(v.titulo), detalhe: texto(v.detalhe), variacao: variacao(v, "NUMERO " + (i + 1)),
           idx: i + 1, largura: larg[i], principal: i === 0, primeiro: i === 0,
-          cor_valor: i === 0 ? cor.marca : cor.texto, cor_filete: i === 0 ? cor.marca : cor.texto,
+          /* o 1º número na cor do título (PF: Vermelho Santander; PJ: Preto) */
+          cor_valor: i === 0 ? cor.titulo : cor.texto, cor_filete: i === 0 ? cor.titulo : cor.texto,
           classe_m: nums.length === 3 ? "third" : "half",
           estilo: "padding:0 0 20px 0;"
         };
       }),
       sobra: sobra
     };
+    /* Funil (5.4): os mesmos números, em degraus (bloco [FUNIL]) */
+    var FN = D.simples.FUNIL;
+    if (FN) abertura.funil = { html: seguro(blocoFunil({
+      itens: abertura.numeros.map(function (x) { return { idx: x.idx, valor: x.valor.s, titulo: x.titulo.s, detalhe: x.detalhe.s, variacao: x.variacao ? x.variacao.s : "" }; }),
+      rotulo: texto(maiusculas(semBr(FN.rotulo || ""))).s, total: numero(FN.total || "").s, total_titulo: texto(FN.total_titulo).s,
+      cor: { fundo: cor.marca.s, valor: cor.marca.s, texto: cor.texto.s }, fonte: { titulos: fonte.titulos.s || fonte.titulos, texto: fonte.texto.s || fonte.texto }
+    })) };
 
     /* 02 · O que lançamos */
     var DS = D.simples.DESTAQUE, lanc = L.LANCAMENTO || [], res = L.RESULTADO || [];
@@ -661,6 +797,7 @@
         n: proxSecao(), titulo: texto((D.simples.LANCAMOS || {}).titulo || ""), tem_compactos: lanc.length > 0, colunas_compactos: Math.min(lanc.length, 3) * 2 - 1,
         destaque: DS ? {
           categoria: seguro(marcarPendencias(categoria(DS.categoria).s)), titulo: texto(DS.titulo), texto_cta: comCta(DS.texto, dsp), peca: dsp, nota: texto(DS.nota), tem_resultados: res.length > 0,
+          aprendizado: aprendizado(DS, "DESTAQUE", "destaque.aprendizado", "destaque"),
           largura_texto: textoDestaque, colunas: res.length * 3 - 2,
           resultados: res.map(function (v, i) {
             /* No celular os resultados ficam em terços (~110 px): número longo (ex.: "R$ 1.234,56") invade a coluna ao lado. */
@@ -675,7 +812,7 @@
         linhas_compactos: (function () {
           var itens = lanc.map(function (v, i) {
             var nb = "LANCAMENTO " + (i + 1), p = peca(v, nb, COL, 72, 20, { dica: "700 x 274 px", fluida: true }), ult = i === lanc.length - 1;
-            return { idx: i + 1, status: status(v, nb), nome: texto(v.nome), texto_cta: comCta(v.texto, p), peca: p, largura: lanc.length > 3 ? COL : lc[i], classe: (ult ? "col" : "col gap") + (i >= 3 ? " pt0" : ""), vazio: false, estilo: i >= 3 ? "padding-top:28px;" : "" };
+            return { idx: i + 1, status: status(v, nb), nome: texto(v.nome), texto_cta: comCta(v.texto, p), aprendizado: aprendizado(v, nb, "lancamento-" + (i + 1) + ".aprendizado", "card"), peca: p, largura: lanc.length > 3 ? COL : lc[i], classe: (ult ? "col" : "col gap") + (i >= 3 ? " pt0" : ""), vazio: false, estilo: i >= 3 ? "padding-top:28px;" : "" };
           }), linhas = [];
           for (var k = 0; k < itens.length; k += 3) {
             var linha = itens.slice(k, k + 3);
@@ -907,9 +1044,9 @@
       lrc.problemas.forEach(function (x) { problema(prob, x.nivel, arqD, E._linhas.link_report_completo, "[EDICAO] link_report_completo: " + x.msg); });
       linkRC = lrc.url;
     }
-    var assunto = "Creative Strategy PF | Report de " + mes + " " + ano;
+    var assunto = PERF.area + " | Report de " + mes + " " + ano;
     var modelo = {
-      assunto: assunto, icone: seguro(ICONE_TAG), css_celular: seguro(CSS_CELULAR), link_report_completo: linkRC, previa: texto(A.previa || semBr(A.frase + " " + A.frase_final)),
+      assunto: assunto, icone: seguro(PERF.icone), segmento: PERF.id, area: PERF.area, area_linha: PERF.area_linha, layout: PERF.layout, painel: painelDaPagina(PERF, cor), rot: rotulosDaPagina(PERF), css_celular: seguro(CSS_CELULAR), link_report_completo: linkRC, previa: texto(A.previa || semBr(A.frase + " " + A.frase_final)),
       logo: logo, rodape_logo: rodapeLogo, rodape_formiga: formiga(64, "formiguinha"), edicao: texto(maiusculas(mes + " " + ano)), proximo_mes: prox, proximo_mes_minusculo: texto(ehPendencia(prox) ? prox : prox.toLocaleLowerCase("pt-BR")), contato: texto(E.contato),
       cor: cor, fonte: fonte,
       abertura: abertura, lancamos: lancamos, cx: cx, transformation: transformation, aprendizados: aprendizados, topicos: topicos, foco: foco, agenda: agenda
@@ -924,19 +1061,19 @@
     /* Links do report (para a lista de "testar antes de enviar") */
     var links = [];
     function regLink(onde, p) { if (p && p.link) links.push({ onde: onde, tipo: p.tipo, rotulo: CTA[p.tipo].texto, url: p.link }); }
-    regLink("Projeto principal · " + semBr(P.nome), pp);
+    regLink(PERF.links.principal + semBr(P.nome), pp);
     if (lancamos) {
-      if (lancamos.destaque) regLink("Destaque · " + semBr(DS.titulo), lancamos.destaque.peca);
-      lanc.forEach(function (v, i) { regLink("Lançamento " + (i + 1) + " · " + semBr(v.nome), lancamos.linhas_compactos[Math.floor(i / 3)].itens[i % 3].peca); });
+      if (lancamos.destaque) regLink(PERF.links.destaque + semBr(DS.titulo), lancamos.destaque.peca);
+      lanc.forEach(function (v, i) { regLink(PERF.links.lancamento + (i + 1) + " · " + semBr(v.nome), lancamos.linhas_compactos[Math.floor(i / 3)].itens[i % 3].peca); });
     }
-    if (transformation) tr.forEach(function (v, i) { regLink("Transformation " + (i + 1) + " · " + semBr(v.nome), transformation.projetos[i].peca); });
+    if (transformation) tr.forEach(function (v, i) { regLink(PERF.links.transformation + (i + 1) + " · " + semBr(v.nome), transformation.projetos[i].peca); });
     links = links.concat(linksReport);
 
     /* Nome do arquivo: report-AAAA-MM (no modelo em branco, report-MODELO). */
     var slug = periodoOk ? ano + "-" + String(mesNumero(mes)).padStart(2, "0") : "MODELO";
     return {
       ok: true, problemas: prob, modelo: modelo, imagens: imagens, videos: videos, anexos: anexos, html: html, links: links,
-      texto: textoPuro(D, links), assunto: assunto, nomeArquivo: ("report-" + slug).replace(/[^\w-]/g, ""),
+      texto: textoPuro(D, links, PERF), assunto: assunto, nomeArquivo: ("report-" + slug).replace(/[^\w-]/g, ""),
       config: { modo: modo, base: base, qualidade: qualidade / 100, dominios: dominios, corMarca: cor.marca.s }
     };
   }
@@ -949,32 +1086,35 @@
   /* =================================================================== */
   /* Quem não vê HTML (alguns leitores, pré-visualizações, acessibilidade)
      recebe o mesmo conteúdo em texto, com os links escritos por extenso. */
-  function textoPuro(D, links) {
-    var S = D.simples, L = D.listas, o = [];
+  function textoPuro(D, links, PERF) {
+    var S = D.simples, L = D.listas, o = [], N = (PERF || PERFIS.pf).nomes;
     function t(s) { return semBr(s); }
     function num(v) { return "- " + t(v.valor) + (v.titulo ? " · " + t(v.titulo) : "") + (v.detalhe ? " (" + t(v.detalhe) + ")" : "") + (v.variacao ? " · " + t(v.variacao) : ""); }
     function lk(v) { return v.link && !ehPendencia(v.link) ? "  " + (CTA[chaveCampo(v.tipo || "peca")] || CTA.peca).texto + ": " + v.link : ""; }
     var E = S.EDICAO;
-    o.push("CREATIVE STRATEGY PF · REPORT MENSAL · " + maiusculas(E.mes + " " + E.ano), "");
+    o.push(maiusculas((PERF || PERFIS.pf).area) + " · REPORT MENSAL · " + maiusculas(E.mes + " " + E.ano), "");
     o.push(t(S.ABERTURA.frase + " " + S.ABERTURA.frase_final), "");
-    o.push("PROJETO PRINCIPAL: " + t(S["PROJETO PRINCIPAL"].nome), t(S["PROJETO PRINCIPAL"].resumo));
+    o.push(maiusculas(t(S["PROJETO PRINCIPAL"].rotulo || "") || "Campanha") + ": " + t(S["PROJETO PRINCIPAL"].nome), t(S["PROJETO PRINCIPAL"].resumo));
     (L.NUMERO || []).forEach(function (v) { o.push(num(v)); });
+    function apr(v) { if (v && v.aprendizado) o.push("O que aprendemos: " + t(v.aprendizado)); }
+    apr(S["PROJETO PRINCIPAL"]);
     var l = lk(S["PROJETO PRINCIPAL"]); if (l) o.push(l);
     if (S.DESTAQUE || (L.LANCAMENTO || []).length) {
-      o.push("", "O QUE LANÇAMOS" + (S.LANCAMOS && S.LANCAMOS.titulo ? ": " + t(S.LANCAMOS.titulo) : ""));
+      o.push("", N.topo_lancamos + (S.LANCAMOS && S.LANCAMOS.titulo ? ": " + t(S.LANCAMOS.titulo) : ""));
       if (S.DESTAQUE) {
         o.push("", t(S.DESTAQUE.titulo) + (S.DESTAQUE.categoria ? " (" + t(S.DESTAQUE.categoria) + ")" : ""), t(S.DESTAQUE.texto));
         (L.RESULTADO || []).forEach(function (v) { o.push(num(v)); });
+        apr(S.DESTAQUE);
         l = lk(S.DESTAQUE); if (l) o.push(l);
       }
-      (L.LANCAMENTO || []).forEach(function (v) { o.push("", t(v.nome) + (v.status ? " · " + t(v.status) : ""), t(v.texto)); l = lk(v); if (l) o.push(l); });
+      (L.LANCAMENTO || []).forEach(function (v) { o.push("", t(v.nome) + (v.status ? " · " + t(v.status) : ""), t(v.texto)); apr(v); l = lk(v); if (l) o.push(l); });
     }
     if (S["CREATIVE X"]) {
       var c = S["CREATIVE X"], ct = S["CREATIVE X TRIMESTRE"], ci = L["CREATIVE X TRIMESTRE"] || [];
-      o.push("", "CREATIVE X" + (c.rotulo || ct || ci.length ? " · " + maiusculas(c.rotulo || "Mensal · " + E.mes + " " + E.ano) : "") + ": " + (c.anterior ? t(c.anterior) + " -> " : "") + t(c.atual) + (c.periodo ? " (" + t(c.periodo) + ")" : ""), t(c.referencia), t(c.significado));
+      o.push("", N.rotulo_texto + (c.rotulo || ct || ci.length ? " · " + maiusculas(c.rotulo || "Mensal · " + E.mes + " " + E.ano) : "") + ": " + (c.anterior ? t(c.anterior) + " -> " : "") + t(c.atual) + (c.periodo ? " (" + t(c.periodo) + ")" : ""), t(c.referencia), t(c.significado));
       if (ct || ci.length) {
         ct = ct || {};
-        o.push("", "CREATIVE X · " + maiusculas(ct.rotulo || "Trimestral") + (ct.titulo ? ": " + t(ct.titulo) : ""));
+        o.push("", N.rotulo_texto + " · " + maiusculas(ct.rotulo || "Trimestral") + (ct.titulo ? ": " + t(ct.titulo) : ""));
         ci.forEach(function (v) { o.push(num(v)); });
         if (ct.texto) o.push(t(ct.texto));
         if (ct.estimativa) o.push("Estimativa: " + t(ct.estimativa));
@@ -982,13 +1122,13 @@
       if (c.nota) o.push(t(c.nota));
     }
     if ((L.TRANSFORMATION || []).length) {
-      o.push("", "TRANSFORMATION HUB");
+      o.push("", N.topo_transformation);
       L.TRANSFORMATION.forEach(function (v) {
         o.push("", t(v.nome) + (v.status ? " · " + t(v.status) : ""), t(v.texto)); if (v.resultado) o.push("Resultado: " + t(v.resultado)); l = lk(v); if (l) o.push(l);
         (v.links || "").split(";").forEach(function (par) { var k = par.lastIndexOf("|"), u = k > 0 ? par.slice(k + 1).trim() : ""; if (u && !ehPendencia(u)) o.push("  " + par.slice(0, k).trim() + ": " + u); });
       });
     }
-    if ((L.APRENDIZADO || []).length) { o.push("", "O QUE APRENDEMOS"); L.APRENDIZADO.forEach(function (v, i) { o.push((i + 1) + ". " + t(v.titulo) + ": " + t(v.texto) + (v.levamos ? " Levamos: " + t(v.levamos) : "")); }); }
+    if ((L.APRENDIZADO || []).length) { o.push("", N.topo_aprendizados); L.APRENDIZADO.forEach(function (v, i) { o.push((i + 1) + ". " + t(v.titulo) + ": " + t(v.texto) + (v.levamos ? " Levamos: " + t(v.levamos) : "")); }); }
     TOPICOS.forEach(function (tb) {
       if (!(L[tb[0]] || []).length) return;
       var T = S[tb[0]] || {};
@@ -998,8 +1138,8 @@
         (v.links || "").split(";").forEach(function (par) { var k = par.lastIndexOf("|"), u = k > 0 ? par.slice(k + 1).trim() : ""; if (u && !ehPendencia(u) && !/\.pdf$/i.test(u)) o.push("  " + par.slice(0, k).trim() + ": " + u); });
       });
     });
-    if (S.FOCO) o.push("", "FOCO DE " + maiusculas(E.proximo_mes) + ": " + t(S.FOCO.prioridade), t(S.FOCO.texto));
-    if ((L.AGENDA || []).length) { o.push("", "TAMBÉM VEM AÍ"); L.AGENDA.forEach(function (v) { o.push("- " + t(v.data) + " · " + t(v.titulo) + (v.detalhe ? " (" + t(v.detalhe) + ")" : "")); }); }
+    if (S.FOCO) o.push("", N.topo_foco + maiusculas(E.proximo_mes) + ": " + t(S.FOCO.prioridade), t(S.FOCO.texto));
+    if ((L.AGENDA || []).length) { o.push("", N.topo_agenda); L.AGENDA.forEach(function (v) { o.push("- " + t(v.data) + " · " + t(v.titulo) + (v.detalhe ? " (" + t(v.detalhe) + ")" : "")); }); }
     o.push("", "Até " + E.proximo_mes.toLowerCase() + ".", E.contato ? "Dúvidas, sugestões ou pedidos: " + t(E.contato) : "");
     return o.filter(function (x, i, a) { return !(x === "" && a[i - 1] === ""); }).join("\r\n").trim() + "\r\n";
   }
@@ -1179,11 +1319,11 @@
     "w.addEventListener('scroll',lendo,{passive:true});w.addEventListener('resize',lendo);lendo();" +
     "if((w.matchMedia&&w.matchMedia('(prefers-reduced-motion: reduce)').matches)||!('IntersectionObserver' in w)||d.designMode==='on')return;" +
     "raiz.setAttribute('data-motion','');" +
-    /* alvos: as células de cada linha de seção (entre as marcas secao:nome) */
+    /* alvos: as células de cada linha de seção (entre as marcas secao:nome); as células vazias (espaço entre blocos) não */
     "var tw=d.createTreeWalker(d.body,128),c,alvos=[];" +
     "while((c=tw.nextNode())){var m=/^secao:([a-z]+)$/.exec(c.nodeValue.trim());if(!m||m[1]==='fim')continue;" +
     "var e=c.nextSibling;while(e&&e.nodeType===3)e=e.nextSibling;if(e&&e.nodeType===1&&e.tagName==='TBODY')e=e.firstChild;" +
-    "for(;e&&!(e.nodeType===8&&/^secao:/.test(e.nodeValue.trim()));e=e.nextSibling){if(e.nodeType===1&&e.tagName==='TR'){for(var k=0;k<e.children.length;k++)alvos.push(e.children[k]);}}}" +
+    "for(;e&&!(e.nodeType===8&&/^secao:/.test(e.nodeValue.trim()));e=e.nextSibling){if(e.nodeType===1&&e.tagName==='TR'){for(var k=0;k<e.children.length;k++){var q=e.children[k];if(q.children.length||q.textContent.replace(/[\\s\\u00a0]/g,''))alvos.push(q);}}}}" +
     /* barra do Creative X: a parte preenchida (altura 8, largura em %, menor que 100%) */
     "Array.prototype.forEach.call(d.querySelectorAll('td[height=\"8\"]'),function(t){var wd=t.getAttribute('width')||'';if(/%$/.test(wd)&&wd!=='100%'&&!t.previousElementSibling)t.setAttribute('data-barra','');});" +
     "var NUM=/^([^\\d]*?)(\\d{1,3}(?:\\.\\d{3})+|\\d+)(?:,(\\d+))?([^\\d]*)$/;" +
@@ -1203,11 +1343,46 @@
     "alvos.forEach(function(td){td.setAttribute('data-rv','');io.observe(td);});})();";
   /* Estilo e script que esta função injeta (para trocar, sem duplicar, numa página que já os tem). */
   var INJETADO_CSS = /<style\b[^>]*>\s*\/\* Ampliar peças[\s\S]*?<\/style>\s*/g, INJETADO_JS = /<script\b[^>]*>[^<]*box\.id='amp'[\s\S]*?<\/script>\s*/g;
+  /* Funil vivo (5.5), só na página do navegador e só quando a página tem funil: os degraus entram um a um, ganham a
+     forma de funil (cada degrau afina até a largura do de baixo), os números contam até o valor, e passar o mouse (ou
+     o Tab) num degrau destaca ele e apaga um pouco os outros. No e-mail o funil fica como é (estático). Com "reduzir
+     movimento" no computador, só o destaque ao passar o mouse. */
+  var FUNIL_CSS = "html[data-funil-vivo] table[data-funil] tr[data-item]>td{filter:drop-shadow(0 6px 9px rgba(0,0,0,.2));}" +
+    "html[data-funil-vivo] table[data-funil] table[data-degrau]{border-radius:0 !important;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease;transform-origin:50% 50%;}" +
+    "html[data-funil-vivo] table[data-degraus]:hover table[data-degrau]{opacity:.55;}" +
+    "html[data-funil-vivo] table[data-degraus] tr[data-item]:hover table[data-degrau],html[data-funil-vivo] table[data-degraus] tr[data-item]:focus table[data-degrau]{opacity:1;transform:scale(1.04);}" +
+    "html[data-funil-vivo] table[data-funil] tr[data-item]{outline:none;cursor:default;}html[data-funil-vivo] table[data-funil] tr[data-item]:focus-visible table[data-degrau]{outline:3px solid #FFFFFF;outline-offset:4px;}" +
+    "html[data-funil-vivo] [data-item=funil-total]{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1);}" +
+    "html[data-funil-mov] table[data-funil]:not([data-funil-on]) table[data-degrau]{opacity:0;transform:translateY(16px) scaleX(.72);}" +
+    "html[data-funil-mov] table[data-funil]:not([data-funil-on]) [data-item=funil-total]{opacity:0;transform:translateX(-14px);}" +
+    "@media print{html[data-funil-mov] table[data-funil] table[data-degrau],html[data-funil-mov] table[data-funil] [data-item=funil-total]{opacity:1 !important;transform:none !important;}}";
+  var FUNIL_JS = "(function(){var d=document,w=window,fs=d.querySelectorAll('table[data-funil]');if(!fs.length)return;var raiz=d.documentElement;raiz.setAttribute('data-funil-vivo','');" +
+    "var calmo=w.matchMedia&&w.matchMedia('(prefers-reduced-motion: reduce)').matches;" +
+    /* forma de funil: cada degrau afina (embaixo) até a largura do degrau de baixo; o último afina o mesmo tanto */
+    "function forma(f){var ts=f.querySelectorAll('table[data-degrau]'),ws=[];for(var i=0;i<ts.length;i++)ws.push(ts[i].getBoundingClientRect().width);" +
+    "for(var j=0;j<ts.length;j++){var a=ws[j],b=j+1<ws.length?ws[j+1]:a-(ws.length>1?ws[0]-ws[1]:a*.12),c=Math.max(0,Math.min(28,(a-b)/2));" +
+    "ts[j].style.clipPath='polygon(0 0,100% 0,calc(100% - '+c+'px) 100%,'+c+'px 100%)';var td=ts[j].querySelector('td');if(td){td.style.paddingLeft=td.style.paddingRight=Math.round(12+c)+'px';}}}" +
+    /* os números contam até o valor (os que o movimento da página já conta ficam com ele) */
+    "var NUM=/^([^\\d]*?)(\\d{1,3}(?:\\.\\d{3})+|\\d+)(?:,(\\d+))?([^\\d]*)$/;" +
+    "function jaConta(el,m,alvo){return /^[\\s+\\-\\u2212]*(R\\$\\s?)?$/.test(m[1])&&/^\\s*(%|x|p\\.p\\.|mil)?\\s*$/i.test(m[4])&&parseFloat(w.getComputedStyle(el).fontSize)>=22&&!(alvo<10&&!m[1].trim()&&!m[4].trim());}" +
+    "function conta(el,atraso){var orig=el.textContent,m=NUM.exec(orig.replace(/\\u00a0/g,' ').trim());if(!m)return;var alvo=parseFloat(m[2].replace(/\\./g,'')+'.'+(m[3]||'0'));if(jaConta(el,m,alvo))return;" +
+    "var casas=(m[3]||'').length,mil=m[2].indexOf('.')>=0,t0=null,dur=1100;function fmt(v){var s=v.toFixed(casas).split('.'),i=s[0];if(mil)i=i.replace(/\\B(?=(\\d{3})+(?!\\d))/g,'.');return m[1]+i+(casas?','+s[1]:'')+m[4];}" +
+    "el.setAttribute('data-conta','');el.textContent=fmt(0);setTimeout(function(){function p(ts){if(t0===null)t0=ts;var q=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-q,3);el.textContent=q<1?fmt(alvo*e):orig;if(q<1)w.requestAnimationFrame(p);else el.setAttribute('data-conta','ok');}w.requestAnimationFrame(p);},atraso);}" +
+    "function entra(f){if(f.hasAttribute('data-funil-on'))return;var ts=f.querySelectorAll('table[data-degrau]');for(var i=0;i<ts.length;i++)ts[i].style.transitionDelay=(i*140)+'ms';" +
+    "var tt=f.querySelector('[data-item=funil-total]');if(tt)tt.style.transitionDelay=(ts.length*140+120)+'ms';f.setAttribute('data-funil-on','');" +
+    "setTimeout(function(){for(var k=0;k<ts.length;k++)ts[k].style.transitionDelay='';if(tt)tt.style.transitionDelay='';},ts.length*140+1400);" +
+    "if(calmo)return;var vs=f.querySelectorAll('[data-campo$=\".valor\"],[data-campo=\"funil.total\"]');for(var v=0;v<vs.length;v++)conta(vs[v],v<ts.length?v*140+200:ts.length*140+320);}" +
+    "Array.prototype.forEach.call(fs,function(f){forma(f);Array.prototype.forEach.call(f.querySelectorAll('tr[data-item]'),function(tr){tr.setAttribute('tabindex','0');});});" +
+    "var rt=0;w.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){Array.prototype.forEach.call(fs,forma);},150);});" +
+    "if(calmo||!('IntersectionObserver' in w)){Array.prototype.forEach.call(fs,function(f){f.setAttribute('data-funil-on','');});return;}" +
+    "raiz.setAttribute('data-funil-mov','');var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);entra(en.target);}});},{threshold:.35});" +
+    "Array.prototype.forEach.call(fs,function(f){io.observe(f);});})();";
   function paraNavegador(html) {
     html = html.replace(INJETADO_CSS, "").replace(INJETADO_JS, "");
     if (html.indexOf("data-ampliar=") < 0 && html.indexOf("data-video=") < 0 && html.indexOf("data-anexo=") < 0 && html.indexOf("<!--secao:") < 0) return html;
-    return html.replace("</head>", "<style>\n/* Ampliar peças e movimento (só na página do navegador) */\n" + AMPLIAR_CSS + MOVIMENTO_CSS + "\n</style>\n</head>")
-      .replace(/<\/body>(?![\s\S]*<\/body>)/, "<script>\n" + AMPLIAR_JS + "\n" + MOVIMENTO_JS + "\n</script>\n</body>");
+    var funil = html.indexOf("data-funil=") >= 0;
+    return html.replace("</head>", "<style>\n/* Ampliar peças e movimento (só na página do navegador) */\n" + AMPLIAR_CSS + MOVIMENTO_CSS + (funil ? FUNIL_CSS : "") + "\n</style>\n</head>")
+      .replace(/<\/body>(?![\s\S]*<\/body>)/, "<script>\n" + AMPLIAR_JS + "\n" + MOVIMENTO_JS + (funil ? "\n" + FUNIL_JS : "") + "\n</script>\n</body>");
   }
 
   /* =================================================================== */
@@ -1264,6 +1439,10 @@
     html = html.replace(/<link rel="(?:icon|apple-touch-icon)"[^>]*>\n?/g, "");
     tira(/ (?:tabindex="0"|role="button"|aria-label="(?:Ampliar|Assistir): [^"]*"|title="Clique para (?:ampliar|assistir)")/g, "atributo do clique");
     tira(/ (?:contenteditable|spellcheck)(?:="[^"]*")?(?=[\s>\/])/gi, "atributo de edição");
+    /* cor em rgb() (estilo regravado por um navegador): vira #RRGGBB, o único formato que o Outlook para Windows entende */
+    var nr = 0;
+    html = html.replace(/rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/g, function (m, r, g, b) { nr++; return "#" + [r, g, b].map(function (x) { return ("0" + Math.min(255, +x).toString(16)).slice(-2).toUpperCase(); }).join(""); });
+    if (nr) saiu.push({ item: "cor em rgb() trocada pelo código #RRGGBB", n: nr });
     return { html: html, saiu: saiu };
   }
 
@@ -1356,18 +1535,18 @@
 
   /* Nome de cada seção (marcas <!--secao:nome--> do template) e as que o e-mail resumido leva. */
   var SECOES = {
-    capa: "Capa e números do projeto principal", lancamos: "O que lançamos", cx: "Creative X",
+    capa: "Capa (frase do mês, campanha e números)", lancamos: "O que lançamos", cx: "Creative X",
     transformation: "Transformation Hub", aprendizados: "O que aprendemos", foco: "Foco do próximo mês",
     agenda: "Também vem aí", rodape: "Encerramento e assinatura"
   };
   TOPICOS.forEach(function (t, i) { SECOES[t[1]] = "Novo tópico " + (i + 1); });
-  var SECOES_RESUMO = ["capa", "foco", "rodape"];
+  var SECOES_RESUMO = ["capa", "visao", "resultados", "foco", "rodape"];
   var MARCA_SECAO = /<!--secao:([a-z]+)-->/g;
 
   /* Nome da seção; o de um tópico novo é o rótulo que ele tem na página (ex.: "Tópico: TESTES"). */
   function nomeDaSecao(html, id) {
     var m = /^topico[a-z]?$/.test(id) && new RegExp('data-campo="' + id + '\\.rotulo"[^>]*>([^<]*)<').exec(html);
-    return m && m[1].trim() ? "Tópico: " + desfazEntidades(m[1].trim()) : SECOES[id] || id;
+    return m && m[1].trim() ? "Tópico: " + desfazEntidades(m[1].trim()) : perfil(segmentoDoHtml(html)).secoes[id] || SECOES[id] || id;
   }
   /* Seções que a página tem, na ordem: [{ id, nome }]. Vazio = arquivo de antes da versão 3.9 (sem marcas). */
   function secoesDoHtml(html) {
@@ -1502,11 +1681,11 @@
    * No emulador, dá para trocar por outros indicadores da página (resultados do destaque, Creative X).
    * Indicador vazio não aparece; nada é inventado nem completado com zero.
    */
-  var RESUMO_REGRAS = { indicadores: 3, itens_topico: 4 };
+  var RESUMO_REGRAS = { indicadores: 3, destaques: 4, itens_topico: 4 };
   /* Paleta do Brand Guide (a mesma de config/marca.txt). */
   var CR = {
     marca: "#EC0000", branco: "#FFFFFF", lisboa: "#FBF1EA", rio: "#F5DECF", mexico: "#F0B998", texto: "#000000", apoio: "#767676", linha: "#E2E2E2",
-    positivo: "#21634F", positivo_fundo: "#A3E0CE", atencao: "#945400", atencao_fundo: "#FFE1B9",
+    positivo: "#21634F", positivo_fundo: "#A3E0CE", atencao: "#945400", atencao_fundo: "#FFE1B9", boston: "#CC0000",
     turquesa: "#127277", turquesa_fundo: "#CDECEE", roxo: "#803262", roxo_fundo: "#F0CAE1", rosa: "#A6112F", rosa_fundo: "#FFC3CF"
   };
 
@@ -1560,7 +1739,9 @@
       }
       return r;
     }
+    var seg = segmentoDoHtml(html), N = PERFIS[seg].nomes;
     var d = {
+      segmento: seg,
       periodo: c.periodo || "", frase: c.frase || "", frase_final: c.frase_final || "",
       logo: img.logo || null,
       principal: c["principal.nome"] ? { nome: c["principal.nome"], resumo: c["principal.resumo"] || "" } : null,
@@ -1583,9 +1764,114 @@
       var gr = tp.rotulo.charAt(0) + tp.rotulo.slice(1).toLocaleLowerCase("pt-BR");
       tp.itens.forEach(function (n) { if (n.valor) ind.push({ chave: n.chave, valor: n.valor, titulo: n.nome, detalhe: n.texto, variacao: "", tom: "", origem: tp.titulo || gr, grupo: gr }); });
     });
-    if (d.cx) ind.push({ chave: "cx", valor: d.cx.atual, titulo: "Creative X" + (d.cx.subtitulo ? " · " + d.cx.subtitulo.split(" · ")[0] : ""), detalhe: (d.cx.anterior ? "Antes: " + d.cx.anterior : "") + (d.cx.periodo ? (d.cx.anterior ? " · " : "") + d.cx.periodo : ""), variacao: d.cx.variacao, tom: d.cx.tom, origem: "Creative X", grupo: "Creative X" });
+    if (d.cx) ind.push({ chave: "cx", valor: d.cx.atual, titulo: seg === "pj" ? (d.cx.subtitulo ? d.cx.subtitulo.split(" · ")[0] : "Indicador do mês") : "Creative X" + (d.cx.subtitulo ? " · " + d.cx.subtitulo.split(" · ")[0] : ""), detalhe: (d.cx.anterior ? "Antes: " + d.cx.anterior : "") + (d.cx.periodo ? (d.cx.anterior ? " · " : "") + d.cx.periodo : ""), variacao: d.cx.variacao, tom: d.cx.tom, origem: N.cx, grupo: N.cx });
     d.indicadores = ind;
+    d.campos = c; d.tons = tom;
+    /* imagens da página (data-img): a peça, o card, o projeto… A de vídeo já tem o ▶ desenhado (é a capa estática). */
+    d.figuras = {};
+    html.replace(/<img\b[^>]*\sdata-img="([^"]+)"[^>]*>/g, function (tag, k) {
+      if (!d.figuras[k]) d.figuras[k] = { src: atributo(tag, "src"), alt: atributo(tag, "alt"), video: / data-video="/.test(tag), w: +atributo(tag, "width") || 0 };
+      return tag;
+    });
     return { ok: true, d: d, pendencias: pend };
+  }
+
+  /* =================================================================== */
+  /* Destaques do e-mail-resumo (4.13): o que o report oferece, a sugestão, e a escolha da pessoa (até 4)        */
+  /* =================================================================== */
+  /*
+   * Cada candidato: { origem, secao, tipo: "indicador" | "texto", valor, titulo, texto, etiqueta, tom, grupo, figura }
+   *   origem = a chave na página (numero-1, resultado-2, cx, cxt-1, principal, destaque, lancamento-3,
+   *   principal.aprendizado, aprendizado-1, transformation-2, foco, agenda-1, topico-1…). O valor sempre vem da página:
+   *   mudar um número no report muda o e-mail. figura = a chave da imagem da página que combina com o item (data-img).
+   */
+  function candidatosResumo(d) {
+    var c = d.campos || {}, tom = d.tons || {}, fig = d.figuras || {}, out = [], N = perfil(d.segmento).nomes, pj = d.segmento === "pj";
+    function v(k) { return c[k] || ""; }
+    function semBola(t) { return String(t || "").replace(/^[\u25cf\u25cb]\s*/, ""); }
+    function add(x) { if (x.titulo || x.valor || x.texto) out.push(x); }
+    /* na etiqueta do cartão, o nome curto da campanha: "Campanha Beta: frase do título" vira "Campanha Beta" */
+    function nomeCurto(t) { var m = /^([^:]{2,32}):\s/.exec(String(t || "")); return m ? m[1].trim() : t; }
+    var nomeP = v("principal.nome") || "Campanha", nomeD = v("destaque.titulo");
+    /* o rótulo da capa ("CAMPANHA", editável) dá nome à seção na lista do emulador e à etiqueta do cartão no e-mail */
+    var rotP = (function (r) { r = String(r || "").trim(); r = r ? r.toLocaleLowerCase("pt-BR") : "campanha"; return r.charAt(0).toLocaleUpperCase("pt-BR") + r.slice(1); })(v("principal.rotulo"));
+    d.indicadores.forEach(function (n) {
+      var sec = n.grupo === "Destaque do mês" ? N.destaque : n.grupo === "Projeto principal" ? rotP : n.grupo;
+      add({ origem: n.chave, secao: sec, tipo: "indicador", valor: n.valor, titulo: n.titulo, texto: n.detalhe, etiqueta: n.variacao, tom: n.tom, grupo: n.grupo === "Destaque do mês" ? nomeCurto(n.origem) : n.origem,
+        figura: n.grupo === "Projeto principal" ? "principal" : n.grupo === "Destaque do mês" ? "destaque" : "", capa: n.grupo === "Projeto principal" });
+    });
+    for (var i = 1; i <= 3; i++) if (v("cxt-" + i + ".valor")) add({ origem: "cxt-" + i, secao: N.cx, tipo: "indicador", valor: v("cxt-" + i + ".valor"), titulo: v("cxt-" + i + ".titulo"), texto: v("cxt-" + i + ".detalhe"), etiqueta: v("cxt-" + i + ".variacao"), tom: tom["cxt-" + i + ".variacao"] || "", grupo: N.cxt, figura: "" });
+    if (c["principal.nome"]) add({ origem: "principal", secao: rotP, capa: true, tipo: "texto", titulo: nomeP, texto: v("principal.resumo"), grupo: rotP, figura: fig.principal ? "principal" : "" });
+    if (v("principal.aprendizado")) add({ origem: "principal.aprendizado", secao: rotP, capa: true, tipo: "texto", titulo: "O que aprendemos", texto: v("principal.aprendizado"), grupo: nomeP, aprendizado: true, figura: "" });
+    var dstq = pj ? N.destaque : "Destaque do mês";
+    if (nomeD) add({ origem: "destaque", secao: N.destaque, tipo: "texto", titulo: nomeD, texto: v("destaque.texto"), grupo: v("destaque.categoria") || dstq, figura: fig.destaque ? "destaque" : "" });
+    if (v("destaque.aprendizado")) add({ origem: "destaque.aprendizado", secao: N.destaque, tipo: "texto", titulo: "O que aprendemos", texto: v("destaque.aprendizado"), grupo: nomeCurto(nomeD) || dstq, aprendizado: true, figura: "" });
+    for (i = 1; i <= 6; i++) {
+      var lk = "lancamento-" + i; if (!v(lk + ".nome")) continue;
+      add({ origem: lk, secao: N.lancamentos, tipo: "texto", titulo: v(lk + ".nome"), texto: v(lk + ".texto"), etiqueta: semBola(v(lk + ".status")), tom: tom[lk + ".status"] || "", grupo: pj ? N.lancamentos : "Também neste mês", figura: fig[lk] ? lk : "" });
+      if (v(lk + ".aprendizado")) add({ origem: lk + ".aprendizado", secao: N.lancamentos, tipo: "texto", titulo: "O que aprendemos", texto: v(lk + ".aprendizado"), grupo: v(lk + ".nome"), aprendizado: true, figura: "" });
+    }
+    for (i = 1; i <= 3; i++) {
+      var tk = "transformation-" + i; if (!v(tk + ".nome")) continue;
+      add({ origem: tk, secao: N.transformation, tipo: "texto", titulo: v(tk + ".nome"), texto: v(tk + ".texto"), etiqueta: semBola(v(tk + ".status")), tom: tom[tk + ".status"] || "", grupo: N.transformation, figura: fig[tk] ? tk : "" });
+    }
+    for (i = 1; i <= 3; i++) if (v("aprendizado-" + i + ".titulo")) add({ origem: "aprendizado-" + i, secao: N.aprendizados, tipo: "texto", titulo: v("aprendizado-" + i + ".titulo"), texto: v("aprendizado-" + i + ".texto"), grupo: N.aprendizados, aprendizado: true, figura: "" });
+    if (v("foco.prioridade")) add({ origem: "foco", secao: N.foco, tipo: "texto", titulo: v("foco.prioridade"), texto: v("foco.texto"), grupo: N.foco + (v("foco.mes") && !pj ? " de " + v("foco.mes").charAt(0) + v("foco.mes").slice(1).toLocaleLowerCase("pt-BR") : ""), figura: "" });
+    for (i = 1; i <= 6; i++) if (v("agenda-" + i + ".titulo")) add({ origem: "agenda-" + i, secao: N.agenda, tipo: "texto", titulo: v("agenda-" + i + ".titulo"), texto: v("agenda-" + i + ".detalhe"), etiqueta: v("agenda-" + i + ".data"), tom: "verde", grupo: N.agenda, figura: "" });
+    d.topicos.forEach(function (tp) {
+      var gr = tp.rotulo.charAt(0) + tp.rotulo.slice(1).toLocaleLowerCase("pt-BR");
+      tp.itens.forEach(function (n) { if (!n.valor) add({ origem: n.chave, secao: gr, tipo: "texto", titulo: n.nome || n.texto, texto: n.nome ? n.texto : "", etiqueta: semBola(n.status), tom: n.tom_status || "", grupo: tp.titulo || gr, figura: fig[n.chave] ? n.chave : "" }); });
+    });
+    return out;
+  }
+  /* Sugestão (a pessoa decide no fim): os números do projeto principal que a frase do mês ainda não diz, até 3, como
+     antes da 4.13; sem eles, os primeiros indicadores da página. */
+  function sugerirDestaques(cand, fraseMes) {
+    var ind = cand.filter(function (x) { return x.tipo === "indicador"; });
+    ind.forEach(function (x) { x.na_frase = repete(fraseMes, x); });
+    var livres = ind.filter(function (x) { return !x.na_frase; });
+    var s = livres.filter(function (x) { return x.capa; }).slice(0, RESUMO_REGRAS.indicadores);
+    if (!s.length) s = (livres.length ? livres : ind).slice(0, RESUMO_REGRAS.indicadores);
+    return s.map(function (x) { return { origem: x.origem }; });
+  }
+  /* Grade: em pares (290 + 20 + 290); com número ímpar, o primeiro ocupa a largura toda. */
+  var DESTAQUE_IMG = { metade: [290, 163], larga: [600, 270], lado: [240, 240] };
+  function layoutDestaques(n) {
+    var r = [];
+    for (var i = 0; i < n; i++) r.push({ largo: n % 2 === 1 && i === 0, w: n % 2 === 1 && i === 0 ? LARGURA : 290 });
+    return r;
+  }
+  /* O tamanho da imagem de cada destaque (o emulador recorta nesse tamanho, em dobro para telas nítidas):
+     posicao "lado" só no destaque largo; nos outros, a imagem vai em cima. */
+  function tamanhoImagemDestaque(i, n, posicao) {
+    var l = layoutDestaques(n)[i] || { largo: false };
+    return l.largo ? (posicao === "lado" ? DESTAQUE_IMG.lado : DESTAQUE_IMG.larga) : DESTAQUE_IMG.metade;
+  }
+  /*
+   * resolverDestaques(config, cand) → { lista, fora }
+   *   config: [{ origem, titulo?, texto?, semEtiqueta?, imagem?: { src, w, h, alt, posicao, video }, link?, link_texto?,
+   *              novo?: true, valor?, etiqueta?, tom? }] (até 4). Título e descrição: o texto da pessoa (se houver) ou o da
+   *   página. Informação nova (novo): tudo vem da configuração. Item que saiu da página fica de fora (aviso).
+   */
+  function resolverDestaques(config, cand) {
+    var por = {}, lista = [], fora = [];
+    cand.forEach(function (x) { por[x.origem] = x; });
+    (config || []).slice(0, RESUMO_REGRAS.destaques).forEach(function (cf) {
+      if (!cf) return;
+      var base = cf.novo ? { origem: cf.origem || "novo", secao: "Informação nova", tipo: cf.valor ? "indicador" : "texto", valor: cf.valor || "", titulo: "", texto: "", etiqueta: cf.etiqueta || "", tom: cf.tom || "verde", grupo: cf.grupo || "" } : por[cf.origem];
+      if (!base) { fora.push(cf.origem); return; }
+      var t = function (x, y) { return x !== undefined && x !== null && String(x).trim() !== "" ? String(x).trim() : y; };
+      var lk = cf.link ? normalizarLink(cf.link) : null;
+      lista.push({
+        origem: base.origem, secao: base.secao, tipo: cf.novo ? (cf.valor ? "indicador" : "texto") : base.tipo, novo: !!cf.novo,
+        valor: cf.novo ? (cf.valor || "") : base.valor || "", titulo: t(cf.titulo, base.titulo), texto: cf.texto !== undefined && cf.texto !== null ? String(cf.texto).trim() : base.texto || "",
+        etiqueta: cf.semEtiqueta ? "" : cf.novo ? (cf.etiqueta || "") : base.etiqueta || "", tom: cf.novo ? (cf.tom || "verde") : base.tom || "",
+        grupo: t(cf.grupo, base.grupo || ""), aprendizado: !!base.aprendizado,
+        imagem: cf.imagem && cf.imagem.src ? cf.imagem : null, link: lk && !lk.erro ? lk.url : "", link_texto: t(cf.link_texto, "Saiba mais"),
+        editado: !cf.novo && ((t(cf.titulo, "") && t(cf.titulo, "") !== base.titulo) || (cf.texto !== undefined && cf.texto !== null && String(cf.texto).trim() !== (base.texto || "")))
+      });
+    });
+    return { lista: lista, fora: fora };
   }
 
   /* Etiqueta (▲ +12%), com o tom verde ou âmbar que veio da página. Célula de tabela com fundo: o Outlook para
@@ -1607,6 +1893,8 @@
     return !ps.length || ps.filter(function (w) { return t.indexOf(" " + w + " ") >= 0 || t.indexOf(" " + w.replace(/s$/, "") + " ") >= 0; }).length * 2 >= ps.length;
   }
 
+  /* Espaços entre colunas e entre tópicos: células vazias, sem &nbsp;. No modo escuro, o Outlook clássico para Windows
+     pinta o caractere invisível e aparecem quadrados entre os indicadores (4.12.1). */
   /* Cantos retos de propósito: ao enviar, o Outlook para Windows reescreve o e-mail e tira os cantos arredondados para
      todos que recebem. Assim a prévia do emulador mostra o que chega na caixa de entrada. */
   var RESUMO_TPL = [
@@ -1629,14 +1917,16 @@
     '  img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;}',
     '  a[x-apple-data-detectors]{color:inherit !important;text-decoration:none !important;}',
     '  .container td,.container p{overflow-wrap:anywhere;word-break:break-word;}',
-    '  @media screen and (max-width:620px){',
+    '  @media screen and (max-width:700px){',
     '    .container{width:100% !important;}',
     '    .kpiv{white-space:normal !important;}',
     '    .px{padding-left:20px !important;padding-right:20px !important;}',
     '    .col{display:block !important;width:100% !important;box-sizing:border-box !important;padding-left:0 !important;padding-right:0 !important;}',
     '    .hide-m{display:none !important;}',
-    '    .kpi{display:block !important;width:100% !important;box-sizing:border-box !important;padding:10px 0 12px 0 !important;}',
+    '    .kpi{display:block !important;width:100% !important;box-sizing:border-box !important;}',
     '    .kpiv{font-size:26px !important;line-height:30px !important;}',
+    '    .dtq2{border-top:14px solid {{t.corpo}} !important;}',
+    '    .dimg{width:100% !important;max-width:100% !important;height:auto !important;}',
     '    .ctat{display:block !important;width:100% !important;box-sizing:border-box !important;padding:18px 20px 0 20px !important;}',
     '    .ctab{display:block !important;width:100% !important;box-sizing:border-box !important;padding:14px 20px 20px 20px !important;text-align:left !important;}',
     '    .btn{width:100% !important;max-width:100% !important;}',
@@ -1648,68 +1938,67 @@
     '{{css_escuro}}',
     '</style>',
     '</head>',
-    '<body class="dm-lisboa" style="margin:0;padding:0;background:{{cor.lisboa}};" bgcolor="{{cor.lisboa}}">',
-    '<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;mso-line-height-rule:exactly;color:{{cor.lisboa}};">{{previa}}&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>',
-    '<table role="presentation" class="dm-lisboa" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{cor.lisboa}}" style="background:{{cor.lisboa}};"><tr><td align="center" style="padding:24px 0;">',
+    '<body class="{{t.dm_pagina}}" style="margin:0;padding:0;background:{{t.pagina}};" bgcolor="{{t.pagina}}">',
+    '<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;mso-line-height-rule:exactly;color:{{t.pagina}};">{{previa}}&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>',
+    '<table role="presentation" class="{{t.dm_pagina}}" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{t.pagina}}" style="background:{{t.pagina}};"><tr><td align="center" style="padding:24px 0;">',
     '<!--[if mso]><table role="presentation" width="680" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->',
-    '<table role="presentation" class="container dm-branco-bg" width="680" cellpadding="0" cellspacing="0" border="0" bgcolor="{{cor.branco}}" style="width:680px;max-width:680px;background:{{cor.branco}};">',
+    '<table role="presentation" class="container {{t.dm_corpo}}" width="680" cellpadding="0" cellspacing="0" border="0" bgcolor="{{t.corpo}}" style="width:680px;max-width:680px;background:{{t.corpo}};">',
     '',
     '  <!-- CABEÇALHO: identidade, período e a frase do mês (contexto) -->',
-    '  <tr><td class="px dm-marca-bg" bgcolor="{{cor.marca}}" style="background:{{cor.marca}};padding:22px 40px 26px 40px;">',
+    '  <tr><td class="px {{t.dm_cab}}" bgcolor="{{t.cab}}" style="background:{{t.cab}};padding:22px 40px 26px 40px;">',
     '    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>',
     '      <td class="col" valign="middle">',
     '        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>',
-    '          {{#logo}}<td valign="middle" style="padding-right:14px;"><img src="{{src}}" width="{{w}}" alt="Santander" style="display:block;border:0;width:{{w}}px;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#FFFFFF;"></td>{{/logo}}',
-    '          <td valign="middle" style="{{#logo}}padding-left:14px;border-left:1px solid #FFFFFF;{{/logo}}"><p class="ft dm-txt-branco" style="margin:0;font-family:{{ft}};font-size:19px;line-height:22px;mso-line-height-rule:exactly;font-weight:bold;color:#FFFFFF;">Creative Strategy PF</p></td>',
+    '          {{#logo}}<td valign="middle" style="padding-right:14px;"><img src="{{src}}" width="{{w}}" alt="Santander" style="display:block;border:0;width:{{w}}px;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:{{t.cab_txt}};"></td>{{/logo}}',
+    '          <td valign="middle" style="{{#logo}}padding-left:14px;border-left:1px solid {{t.cab_filete}};{{/logo}}"><p class="ft {{t.dm_cab_txt}}" style="margin:0;font-family:{{ft}};font-size:19px;line-height:22px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.cab_txt}};">{{t.area}}</p></td>',
     '        </tr></table>',
     '      </td>',
     '      <td class="col al-l" valign="middle" align="right"><table role="presentation" class="selo" align="right" cellpadding="0" cellspacing="0" border="0"><tr><td class="dm-branco-bg" bgcolor="#FFFFFF" style="background:#FFFFFF;padding:6px 12px;"><p class="fx dm-txt-marca" style="margin:0;font-family:{{fx}};font-size:9px;line-height:12px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.marca}};letter-spacing:1.5px;">REPORT MENSAL{{#periodo}}&nbsp;&nbsp;·&nbsp;&nbsp;{{periodo}}{{/periodo}}</p></td></tr></table></td>',
     '    </tr>',
     '    <tr><td colspan="2" style="padding:16px 0 18px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="dm-branco-bg" height="1" bgcolor="#FFFFFF" style="height:1px;background:#FFFFFF;font-size:0;line-height:0;">&nbsp;</td></tr></table></td></tr>',
     '    <tr><td colspan="2">',
-    '      <p class="ft h1 dm-txt-branco" style="margin:0;font-family:{{fti}};font-size:32px;line-height:36px;mso-line-height-rule:exactly;font-weight:bold;color:#FFFFFF;letter-spacing:-0.8px;">{{frase}}{{#frase_final}}<br><span style="font-weight:normal;">{{frase_final}}</span>{{/frase_final}}</p>',
-    '      <p class="fx dm-txt-branco" style="margin:10px 0 0 0;font-family:{{fx}};font-size:13px;line-height:19px;mso-line-height-rule:exactly;color:#FFFFFF;">{{intro}}</p>',
+    '      <p class="ft h1 {{t.dm_cab_txt}}" style="margin:0;font-family:{{fti}};font-size:32px;line-height:36px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.cab_txt}};letter-spacing:-0.8px;">{{frase}}{{#frase_final}}<br><span style="font-weight:normal;">{{frase_final}}</span>{{/frase_final}}</p>',
+    '      <p class="fx {{t.dm_cab_txt}}" style="margin:10px 0 0 0;font-family:{{fx}};font-size:13px;line-height:19px;mso-line-height-rule:exactly;color:{{t.cab_txt}};">{{intro}}</p>',
     '    </td></tr></table>',
     '  </td></tr>',
     '',
-    '  {{#tem_indicadores}}',
-    '  <!-- PRINCIPAIS RESULTADOS: dois ou três indicadores -->',
-    '  <tr><td class="px" style="padding:26px 40px 0 40px;">',
-    '    <p class="fx dm-txt-turquesa" style="margin:0;font-family:{{fx}};font-size:10px;line-height:14px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.turquesa}};letter-spacing:2px;">PRINCIPAIS RESULTADOS</p>',
-    '    {{#origem_unica}}<p class="fx dm-txt-texto" style="margin:4px 0 0 0;font-family:{{fx}};font-size:13px;line-height:18px;mso-line-height-rule:exactly;color:{{cor.texto}};"><b>{{origem_unica}}</b></p>{{/origem_unica}}',
-    '    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;"><tr>',
-    '      {{#indicadores}}{{^primeiro}}<td class="hide-m" width="24" style="width:24px;font-size:0;line-height:0;">&nbsp;</td>{{/primeiro}}',
-    '      <td class="kpi dm-borda-{{dm_valor}}" width="{{largura}}" valign="top" style="width:{{largura}}px;border-top:2px solid {{cor_valor}};padding-top:12px;">',
-    '        <p class="ft kpiv dm-txt-{{dm_valor}}" style="margin:0;font-family:{{ft}};font-size:30px;line-height:34px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor_valor}};white-space:nowrap;letter-spacing:-0.5px;">{{valor}}</p>',
-    '        <p class="fx dm-txt-texto" style="margin:6px 0 0 0;font-family:{{fx}};font-size:12px;line-height:16px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.texto}};">{{titulo}}</p>',
-    '        {{#detalhe}}<p class="fx dm-txt-apoio" style="margin:2px 0 0 0;font-family:{{fx}};font-size:11px;line-height:15px;mso-line-height-rule:exactly;color:{{cor.apoio}};">{{detalhe}}</p>{{/detalhe}}',
-    '        {{#origem}}<p class="fx dm-txt-apoio" style="margin:2px 0 0 0;font-family:{{fx}};font-size:11px;line-height:15px;mso-line-height-rule:exactly;color:{{cor.apoio}};">{{origem}}</p>{{/origem}}',
-    '        {{#variacao}}<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-top:8px;">{{variacao}}</td></tr></table>{{/variacao}}',
-    '      </td>{{/indicadores}}',
-    '    </tr></table>',
-    '  </td></tr>',
-    '  {{/tem_indicadores}}',
-    '',
-    '  {{#tem_topicos}}',
-    '  <!-- NOVOS TÓPICOS (ex.: Testes): rótulo, título e os itens de cada um, sem link (o link do e-mail é o botão) -->',
-    '  <tr><td class="px" style="padding:26px 40px 0 40px;">',
-    '    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">',
-    '      {{#topicos}}{{^primeiro}}<tr><td height="18" style="height:18px;font-size:0;line-height:0;">&nbsp;</td></tr>{{/primeiro}}',
-    '      <tr><td class="dm-borda-texto" style="border-top:1px solid {{cor.texto}};padding-top:12px;">',
-    '        <p class="fx dm-txt-turquesa" style="margin:0;font-family:{{fx}};font-size:10px;line-height:14px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.turquesa}};letter-spacing:2px;">{{rotulo}}</p>',
-    '        {{#titulo}}<p class="ft dm-txt-texto" style="margin:4px 0 0 0;font-family:{{ft}};font-size:17px;line-height:22px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.texto}};">{{titulo}}</p>{{/titulo}}',
-    '        {{#itens}}<p class="fx dm-txt-texto" style="margin:6px 0 0 0;font-family:{{fx}};font-size:13px;line-height:19px;mso-line-height-rule:exactly;color:{{cor.texto}};"><span class="dm-txt-marca" style="color:{{cor.marca}};font-weight:bold;">&#9679;</span>&nbsp; {{#valor}}<b class="dm-txt-marca" style="color:{{cor.marca}};">{{valor}}</b>&nbsp;·&nbsp;{{/valor}}<b>{{nome}}</b>{{#status}}<span class="dm-txt-apoio" style="color:{{cor.apoio}};">&nbsp;·&nbsp;{{status}}</span>{{/status}}</p>{{/itens}}',
-    '        {{#mais}}<p class="fx dm-txt-apoio" style="margin:6px 0 0 0;font-family:{{fx}};font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:{{cor.apoio}};">E mais {{mais}} no report completo.</p>{{/mais}}',
-    '      </td></tr>{{/topicos}}',
+    '  {{#tem_destaques}}',
+    '  <!-- DESTAQUES DO MÊS: até 4, escolhidos no emulador (indicador, campanha, aprendizado, informação nova), com imagem opcional.',
+    '       Em pares (290 + 20 + 290); com número ímpar, o primeiro ocupa a largura toda. No celular, um embaixo do outro. -->',
+    '  <tr><td class="px" style="padding:26px 40px 20px 40px;">',
+    '    <p class="fx {{t.dm_rot}}" style="margin:0;font-family:{{fx}};font-size:10px;line-height:14px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.rot}};letter-spacing:2px;">DESTAQUES DO MÊS{{#campanha_unica}} · {{campanha_unica}}{{/campanha_unica}}</p>',
+    '    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">',
+    '      {{#linhas}}{{^primeira}}<tr><td colspan="3" height="20" style="height:20px;"></td></tr>{{/primeira}}<tr>',
+    '        {{#cards}}{{^primeiro}}<td class="hide-m" width="20" style="width:20px;"></td>{{/primeiro}}',
+    '        <!-- o fundo fica na célula: os dois cartões da linha têm a mesma altura (também no Outlook) -->',
+    '        <td class="col kpi dtq {{t.dm_card}}{{^primeiro}} dtq2{{/primeiro}}"{{#largo}} colspan="3"{{/largo}} width="{{w}}" valign="top" bgcolor="{{t.card}}" style="width:{{w}}px;background:{{t.card}};">',
+    '          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">',
+    '            {{#img_topo}}<tr><td colspan="2" style="font-size:0;line-height:0;"><img src="{{src}}" width="{{w}}"{{#h}} height="{{h}}"{{/h}} alt="{{alt}}" class="dimg" style="display:block;border:0;width:{{w}}px;max-width:100%;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:{{cor.apoio}};"></td></tr>{{/img_topo}}',
+    '            <tr>',
+    '              {{#img_lado}}<td class="col" width="{{w}}" valign="top" style="width:{{w}}px;font-size:0;line-height:0;"><img src="{{src}}" width="{{w}}"{{#h}} height="{{h}}"{{/h}} alt="{{alt}}" class="dimg" style="display:block;border:0;width:{{w}}px;max-width:100%;height:auto;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:{{cor.apoio}};"></td>{{/img_lado}}',
+    '              <td class="col" valign="top" style="padding:16px 18px 18px 18px;">',
+    '                {{#grupo}}<p class="fx dm-txt-{{dm_grupo}}" style="margin:0 0 6px 0;font-family:{{fx}};font-size:9px;line-height:13px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor_grupo}};letter-spacing:1.5px;">{{grupo}}</p>{{/grupo}}',
+    '                {{#valor}}<p class="ft kpiv dm-txt-{{dm_valor}}" style="margin:0;font-family:{{ft}};font-size:30px;line-height:34px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor_valor}};white-space:nowrap;letter-spacing:-0.5px;">{{valor}}</p>{{/valor}}',
+    /* leitura em ordem (4.13): número → o que é (título) → etiqueta colorida com a referência embaixo; sem número, a etiqueta (status) fica no fim */
+    '                {{#titulo}}<p class="ft dm-txt-{{dm_titulo}}" style="margin:{{#valor}}4px{{/valor}}{{^valor}}0{{/valor}} 0 0 0;font-family:{{ft}};font-size:16px;line-height:21px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor_titulo}};">{{titulo}}</p>{{/titulo}}',
+    '                {{#valor}}{{#etiqueta}}<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-top:8px;">{{etiqueta}}</td></tr></table>{{/etiqueta}}{{/valor}}',
+    '                {{#texto}}<p class="fx dm-txt-{{dm_texto}}" style="margin:4px 0 0 0;font-family:{{fx}};font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:{{cor_texto}};">{{texto}}</p>{{/texto}}',
+    '                {{^valor}}{{#etiqueta}}<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-top:8px;">{{etiqueta}}</td></tr></table>{{/etiqueta}}{{/valor}}',
+    '                {{#link}}<p class="fx" style="margin:10px 0 0 0;font-family:{{fx}};font-size:12px;line-height:16px;mso-line-height-rule:exactly;font-weight:bold;"><a class="fx dm-txt-marca" href="{{link}}" target="_blank" style="color:{{cor.marca}};font-family:{{fx}};text-decoration:none;">{{link_texto}}&nbsp;&#8594;</a></p>{{/link}}',
+    '              </td>',
+    '            </tr>',
+    '          </table>',
+    '        </td>{{/cards}}',
+    '      </tr>{{/linhas}}',
     '    </table>',
     '  </td></tr>',
-    '  {{/tem_topicos}}',
+    '  {{/tem_destaques}}',
     '',
     '  <!-- CHAMADA PRINCIPAL: o único link do e-mail -->',
-    '  <tr><td class="px" style="padding:26px 40px 28px 40px;">',
-    '    <table role="presentation" class="dm-lisboa" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{cor.lisboa}}" style="background:{{cor.lisboa}};"><tr>',
+    '  <tr><td class="px" style="padding:{{#tem_destaques}}6px{{/tem_destaques}}{{^tem_destaques}}26px{{/tem_destaques}} 40px 28px 40px;">',
+    '    <table role="presentation" class="{{t.dm_cta}}" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{t.cta}}" style="background:{{t.cta}};{{t.cta_borda}}"><tr>',
     '      <td class="ctat" valign="middle" style="padding:20px 0 20px 26px;">',
-    '        <p class="ft dm-txt-marca" style="margin:0;font-family:{{ft}};font-size:19px;line-height:24px;mso-line-height-rule:exactly;font-weight:bold;color:{{cor.marca}};">{{cta_titulo}}</p>',
+    '        <p class="ft {{t.dm_cta_tit}}" style="margin:0;font-family:{{ft}};font-size:19px;line-height:24px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.cta_tit}};">{{cta_titulo}}</p>',
     '        <p class="fx dm-txt-texto" style="margin:4px 0 0 0;font-family:{{fx}};font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:{{cor.texto}};">{{cta_texto}}</p>',
     '      </td>',
     '      <td class="ctab" width="{{botao_w}}" valign="middle" align="right" style="width:{{botao_w}}px;padding:20px 26px 20px 16px;white-space:nowrap;">{{botao_html}}</td>',
@@ -1717,13 +2006,13 @@
     '  </td></tr>',
     '',
     '  <!-- ASSINATURA: Vermelho Santander, chama no canto inferior direito (Brand Guide 3.10) -->',
-    '  <tr><td class="px dm-marca-bg" bgcolor="{{cor.marca}}" style="background:{{cor.marca}};padding:18px 40px 20px 40px;">',
+    '  <tr><td class="px {{t.dm_ass}}" bgcolor="{{t.ass}}" style="background:{{t.ass}};padding:18px 40px 20px 40px;{{t.ass_borda}}">',
     '    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>',
     '      <td valign="middle" style="padding-right:16px;">',
-    '        <p class="ft dm-txt-branco" style="margin:0;font-family:{{ft}};font-size:14px;line-height:18px;mso-line-height-rule:exactly;font-weight:bold;color:#FFFFFF;">Creative Strategy PF</p>',
-    '        <p class="fx dm-txt-branco" style="margin:2px 0 0 0;font-family:{{fx}};font-size:9px;line-height:13px;mso-line-height-rule:exactly;font-weight:bold;color:#FFFFFF;letter-spacing:1.5px;">CUSTOMER INTERACTIONS&nbsp;&nbsp;·&nbsp;&nbsp;RESUMO DO REPORT MENSAL{{#contato}}&nbsp;&nbsp;·&nbsp;&nbsp;{{contato}}{{/contato}}</p>',
+    '        <p class="ft {{t.dm_ass_txt}}" style="margin:0;font-family:{{ft}};font-size:14px;line-height:18px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.ass_txt}};">{{t.area}}</p>',
+    '        <p class="fx {{t.dm_ass_txt}}" style="margin:2px 0 0 0;font-family:{{fx}};font-size:9px;line-height:13px;mso-line-height-rule:exactly;font-weight:bold;color:{{t.ass_txt}};letter-spacing:1.5px;">{{t.area_linha}}&nbsp;&nbsp;·&nbsp;&nbsp;RESUMO DO REPORT MENSAL{{#contato}}&nbsp;&nbsp;·&nbsp;&nbsp;{{contato}}{{/contato}}</p>',
     '      </td>',
-    '      {{#logo}}<td valign="middle" align="right" width="{{w}}"><img src="{{src}}" width="{{w}}" alt="Santander" style="display:block;border:0;width:{{w}}px;height:auto;margin-left:auto;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;color:#FFFFFF;"></td>{{/logo}}',
+    '      {{#logo}}<td valign="middle" align="right" width="{{w}}"><img src="{{src}}" width="{{w}}" alt="Santander" style="display:block;border:0;width:{{w}}px;height:auto;margin-left:auto;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;color:{{t.ass_txt}};"></td>{{/logo}}',
     '    </tr></table>',
     '  </td></tr>',
     '</table>',
@@ -1740,8 +2029,8 @@
      (que marcam o que recoloriram com data-ogsc / data-ogsb). O "light only" do cabeçalho já pede ao Apple Mail para
      não inverter. O Outlook clássico para Windows não aceita nenhum desses recursos: lá vale o botão do próprio
      Outlook para trocar o fundo da mensagem (docs/EMULADOR.md). */
-  var DM_FUNDOS = { "dm-lisboa": CR.lisboa, "dm-branco-bg": CR.branco, "dm-marca-bg": CR.marca, "dm-chip-verde": CR.positivo_fundo, "dm-chip-ambar": CR.atencao_fundo };
-  var DM_TEXTOS = { "dm-txt-branco": CR.branco, "dm-txt-marca": CR.marca, "dm-txt-texto": CR.texto, "dm-txt-apoio": CR.apoio, "dm-txt-turquesa": CR.turquesa, "dm-chip-verde": CR.positivo, "dm-chip-ambar": CR.atencao };
+  var DM_FUNDOS = { "dm-lisboa": CR.lisboa, "dm-rio": CR.rio, "dm-branco-bg": CR.branco, "dm-marca-bg": CR.marca, "dm-chip-verde": CR.positivo_fundo, "dm-chip-ambar": CR.atencao_fundo };
+  var DM_TEXTOS = { "dm-txt-branco": CR.branco, "dm-txt-marca": CR.marca, "dm-txt-texto": CR.texto, "dm-txt-apoio": CR.apoio, "dm-txt-turquesa": CR.turquesa, "dm-txt-rosa": CR.rosa, "dm-chip-verde": CR.positivo, "dm-chip-ambar": CR.atencao };
   var DM_BORDAS = { "dm-borda-marca": CR.marca, "dm-borda-texto": CR.texto };
   var CSS_ESCURO = (function () {
     function regras(mapa, prop, sel) {
@@ -1754,6 +2043,39 @@
     function ogs(at) { return function (c) { return at.map(function (a) { return "[" + a + "] ." + c + ",." + c + "[" + a + "]"; }).join(","); }; }
     return ["  @media (prefers-color-scheme:dark){"].concat(regras(DM_FUNDOS, "bg", solto), regras(DM_TEXTOS, "cor", solto), regras(DM_BORDAS, "borda", solto), ["  }"],
       regras(DM_FUNDOS, "bg", ogs(["data-ogsb", "data-ogab"])), regras(DM_TEXTOS, "cor", ogs(["data-ogsc", "data-ogac"])), regras(DM_BORDAS, "borda", ogs(["data-ogsc", "data-ogsb"]))).join("\n");
+  })();
+
+  /* Tema do e-mail-resumo por segmento (5.0). PF: o de sempre (fundo Lisboa, faixas em Vermelho Santander). PJ (Brand Guide
+     Santander Empresas, 6.2 Cores): Rio e Branco como fundos, títulos e textos em Preto, etiquetas em Boston, e o vermelho só
+     na chama, nos links e no botão (o Botão de Início). Cantos retos nos dois, pelo mesmo motivo do Outlook (acima). */
+  var TEMAS_RESUMO = {
+    pf: { area: PERFIS.pf.area, area_linha: PERFIS.pf.area_linha, pagina: CR.lisboa, dm_pagina: "dm-lisboa", corpo: CR.branco, dm_corpo: "dm-branco-bg", cab: CR.marca, dm_cab: "dm-marca-bg", cab_txt: "#FFFFFF", dm_cab_txt: "dm-txt-branco", cab_filete: "#FFFFFF",
+      rot: CR.turquesa, dm_rot: "dm-txt-turquesa", card: CR.lisboa, dm_card: "dm-lisboa", grupo: CR.turquesa, dm_grupo: "turquesa", grupo_apr: CR.rosa, dm_grupo_apr: "rosa",
+      valor1: CR.marca, dm_valor1: "marca", titulo_txt: CR.marca, dm_titulo_txt: "marca", cta: CR.rio, dm_cta: "dm-rio", cta_borda: "", cta_tit: CR.marca, dm_cta_tit: "dm-txt-marca",
+      ass: CR.marca, dm_ass: "dm-marca-bg", ass_txt: "#FFFFFF", dm_ass_txt: "dm-txt-branco", ass_borda: "", apoio: CR.apoio, dm_apoio: "apoio" },
+    /* PJ (5.3): a hierarquia do Brand Guide Empresas, como no report: o fundo do e-mail é Branco; o conteúdo (cabeçalho,
+       corpo e assinatura) é Rio, a cor principal; os cartões dos destaques e a chamada são Brancos, recuados no Rio. */
+    pj: { area: PERFIS.pj.area, area_linha: PERFIS.pj.area_linha, pagina: CR.branco, dm_pagina: "dm-branco-bg", corpo: CR.rio, dm_corpo: "dm-rio", cab: CR.rio, dm_cab: "dm-rio", cab_txt: CR.texto, dm_cab_txt: "dm-txt-texto", cab_filete: CR.texto,
+      rot: CR.boston, dm_rot: "dm-txt-boston", card: CR.branco, dm_card: "dm-branco-bg", grupo: CR.boston, dm_grupo: "boston", grupo_apr: CR.boston, dm_grupo_apr: "boston",
+      valor1: CR.texto, dm_valor1: "texto", titulo_txt: CR.texto, dm_titulo_txt: "texto", cta: CR.branco, dm_cta: "dm-branco-bg", cta_borda: "", cta_tit: CR.texto, dm_cta_tit: "dm-txt-texto",
+      ass: CR.rio, dm_ass: "dm-rio", ass_txt: CR.texto, dm_ass_txt: "dm-txt-texto", ass_borda: "border-top:1px solid " + CR.branco + ";", apoio: CR.texto, dm_apoio: "texto" }
+  };
+  var CSS_ESCURO_PJ = (function () {
+    /* só as classes que o tema PJ usa (sem Lisboa, turquesa, rosa: não são do Empresas) */
+    var f = {}, t = {};
+    ["dm-rio", "dm-branco-bg", "dm-marca-bg", "dm-chip-verde", "dm-chip-ambar"].forEach(function (k) { f[k] = DM_FUNDOS[k]; });
+    ["dm-txt-branco", "dm-txt-marca", "dm-txt-texto", "dm-chip-verde", "dm-chip-ambar"].forEach(function (k) { t[k] = DM_TEXTOS[k]; });
+    t["dm-txt-boston"] = CR.boston;
+    function regras(mapa, prop, sel) {
+      return Object.keys(mapa).map(function (c) {
+        var v = mapa[c], d = prop === "bg" ? "background:" + v + " !important;background-color:" + v + " !important;" : prop === "cor" ? "color:" + v + " !important;" : "border-color:" + v + " !important;";
+        return "  " + sel(c) + "{" + d + "}";
+      });
+    }
+    function solto(c) { return "." + c; }
+    function ogs(at) { return function (c) { return at.map(function (a) { return "[" + a + "] ." + c + ",." + c + "[" + a + "]"; }).join(","); }; }
+    return ["  @media (prefers-color-scheme:dark){"].concat(regras(f, "bg", solto), regras(t, "cor", solto), regras(DM_BORDAS, "borda", solto), ["  }"],
+      regras(f, "bg", ogs(["data-ogsb", "data-ogab"])), regras(t, "cor", ogs(["data-ogsc", "data-ogac"])), regras(DM_BORDAS, "borda", ogs(["data-ogsc", "data-ogsb"]))).join("\n");
   })();
 
   /* Largura do botão (px), pelo tamanho do texto (Arial negrito 15px: ~8,6px por letra, mais a seta e a margem
@@ -1778,60 +2100,70 @@
     op = op || {};
     var lido = dadosDoResumo(html);
     if (lido.erro) return lido;
-    var d = lido.d, ft = fonteDaClasse(html, "ft", "Arial, Helvetica, sans-serif"), fx = fonteDaClasse(html, "fx", "Arial, Helvetica, sans-serif");
+    var d = lido.d, T = TEMAS_RESUMO[d.segmento] || TEMAS_RESUMO.pf, ft = fonteDaClasse(html, "ft", "Arial, Helvetica, sans-serif"), fx = fonteDaClasse(html, "fx", "Arial, Helvetica, sans-serif");
     var fti = (/class="ft h1"[^>]*?font-family:([^;"]+)/.exec(html) || [])[1] || ft;
     var mso = (/<!--\[if mso\]>\s*<noscript>[\s\S]*?<!\[endif\]-->/.exec(html) || [""])[0];
-    var cand = d.indicadores, porChave = {};
-    cand.forEach(function (x) { porChave[x.chave] = x; });
-    /* Sem repetição: um indicador que a frase do mês já diz (valor e o que ele mede) não vem marcado sozinho. */
-    var fraseMes = [d.frase, d.frase_final].join(" ");
-    cand.forEach(function (x) { x.na_frase = repete(fraseMes, x); });
-    var livres = cand.filter(function (x) { return !x.na_frase; });
-    var escolha = (op.indicadores && op.indicadores.length ? op.indicadores : livres.filter(function (x) { return x.grupo === "Projeto principal"; }).map(function (x) { return x.chave; }))
-      .filter(function (k) { return porChave[k]; }).slice(0, RESUMO_REGRAS.indicadores);
-    if (!escolha.length) escolha = (livres.length ? livres : cand).slice(0, RESUMO_REGRAS.indicadores).map(function (x) { return x.chave; });
-    var sel = escolha.map(function (k) { return porChave[k]; }), n = sel.length, larg = n ? colunas(LARGURA, n) : [];
-    var grupos = sel.map(function (x) { return x.grupo + "|" + x.origem; }).filter(function (g, i, a) { return a.indexOf(g) === i; });
-    var unica = grupos.length === 1 ? sel[0] : null;
+    var cand = candidatosResumo(d), fraseMes = [d.frase, d.frase_final].join(" ");
+    /* a escolha da pessoa (destaques); sem ela, os indicadores pedidos (como antes da 4.13); sem nada, a sugestão */
+    var sugestao = sugerirDestaques(cand, fraseMes);
+    var config = op.destaques && op.destaques.length ? op.destaques : op.indicadores && op.indicadores.length ? op.indicadores.map(function (k) { return { origem: k }; }) : sugestao;
+    var rd = resolverDestaques(config, cand), sel = rd.lista, n = sel.length, lay = layoutDestaques(n);
+    sel.forEach(function (x) { x.na_frase = x.tipo === "indicador" && repete(fraseMes, x); });
     var periodo = d.periodo, mesTxt = periodo ? periodo.charAt(0) + periodo.slice(1).toLocaleLowerCase("pt-BR") : "";
     var nomesTop = d.topicos.map(function (t) { return t.rotulo.toLocaleLowerCase("pt-BR"); });
-    var partes = [d.tem.campanhas ? "as campanhas" : "", d.tem.aprendizados ? "os aprendizados" : "", d.tem.transformation ? "o Transformation Hub" : ""].concat(nomesTop, [d.tem.proximos ? "os próximos passos" : ""]).filter(Boolean);
+    var partes = [d.tem.campanhas ? "as campanhas" : "", d.tem.aprendizados ? "os aprendizados" : "", d.tem.transformation ? (d.segmento === "pj" ? "as análises" : "o Transformation Hub") : ""].concat(nomesTop, [d.tem.proximos ? "os próximos passos" : ""]).filter(Boolean);
     var lista = partes.length > 1 ? partes.slice(0, -1).join(", ") + " e " + partes[partes.length - 1] : partes[0] || "";
     var temVideo = /data-video="/.test(html) || /alt="Vídeo: /.test(html);
     /* qualquer link (o que executa código, não); sem link, no lugar do botão vai o aviso (e o .eml não é liberado) */
     var link = linkDoReport(op.link).url, txtBotao = op.botao || "Acessar report completo";
     var botao = link ? botaoResumo(link, txtBotao, fx) :
       '<span class="fx" style="display:inline-block;background:' + CR.atencao_fundo + ";color:" + CR.atencao + ";font-family:" + fx + ';font-size:12px;line-height:16px;font-weight:bold;padding:12px 18px;border:1px dashed ' + CR.atencao + ';">FALTA O LINK DO REPORT COMPLETO</span>';
+    /* todos os cartões da mesma campanha (ex.: os 3 números da Campanha Exemplo A): o nome vai uma vez, no título da seção */
+    var campanhaUnica = "";
     var m = {
       assunto: op.assunto || assuntoDoHtml(html), mso: seguro(mso), cor: CR, ft: ft, fx: fx, fti: fti,
       periodo: periodo, frase: d.frase, frase_final: d.frase_final,
       previa: "Resumo" + (mesTxt ? " de " + mesTxt : "") + ": " + [d.frase, d.frase_final].filter(Boolean).join(" "),
       intro: "Os destaques" + (mesTxt ? " de " + mesTxt : " do mês") + " em poucos segundos. O report completo traz todos os detalhes.",
       logo: d.logo && d.logo.src ? { src: d.logo.src, w: Math.min(d.logo.w || 32, 40) } : null,
-      tem_indicadores: n > 0,
-      /* o nome do projeto (não "Projeto principal"), e só uma vez: se a frase do mês já diz o nome, a linha sai */
-      origem_unica: unica && !contemTexto(fraseMes, unica.origem) ? unica.origem : "",
-      indicadores: sel.map(function (x, i) {
-        /* o detalhe que só repete o valor e o título (ex.: "28 contas abertas" embaixo de 28 · Contas abertas) sai;
-           o nome do projeto embaixo do indicador também, se o título ou a frase já o dizem */
-        var detalhe = x.detalhe && !repete(x.detalhe, x) && !contemTexto(x.titulo, x.detalhe) ? x.detalhe : "";
-        var origem = unica || contemTexto(x.titulo + " " + detalhe + " " + fraseMes, x.origem) ? "" : x.origem;
-        return { valor: x.valor, titulo: x.titulo, detalhe: detalhe, origem: origem, variacao: etiquetaResumo(x.variacao, x.tom, fx), primeiro: i === 0, largura: larg[i], cor_valor: i === 0 ? CR.marca : CR.texto, dm_valor: i === 0 ? "marca" : "texto" };
-      }),
-      tem_topicos: d.topicos.length > 0,
-      topicos: d.topicos.map(function (t, i) {
-        var mostra = t.itens.slice(0, RESUMO_REGRAS.itens_topico), resto = t.itens.length - mostra.length;
-        return {
-          primeiro: i === 0, rotulo: maiusculas(t.rotulo), titulo: t.titulo, mais: resto > 0 ? resto + (resto > 1 ? " itens" : " item") : "",
-          itens: mostra.map(function (x) { return { valor: x.valor, nome: x.nome || x.texto, status: (x.status || "").replace(/^[\u25cf\u25cb]\s*/, "") }; })
-        };
-      }),
+      tem_destaques: n > 0,
+      linhas: (function () {
+        var cards = sel.map(function (x, i) {
+          var l = lay[i], ind = x.tipo === "indicador", im = x.imagem, lado = !!(im && l.largo && im.posicao === "lado");
+          /* o detalhe que só repete o valor e o título (ex.: "28 contas abertas" embaixo de 28 · Contas abertas) sai;
+             o nome do projeto no alto do cartão também, se o título ou a frase do mês já o dizem */
+          var texto = ind && x.texto && !x.novo && (repete(x.texto, x) || contemTexto(x.titulo, x.texto)) ? "" : x.texto;
+          var grupo = x.grupo && !contemTexto(x.titulo + " " + texto + " " + (ind ? fraseMes : ""), x.grupo) ? maiusculas(x.grupo) : "";
+          if (x.aprendizado) grupo = "O QUE APRENDEMOS" + (x.titulo !== "O que aprendemos" || !x.grupo ? "" : " · " + maiusculas(x.grupo));
+          var img = im ? { src: im.src, w: lado ? DESTAQUE_IMG.lado[0] : l.w, h: im.h ? Math.round(im.h * (lado ? DESTAQUE_IMG.lado[0] : l.w) / (im.w || l.w)) : "", alt: im.alt || x.titulo } : null;
+          return {
+            primeiro: false, w: l.w, largo: l.largo, valor: ind ? x.valor : "", titulo: x.aprendizado && x.titulo === "O que aprendemos" ? "" : x.titulo, texto: texto,
+            grupo: grupo, dm_grupo: x.aprendizado ? T.dm_grupo_apr : T.dm_grupo, cor_grupo: x.aprendizado ? T.grupo_apr : T.grupo, campanha: !x.aprendizado,
+            dm_valor: i === 0 ? T.dm_valor1 : "texto", cor_valor: i === 0 ? T.valor1 : CR.texto,
+            dm_titulo: ind ? "texto" : T.dm_titulo_txt, cor_titulo: ind ? CR.texto : T.titulo_txt, mt_titulo: ind ? 6 : x.aprendizado ? 6 : 6,
+            dm_texto: ind ? T.dm_apoio : "texto", cor_texto: ind ? T.apoio : CR.texto,
+            etiqueta: etiquetaResumo(x.etiqueta, x.tom, fx), link: x.link, link_texto: x.link_texto,
+            img_topo: img && !lado ? img : null, img_lado: img && lado ? img : null
+          };
+        }), linhas = [], k = 0;
+        var gs = cards.map(function (c) { return c.campanha ? c.grupo : null; });
+        if (cards.length > 1 && gs[0] && gs.every(function (g) { return g === gs[0]; })) { campanhaUnica = gs[0]; cards.forEach(function (c) { c.grupo = ""; }); }
+        while (k < cards.length) {
+          var lin = cards[k].largo ? [cards[k]] : cards.slice(k, k + 2);
+          lin.forEach(function (c2, j) { c2.primeiro = j === 0; });
+          linhas.push({ cards: lin, primeira: !linhas.length }); k += lin.length;
+        }
+        return linhas;
+      })(),
+      campanha_unica: campanhaUnica,
       cta_titulo: op.titulo || "Acesse o report completo.",
       cta_texto: op.chamada || ((lista ? lista.charAt(0).toUpperCase() + lista.slice(1) : "Todas as seções") + ", com as peças" + (temVideo ? " e os vídeos" : "") + "."),
-      botao_html: seguro(botao), css_escuro: seguro(CSS_ESCURO), botao_w: link ? larguraBotao(txtBotao) : 260, contato: ""
+      t: T, botao_html: seguro(botao), css_escuro: seguro(d.segmento === "pj" ? CSS_ESCURO_PJ : CSS_ESCURO), botao_w: link ? larguraBotao(txtBotao) : 260, contato: ""
     };
     var out = aplicar(RESUMO_TPL, m).replace(/\n[ \t]*\n(\s*\n)+/g, "\n\n");
-    return { html: out, indicadores: escolha, candidatos: cand, pendencias: lido.pendencias, temVideo: temVideo, temLink: !!link, dados: d };
+    var escolha = sel.filter(function (x) { return x.tipo === "indicador" && !x.novo; }).map(function (x) { return x.origem; });
+    return { html: out, destaques: sel, fora: rd.fora, sugestao: sugestao, candidatos: cand, indicadores: escolha, repetidos: sel.filter(function (x) { return x.na_frase; }),
+      pendencias: lido.pendencias, temVideo: temVideo, temLink: !!link, dados: d };
   }
 
 
@@ -1846,18 +2178,19 @@
    */
   var IMPORTA = {
     "ABERTURA": { frase: "frase", frase_final: "frase_final" },
-    "PROJETO PRINCIPAL": { nome: "principal.nome", resumo: "principal.resumo" },
+    "PROJETO PRINCIPAL": { rotulo: "principal.rotulo", nome: "principal.nome", resumo: "principal.resumo", aprendizado: "principal.aprendizado" },
     "LANCAMOS": { titulo: "lancamos.titulo" },
-    "DESTAQUE": { categoria: "destaque.categoria", titulo: "destaque.titulo", texto: "destaque.texto", nota: "destaque.nota" },
+    "DESTAQUE": { categoria: "destaque.categoria", titulo: "destaque.titulo", texto: "destaque.texto", nota: "destaque.nota", aprendizado: "destaque.aprendizado" },
     "CREATIVE X": { subtitulo: "cx.subtitulo", rotulo: "cx.rotulo", anterior: "cx.anterior", atual: "cx.atual", variacao: "cx.variacao", periodo: "cx.periodo", referencia: "cx.referencia", significado: "cx.significado", nota: "cx.nota" },
     "CREATIVE X TRIMESTRE": { rotulo: "cxt.rotulo", titulo: "cxt.titulo", texto: "cxt.texto", estimativa: "cxt.estimativa" },
     "TRANSFORMATION": { titulo: "transformation.titulo" },
-    "FOCO": { prioridade: "foco.prioridade", texto: "foco.texto" }
+    "FOCO": { prioridade: "foco.prioridade", texto: "foco.texto" },
+    "FUNIL": { rotulo: "funil.rotulo", total: "funil.total", total_titulo: "funil.total_titulo" }
   };
   var IMPORTA_LISTA = {
     "NUMERO": ["numero", ["valor", "titulo", "detalhe", "variacao"]], "RESULTADO": ["resultado", ["valor", "titulo", "detalhe", "variacao"]],
     "CREATIVE X TRIMESTRE": ["cxt", ["valor", "titulo", "detalhe", "variacao"]],
-    "LANCAMENTO": ["lancamento", ["status", "nome", "texto"]],
+    "LANCAMENTO": ["lancamento", ["status", "nome", "texto", "aprendizado"]],
     "TRANSFORMATION": ["transformation", ["status", "nome", "texto", "resultado"]], "APRENDIZADO": ["aprendizado", ["titulo", "texto", "levamos"]], "AGENDA": ["agenda", ["data", "titulo", "detalhe"]]
   };
   TOPICOS.forEach(function (t) {
@@ -1865,7 +2198,7 @@
     IMPORTA_LISTA[t[0]] = [t[1], ["status", "nome", "texto", "valor"]];
   });
   function importarDados(texto) {
-    var lido = ler(texto, "conteúdo colado"), campos = {}, problemas = lido.problemas.slice(), n = 0;
+    var lido = ler(texto, "conteúdo colado"), campos = {}, problemas = lido.problemas.slice(), n = 0, secoes = { tirar: [], mostrar: [] };
     function poe(chave, valor, tipo, tom) { campos[chave] = { texto: valor, tipo: tipo || "texto", tom: tom || "" }; n++; }
     lido.ordem.forEach(function (k) {
       var b = lido.blocos[k], m = k.match(/^(.*?)\s+(\d+)$/), base = m ? m[1] : k, idx = m ? m[2] : "";
@@ -1874,6 +2207,12 @@
         if (v.mes && v.ano) poe("periodo", maiusculas(v.mes + " " + v.ano));
         if (v.proximo_mes) { poe("foco.mes", maiusculas(v.proximo_mes)); poe("ate", "Até " + v.proximo_mes.toLocaleLowerCase("pt-BR") + "."); }
         if (v.contato) poe("contato", v.contato);
+        return;
+      }
+      /* [SECOES] tirar: O que aprendemos, Também vem aí · mostrar: … (4.13): seções que a página tira ou volta a mostrar,
+         pelo nome que aparece em "Seções do report". Quem aplica é o emulador. */
+      if ((base === "SECOES" || base === "SEÇÕES") && !idx) {
+        ["tirar", "mostrar"].forEach(function (c) { if (v[c]) String(v[c]).split(/\s*[,;|]\s*/).forEach(function (nome) { if (nome.trim()) secoes[c].push(nome.trim()); }); });
         return;
       }
       var mapa = !idx ? IMPORTA[base] : null, lista = idx ? IMPORTA_LISTA[base] : null;
@@ -1896,7 +2235,7 @@
         else poe(chave, val);
       });
     });
-    return { campos: campos, lidos: n, problemas: problemas };
+    return { campos: campos, lidos: n, problemas: problemas, secoes: secoes };
   }
   /* Nome de arquivo sugerido para a página editada, a partir do período (ex.: "OUTUBRO 2026"). */
   function nomeDoReport(periodo) {
@@ -1911,7 +2250,8 @@
     limparHtmlEditado: limparHtmlEditado, imagensDoHtml: imagensDoHtml, origemImagem: origemImagem, deBase64: deBase64,
     imagemDeDataUri: imagemDeDataUri, trocarSrc: trocarSrc, assuntoDoHtml: assuntoDoHtml, textoDoHtml: textoDoHtml, origemDoHtml: origemDoHtml,
     SECOES: SECOES, SECOES_RESUMO: SECOES_RESUMO, secoesDoHtml: secoesDoHtml, emailResumido: emailResumido, ligarVideos: ligarVideos, paginaInterativa: paginaInterativa, miniaturasSemPlay: miniaturasSemPlay,
-    RESUMO_REGRAS: RESUMO_REGRAS, ICONE_TAG: ICONE_TAG, CSS_CELULAR: CSS_CELULAR, xDeExemplo: xDeExemplo, TOPICOS: TOPICOS, LAYOUTS_TOPICO: LAYOUTS_TOPICO, importarDados: importarDados, normalizarLink: normalizarLink, linkDoReport: linkDoReport, nomeDoReport: nomeDoReport, renumerarSecoes: renumerarSecoes, conferirLinkSimples: function (u) { return conferirLink(u, "projeto", []); }, dadosDoResumo: dadosDoResumo, emailResumo: emailResumo, elementosComCampo: elementosComCampo,
+    RESUMO_REGRAS: RESUMO_REGRAS, ICONE_TAG: ICONE_TAG, ICONE_TAG_PJ: ICONE_TAG_PJ, PERFIS: PERFIS, perfil: perfil, segmentoDoHtml: segmentoDoHtml, segmentoDosDados: segmentoDosDados, CSS_CELULAR: CSS_CELULAR, xDeExemplo: xDeExemplo, TOPICOS: TOPICOS, LAYOUTS_TOPICO: LAYOUTS_TOPICO, importarDados: importarDados, normalizarLink: normalizarLink, linkDoReport: linkDoReport, nomeDoReport: nomeDoReport, renumerarSecoes: renumerarSecoes, conferirLinkSimples: function (u) { return conferirLink(u, "projeto", []); }, dadosDoResumo: dadosDoResumo, emailResumo: emailResumo, htmlAprendizado: htmlAprendizado, candidatosResumo: candidatosResumo, sugerirDestaques: sugerirDestaques, resolverDestaques: resolverDestaques, layoutDestaques: layoutDestaques, tamanhoImagemDestaque: tamanhoImagemDestaque, DESTAQUE_IMG: DESTAQUE_IMG, elementosComCampo: elementosComCampo,
+    blocoFunil: blocoFunil, larguraDegrau: larguraDegrau, FUNIL: FUNIL,
     CTA: CTA, ESQUEMA_DADOS: ESQUEMA_DADOS, ESQUEMA_MARCA: ESQUEMA_MARCA, seguro: seguro, texto: textoSeguro
   };
 });

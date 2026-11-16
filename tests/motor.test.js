@@ -215,8 +215,8 @@ teste("links: placeholder é pendência; https interno passa; domínio fora da l
 
 teste("link pendente: botão aparece em cinza, sem ser clicável (só rascunho)", function () {
   var r = montar(MINIMO.replace(/link: .*/, "link: [INSERIR LINK]"));
-  /* na capa vermelha, em Rio (contraste); nas outras seções, em cinza */
-  assert.ok(/<span title="Link ainda não definido" style="color:#F5DECF;[^"]*">Ver peça&nbsp;&#8594;<\/span>/.test(r.html));
+  /* 5.1: a campanha fica na visão geral, sobre o branco: o link pendente sai em cinza, como nas outras seções */
+  assert.ok(/<span title="Link ainda não definido" style="color:#767676;[^"]*">Ver peça&nbsp;&#8594;<\/span>/.test(r.html));
   var m = montar(MODELO);
   assert.ok(/<span title="Link ainda não definido" style="color:#767676;[^"]*">Ver peça&nbsp;&#8594;<\/span>/.test(m.html));
   assert.ok(!/<a [^>]*>\s*<img/.test(r.html) && !/href="#/.test(r.html));
@@ -303,10 +303,10 @@ teste("conferência de HTML detecta recursos que o Outlook não aceita", functio
   assert.deepStrictEqual(M.conferirHtml('<img src="cid:a" width="10" alt="">'), []);
 });
 
-teste("capa: foto do projeto principal com 220 px (20% maior que a coluna), quadrada", function () {
+teste("visão geral: peça da campanha num retângulo vertical de 184 x 230 px (o mesmo esqueleto do PJ)", function () {
   var r = montar(MINIMO);
-  assert.ok(r.imagens.some(function (i) { return i.papel === "PROJETO PRINCIPAL" && i.w === 220 && i.h === 220 && i.recorte; }));
-  assert.ok(r.html.indexOf('width="356"') > 0 && r.html.indexOf('width="220"') > 0, "texto 356 + 24 + foto 220 = 600");
+  assert.ok(r.imagens.some(function (i) { return i.papel === "PROJETO PRINCIPAL" && i.w === 184 && i.h === 230 && i.recorte; }));
+  assert.ok(r.html.indexOf('width="392"') > 0 && r.html.indexOf('width="184" valign="top" align="center"') > 0, "texto 392 + 24 + peça 184 = 600");
 });
 
 teste("ampliar: peça sem link abre maior no navegador; no e-mail não há script nem versão ampliada", function () {
@@ -446,12 +446,46 @@ function modeloHtml() {
   return r.html;
 }
 
+teste("PF e PJ (5.1 a 5.3): o mesmo esqueleto; mudam as cores da marca, os nomes das seções e a formiguinha", function () {
+  /* os mesmos dados (fictícios) nos dois segmentos: só muda "segmento: PJ" e a marca */
+  var dados = ler("dados/EXEMPLO-treinamento.txt");
+  var pf = montar(dados), pj = montar(dados.replace(/^\[EDICAO\]\s*$/m, "[EDICAO]\nsegmento: PJ"), { marca: ler("config/marca-pj.txt"), arquivoMarca: "config/marca-pj.txt" });
+  assert.ok(pf.ok && pj.ok);
+  var ids = function (r) { return M.secoesDoHtml(r.html).map(function (x) { return x.id; }); };
+  assert.deepStrictEqual(ids(pf), ids(pj), "mesmas seções, na mesma ordem");
+  /* a mesma marcação: os mesmos campos editáveis na abertura, na visão geral e nos resultados */
+  var campos = function (r) { return (r.html.match(/data-campo="(frase|frase_final|periodo|principal\.[a-z]+|numero-\d\.[a-z]+)"/g) || []).join(","); };
+  assert.strictEqual(campos(pf), campos(pj));
+  assert.ok(/<meta name="report-segmento" content="pf">/.test(pf.html) && /<meta name="report-segmento" content="pj">/.test(pj.html));
+  assert.ok(/<meta name="report-layout" content="2">/.test(pf.html) && /<meta name="report-layout" content="3">/.test(pj.html), "layout 2 no PF; 3 no PJ (fundo Rio, 5.2)");
+  var abertura = function (r) { return /<!--secao:capa-->[\s\S]*?bgcolor="(#[0-9A-F]{6})"/.exec(r.html)[1]; };
+  assert.strictEqual(abertura(pf), "#EC0000", "PF: abertura em Vermelho Santander");
+  assert.strictEqual(abertura(pj), "#FFFFFF", "PJ: abertura num painel Branco");
+  /* hierarquia (5.3): fundo do HTML Branco, conteúdo Rio, painéis Brancos recuados (borda Rio de 20 px) */
+  assert.ok(/<body style="margin:0;padding:0;background:#FFFFFF;" bgcolor="#FFFFFF">/.test(pj.html), "PJ: fundo do HTML Branco");
+  assert.ok(/class="container ra" width="680"[^>]*bgcolor="#F5DECF"/.test(pj.html), "PJ: conteúdo (o report) em Rio");
+  assert.strictEqual((pj.html.match(/<td class="px ra painel" bgcolor="#FFFFFF"[^>]*border-radius:44px;padding:\d+px 20px \d+px 20px;border:20px solid #F5DECF;/g) || []).length, 5, "PJ: 5 painéis Brancos recuados no Rio");
+  assert.ok(!/class="px ra painel"|border:20px solid/.test(pf.html) && /<td class="px ra" bgcolor="#EC0000" style="background:#EC0000;border-radius:34px;padding:26px 40px 40px 40px;">/.test(pf.html), "PF: painéis como sempre (sem recuo)");
+  /* balões: Branco com Vermelho sobre o Rio; Rio com Boston sobre os painéis Brancos */
+  assert.ok(/data-campo="principal.rotulo" style="display:inline-block;background:#FFFFFF;color:#EC0000;/.test(pj.html), "PJ: rótulo da campanha num balão Branco com texto Vermelho (sobre o Rio)");
+  assert.ok(/background:#F5DECF;color:#CC0000;border-radius:999px;padding:0 7px;letter-spacing:1px;">02</.test(pj.html), "PJ: número da seção no painel Branco num balão Rio com texto Boston");
+  assert.ok(/&nbsp;&nbsp;O QUE LANÇAMOS<\/p>/.test(pf.html) && /&nbsp;&nbsp;CAMPANHAS<\/p>/.test(pj.html));
+  assert.ok(/data-campo="formiguinha"/.test(pf.html) && !/data-campo="formiguinha"/.test(pj.html), "formiguinha só no PF");
+});
+
+teste("marca de antes da 5.1 (sem as cores novas): vale o que a abertura já usava", function () {
+  var antiga = MARCA.replace(/^abertura_texto:.*\n/m, "").replace(/^bloco_fundo:.*\n/m, "").replace(/^foco_fundo:.*\n/m, "");
+  var r = montar(MINIMO, { marca: antiga });
+  assert.ok(r.ok, JSON.stringify(r.problemas));
+  assert.deepStrictEqual(niveis(r, "erro"), []);
+});
+
 teste("o report sai com as marcas de seção, na ordem do template", function () {
   assert.deepStrictEqual(M.secoesDoHtml(modeloHtml()).map(function (x) { return x.id; }),
-    ["capa", "lancamos", "cx", "transformation", "aprendizados", "foco", "agenda", "rodape"]);
+    ["capa", "visao", "resultados", "lancamos", "cx", "transformation", "aprendizados", "foco", "agenda", "rodape"]);
   assert.ok(/<!--secao:fim-->/.test(modeloHtml()));
   /* Os "EDITAR AQUI" ficam na página (guia para quem abre no editor), mas não vão para o e-mail. */
-  assert.ok(/<!-- EDITAR AQUI: PERÍODO/.test(modeloHtml()) && /<!-- EDITAR AQUI: APRENDIZADO/.test(modeloHtml()), "EDITAR AQUI na página");
+  assert.ok(/<!-- EDITAR AQUI: FRASE DO MÊS E PERÍODO/.test(modeloHtml()) && /<!-- EDITAR AQUI: APRENDIZADO/.test(modeloHtml()), "EDITAR AQUI na página");
   assert.ok(!/<!-- EDITAR AQUI|data-campo=|data-tom=/.test(M.paraEmail(modeloHtml())), "o e-mail não leva EDITAR AQUI nem as marcas do resumo");
   assert.ok(!/<!--(?!\[if|<!\[endif\]|secao:| EDITAR AQUI)/.test(modeloHtml()), "os outros comentários continuam saindo");
 });
@@ -459,13 +493,13 @@ teste("o report sai com as marcas de seção, na ordem do template", function ()
 teste("emailResumido: só as seções escolhidas, botão com o link antes do encerramento, seções renumeradas", function () {
   var link = "https://empresa.sharepoint.com/sites/x/report.html?a=1&b=2";
   var r = M.emailResumido(modeloHtml(), { link: link });
-  assert.deepStrictEqual(r.mantidas, ["capa", "foco", "rodape"]);
+  assert.deepStrictEqual(r.mantidas, ["capa", "visao", "resultados", "foco", "rodape"]);
   assert.deepStrictEqual(r.fora, ["lancamos", "cx", "transformation", "aprendizados", "agenda"]);
   assert.ok(r.html.indexOf('href="https://empresa.sharepoint.com/sites/x/report.html?a=1&amp;b=2"') > 0, "link escapado no href");
   assert.ok(r.html.indexOf("<!--secao:interativo-->") < r.html.indexOf("<!--secao:rodape-->"), "botão antes do encerramento");
   assert.ok(!/<!--secao:(lancamos|cx|agenda)-->/.test(r.html) && /Na versão completa estão também: O que lançamos, Creative X/.test(r.html));
   var nums = (r.html.match(/border-radius:999px;padding:0 7px;letter-spacing:1px;">(\d\d)</g) || []).map(function (x) { return x.slice(-3, -1); });
-  assert.deepStrictEqual(nums, ["01", "02"]);
+  assert.deepStrictEqual(nums, ["01", "02", "03"]);
   assert.ok(r.html.length < modeloHtml().length * 0.7);
   assert.ok(M.emailResumido("<html><body>sem marcas</body></html>", { link: link }).erro);
   var c = M.conferirHtml(r.html).filter(function (x) { return x.nivel === "erro"; });
@@ -591,6 +625,31 @@ var COMPLETO = [
   "[AGENDA 2]", "data: A DEFINIR", "titulo: Evento dois"
 ].join("\n");
 
+teste("O que aprendemos dentro da campanha (4.13): projeto principal, destaque e lançamento; sem texto, sem bloco", function () {
+  var com = COMPLETO.replace("resumo: Resumo do projeto alfa.", "resumo: Resumo do projeto alfa.\naprendizado: O projeto ensinou algo, de teste.")
+    .replace("texto: Texto do destaque.", "texto: Texto do destaque.\nnota: Nota do destaque.\naprendizado: O destaque ensinou<br>em duas linhas.")
+    .replace("texto: Texto um.", "texto: Texto um.\naprendizado: O card ensinou algo.");
+  var r = montar(com), h = r.html;
+  assert.ok(r.ok, JSON.stringify(niveis(r, "erro")));
+  assert.strictEqual((h.match(/<table role="presentation" class="apr" data-apr="/g) || []).length, 3, "três blocos");
+  var ap = h.indexOf('data-apr="principal.aprendizado"'), n3 = h.indexOf('data-campo="numero-3.valor"'), lc = h.indexOf("<!--secao:lancamos-->");
+  assert.ok(n3 > 0 && ap > n3 && ap < lc, "projeto principal: abaixo dos números, ainda na abertura");
+  var ad = h.indexOf('data-apr="destaque.aprendizado"'), r1 = h.indexOf('data-campo="resultado-1.valor"'), nt = h.indexOf('data-campo="destaque.nota"');
+  assert.ok(r1 > 0 && ad > r1 && ad < nt, "destaque: abaixo dos resultados e antes da nota");
+  var card = h.slice(h.indexOf('data-item="lancamento-1"'), h.indexOf('data-item="lancamento-2"'));
+  assert.ok(/data-apr="lancamento-1\.aprendizado"/.test(card) && /data-campo="lancamento-1\.aprendizado"[^>]*>O card ensinou algo\.<\/p>/.test(card), "lançamento: no próprio card");
+  assert.ok(/>O QUE APRENDEMOS<\/p>/.test(h) && /data-campo="destaque\.aprendizado"[^>]*>O destaque ensinou<br>em duas linhas\.<\/p>/.test(h), "rótulo e texto (com quebra de linha)");
+  assert.ok(r.texto.indexOf("O que aprendemos: O projeto ensinou algo, de teste.") >= 0 && r.texto.indexOf("O que aprendemos: O card ensinou algo.") >= 0, "versão em texto do e-mail");
+  var sem = montar(COMPLETO).html;
+  assert.ok(sem.indexOf('class="apr"') < 0 && sem.indexOf(".aprendizado") < 0, "sem o campo, nenhum bloco (nada vazio)");
+  var longo = montar(com.replace("O card ensinou algo.", "Um aprendizado longo demais para caber no card, que tem pouco espaço e por isso pede uma frase só, curta e direta."));
+  assert.ok(niveis(longo, "aviso").some(function (p) { return /\[LANCAMENTO 1\] aprendizado com \d+ caracteres/.test(p.msg); }), "aviso de texto longo no card");
+  var imp = M.importarDados("[PROJETO PRINCIPAL]\naprendizado: A\n\n[DESTAQUE]\naprendizado: B\n\n[LANCAMENTO 2]\naprendizado: C\n");
+  assert.deepStrictEqual(Object.keys(imp.campos).sort(), ["destaque.aprendizado", "lancamento-2.aprendizado", "principal.aprendizado"], "importação do Copilot");
+  var bloco = M.htmlAprendizado("Texto", "lancamento-3.aprendizado", "card", { fonte: "Arial" });
+  assert.ok(/data-apr="lancamento-3\.aprendizado"/.test(bloco) && /font-size:12px/.test(bloco) && /#A6112F/.test(bloco), "o mesmo bloco para o emulador");
+});
+
 teste("Transformation Hub: logo no lugar dos ícones, links extras com seta e link pendente sem clique", function () {
   var r = montar(COMPLETO);
   assert.ok(r.ok, JSON.stringify(niveis(r, "erro")));
@@ -626,10 +685,19 @@ teste("e-mail-resumo no modo escuro: cores aprovadas reafirmadas (prefers-color-
   assert.ok(/\[data-ogsc\] \.dm-txt-branco,\.dm-txt-branco\[data-ogsc\][^{]*\{color:#FFFFFF !important;\}/.test(css), "Outlook.com: texto branco");
   /* cada cor do e-mail tem a sua classe: faixas, selo, título, indicadores, botão e assinatura */
   assert.strictEqual((h.match(/class="px dm-marca-bg"/g) || []).length, 2, "cabeçalho e assinatura");
-  assert.ok(/class="ft h1 dm-txt-branco"/.test(h) && /class="kpi dm-borda-marca"/.test(h) && /class="ft kpiv dm-txt-marca"/.test(h) && /class="cta fx dm-txt-branco"/.test(h) && /class="fx dm-txt-marca"[^>]*>REPORT MENSAL/.test(h));
+  assert.ok(/class="ft h1 dm-txt-branco"/.test(h) && /class="col kpi dtq dm-lisboa/.test(h) && /class="dm-rio"/.test(h) && /class="ft kpiv dm-txt-marca"/.test(h) && /class="cta fx dm-txt-branco"/.test(h) && /class="fx dm-txt-marca"[^>]*>REPORT MENSAL/.test(h));
   /* o texto branco do cabeçalho não tem elemento sem classe: todo color:#FFFFFF visível está protegido */
   var semClasse = (h.split("<body")[1].match(/<(p|a|td)\b(?![^>]*dm-)[^>]*color:#FFFFFF[^>]*>/g) || []).filter(function (t) { return !/display:none/.test(t); });
   assert.deepStrictEqual(semClasse, [], "texto branco sem proteção");
+});
+
+teste("e-mail-resumo: espaços entre os destaques são células vazias (sem &nbsp;, que o Outlook clássico pinta no modo escuro)", function () {
+  var r = M.emailResumo(montar(COMPLETO).html, { link: "https://empresa.sharepoint.com/:u:/r/sites/cs/r.html", indicadores: ["numero-1", "numero-2", "numero-3", "resultado-1"] }), h = r.html.split("<body")[1];
+  var n = (h.match(/<td class="col kpi dtq/g) || []).length;
+  assert.strictEqual(n, 4, "quatro destaques");
+  assert.strictEqual((h.match(/<td class="hide-m" width="20" style="width:20px;"><\/td>/g) || []).length, 2, "um espaço vazio entre os dois cartões de cada linha");
+  assert.strictEqual((h.match(/<tr><td colspan="3" height="20" style="height:20px;"><\/td><\/tr>/g) || []).length, 1, "e um entre as linhas, também vazio");
+  assert.ok(!/<td[^>]*>&nbsp;<\/td>/.test(h.replace(/<td class="dm-branco-bg" height="1"[^>]*>&nbsp;<\/td>/, "")), "nenhuma célula de espaço com caractere (o filete branco do cabeçalho tem fundo próprio)");
 });
 
 teste("linkDoReport (botão do e-mail-resumo): qualquer link; caminho do Windows (OneDrive, espaço, acento) vira file:/// no formato do Outlook e volta ao mesmo caminho; só o que executa código é recusado", function () {
@@ -638,6 +706,7 @@ teste("linkDoReport (botão do e-mail-resumo): qualquer link; caminho do Windows
   assert.deepStrictEqual([od.url, od.tipo, od.erro], ["file:///C:/Users/t000000/OneDrive%20-%20Empresa/Report%20PF/Produção/Outubro_26/HTML/report-2026-10.html", "arquivo", ""]);
   assert.strictEqual(decodeURIComponent(new URL(od.url).pathname), "/C:/Users/t000000/OneDrive - Empresa/Report PF/Produção/Outubro_26/HTML/report-2026-10.html", "volta ao caminho colado");
   assert.ok(/Caminho de arquivo/.test(od.info) && /novo Outlook/.test(od.info), "nota (não erro) sobre onde abre");
+  assert.ok(/Outlook para Windows bloqueia/.test(od.info) && /zona da Internet/.test(od.info) && /Copiar link/.test(od.info), "a nota diz que o Outlook bloqueia no e-mail recebido e indica o link do OneDrive (4.12.1)");
   assert.strictEqual(L("file:///C:/Users/x/Produ%C3%A7%C3%A3o/report%202026.html").url, "file:///C:/Users/x/Produção/report%202026.html", "endereço copiado do navegador: acento volta a ser letra");
   assert.strictEqual(L("\\\\servidor\\área\\report.html").url, "file://servidor/área/report.html");
   assert.strictEqual(L("C:\\Pasta\\Relatório #1 [v2] 100%.html").url, "file:///C:/Pasta/Relatório%20%231%20%5Bv2%5D%20100%25.html");
@@ -661,7 +730,7 @@ teste("dadosDoResumo: lê da página cada campo e lista os indicadores candidato
   assert.strictEqual(r.pendencias.length, 0, r.pendencias.join(" | "));
 });
 
-teste("emailResumo: curto, até 3 indicadores, um único destino (o botão \"Acessar report completo\")", function () {
+teste("emailResumo: curto, até 4 destaques, um único destino (o botão \"Acessar report completo\")", function () {
   var html = montar(COMPLETO).html, LINK = "https://empresa.sharepoint.com/sites/cs/report-atual.html";
   var r = M.emailResumo(html, { link: LINK });
   assert.deepStrictEqual(r.indicadores, ["numero-1", "numero-2", "numero-3"], "padrão: os números do projeto principal");
@@ -673,13 +742,15 @@ teste("emailResumo: curto, até 3 indicadores, um único destino (o botão \"Ace
   /* Cantos retos de propósito: o que a prévia mostra é o que chega depois que o Outlook reescreve o e-mail. */
   assert.ok(!/border-radius/.test(r.html), "sem cantos arredondados no resumo");
   assert.ok(!/<p[^>]*line-height:\d+px;(?!mso-line-height-rule)/.test(r.html), "altura de linha exata também no Outlook");
-  assert.ok(/12,5%/.test(r.html) && /R\$ 1,00/.test(r.html) && /3x/.test(r.html) && /Projeto Alfa/.test(r.html));
+  assert.ok(/12,5%/.test(r.html) && /R\$ 1,00/.test(r.html) && /3x/.test(r.html) && /PROJETO ALFA/.test(r.html) && /DESTAQUES DO MÊS/.test(r.html));
+  assert.ok(/colspan="3" width="600"/.test(r.html), "3 destaques: o primeiro ocupa a largura toda");
   assert.ok(!/data-campo|data-tom|secao:|<script|&#9654;|Ver peça|Documento modelo|Evento um|Aprendizado A|Lançamento Um/.test(r.html), "estático, sem links das peças e sem o detalhe das seções");
   assert.ok(!/\{\{|\}\}/.test(r.html));
   assert.strictEqual(M.conferirHtml(r.html).filter(function (x) { return x.nivel === "erro"; }).length, 0);
-  /* Escolha da pessoa: outros indicadores; nunca mais de 3; chave que não existe é ignorada. */
-  var e = M.emailResumo(html, { link: LINK, indicadores: ["cx", "resultado-1", "numero-1", "numero-2", "nao-existe"] });
+  /* Escolha da pessoa: outros indicadores; nunca mais de 4; chave que não existe fica de fora (avisada). */
+  var e = M.emailResumo(html, { link: LINK, indicadores: ["cx", "nao-existe", "resultado-1", "numero-1", "numero-2", "numero-3"] });
   assert.deepStrictEqual(e.indicadores, ["cx", "resultado-1", "numero-1"]);
+  assert.deepStrictEqual(e.fora, ["nao-existe"], "o que não está mais na página fica de fora");
   assert.ok(/75%/.test(e.html) && /Creative X/.test(e.html) && !/R\$ 1,00/.test(e.html));
   /* Sem link: aviso no lugar do botão, nenhum link. */
   var s = M.emailResumo(html, {});
@@ -688,7 +759,47 @@ teste("emailResumo: curto, até 3 indicadores, um único destino (o botão \"Ace
   var semNum = montar(COMPLETO.replace(/\[NUMERO 1\][\s\S]*?\[DESTAQUE\]/, "[DESTAQUE]").replace(/\[RESULTADO 1\][^\[]*/, "").replace(/\[CREATIVE X\][^\[]*/, "")).html;
   var z = M.emailResumo(semNum, { link: LINK });
   assert.deepStrictEqual(z.indicadores, []);
-  assert.ok(!/PRINCIPAIS RESULTADOS/.test(z.html) && /Acessar report completo/.test(z.html));
+  assert.ok(!/DESTAQUES DO MÊS/.test(z.html) && /Acessar report completo/.test(z.html));
+});
+
+teste("e-mail-resumo (4.13): destaques escolhidos, editados, com imagem, link e informação nova; o número vem sempre da página", function () {
+  var com = COMPLETO.replace("resumo: Resumo do projeto alfa.", "resumo: Resumo do projeto alfa.\naprendizado: O alfa ensinou algo.");
+  var html = montar(com).html, LINK = "https://empresa.sharepoint.com/r", IMG = "data:image/png;base64," + fs.readFileSync(path.join(RAIZ, "assets/icones/icone-lupa.png")).toString("base64");
+  var cand = M.candidatosResumo(M.dadosDoResumo(html).d), origens = cand.map(function (x) { return x.origem; });
+  ["numero-1", "resultado-1", "cx", "principal", "principal.aprendizado", "destaque", "lancamento-1", "transformation-1", "aprendizado-1", "foco", "agenda-1"].forEach(function (o) { assert.ok(origens.indexOf(o) >= 0, "candidato: " + o); });
+  /* etiqueta do cartão com o nome curto da campanha ("Nome: frase do título" vira "Nome") */
+  var hDois = html.replace(/(data-campo="destaque\.titulo"[^>]*>)([^<]*)</, "$1Projeto Beta: uma frase longa de título<");
+  var candD = M.candidatosResumo(M.dadosDoResumo(hDois.replace(/(data-campo="destaque\.texto"[^>]*>)/, '<span class="apr" data-apr="destaque.aprendizado"><span data-campo="destaque.aprendizado">O beta ensinou algo.</span></span>$1')).d);
+  var resD = candD.filter(function (x) { return x.origem === "resultado-1"; })[0], aprD = candD.filter(function (x) { return x.origem === "destaque.aprendizado"; })[0];
+  assert.ok(resD && resD.grupo === "Projeto Beta" && aprD && aprD.grupo === "Projeto Beta", "etiqueta curta: " + (resD && resD.grupo) + " / " + (aprD && aprD.grupo));
+  var conf = [
+    { origem: "principal.aprendizado" },
+    { origem: "numero-1", titulo: "Título ajustado para o e-mail", texto: "" },
+    { origem: "lancamento-1", imagem: { src: IMG, w: 290, h: 163, alt: "Peça" }, link: "empresa.sharepoint.com/peca", link_texto: "Ver a peça" },
+    { origem: "novo-1", novo: true, valor: "+7", titulo: "Informação nova", texto: "Uma frase sobre ela.", etiqueta: "Novo" },
+    { origem: "foco" }];
+  var r = M.emailResumo(html, { link: LINK, destaques: conf }), h = r.html;
+  assert.strictEqual(r.destaques.length, 4, "no máximo 4");
+  assert.deepStrictEqual(r.destaques.map(function (x) { return x.origem; }), ["principal.aprendizado", "numero-1", "lancamento-1", "novo-1"], "na ordem da pessoa");
+  assert.ok(/>O QUE APRENDEMOS · PROJETO ALFA<\/p>/.test(h) && />O alfa ensinou algo\.<\/p>/.test(h) && /dm-txt-rosa/.test(h), "aprendizado com o rótulo do grupo Aprendizado");
+  assert.ok(/>Título ajustado para o e-mail<\/p>/.test(h) && !/era 10%/.test(h) && /12,5%/.test(h), "título e descrição ajustados só no e-mail; o número continua o da página");
+  assert.ok(r.destaques[1].editado && !r.destaques[0].editado, "marca o que foi ajustado");
+  assert.ok(/<img src="data:image\/png;base64,[^"]+" width="290" height="163" alt="Peça" class="dimg"/.test(h), "imagem do destaque, no tamanho do espaço");
+  assert.ok(/href="https:\/\/empresa\.sharepoint\.com\/peca"[^>]*>Ver a peça&nbsp;&#8594;<\/a>/.test(h) && (h.match(/href=/g) || []).length === 2, "link do destaque (texto, não botão) + o botão do report");
+  assert.ok(/>\+7<\/p>/.test(h) && />Informação nova<\/p>/.test(h) && />Novo<\/td>/.test(h) && r.destaques[3].novo, "informação nova");
+  /* o número muda na página: o e-mail acompanha (o título ajustado continua) */
+  var r2 = M.emailResumo(html.replace(/(data-campo="numero-1\.valor"[^>]*>)12,5%/, "$118,0%"), { link: LINK, destaques: conf });
+  assert.ok(/>18,0%<\/p>/.test(r2.html), "o número novo da página"); assert.ok(!/>12,5%</.test(r2.html), "nada do número antigo"); assert.ok(/Título ajustado para o e-mail/.test(r2.html), "o título ajustado continua");
+  /* 1 ou 3 destaques: o primeiro na largura toda; imagem ao lado só nele */
+  var r3 = M.emailResumo(html, { link: LINK, destaques: [{ origem: "principal", imagem: { src: IMG, w: 240, h: 240, posicao: "lado" } }, { origem: "numero-1" }, { origem: "numero-2" }] });
+  assert.ok(/colspan="3" width="600"/.test(r3.html) && /<td class="col" width="240" valign="top"[^>]*><img src="data:image\/png/.test(r3.html), "largo, com a imagem ao lado");
+  assert.deepStrictEqual(M.layoutDestaques(3).map(function (x) { return x.w; }), [600, 290, 290]);
+  assert.deepStrictEqual(M.tamanhoImagemDestaque(0, 3, "lado"), [240, 240]); assert.deepStrictEqual(M.tamanhoImagemDestaque(1, 3, "lado"), [290, 163]);
+  /* link que executa código não vira link */
+  var r4 = M.emailResumo(html, { link: LINK, destaques: [{ origem: "numero-1", link: "javascript:alert(1)" }] });
+  assert.ok(!/javascript:/.test(r4.html) && (r4.html.match(/href=/g) || []).length === 1);
+  /* (a imagem em base64 vira anexo cid: ao montar o .eml no emulador; aqui só o resto da conferência) */
+  assert.ok(!/\{\{|\}\}/.test(h) && M.conferirHtml(h).filter(function (x) { return x.nivel === "erro" && !/base64/.test(x.msg); }).length === 0, "conferência do HTML");
 });
 
 teste("emailResumo acompanha a edição da página; página antiga avisa; modelo vira pendência", function () {
@@ -718,6 +829,34 @@ teste("importarDados: resposta do Copilot (blocos do arquivo de dados) vira camp
   assert.strictEqual(M.nomeDoReport("[MÊS] [ANO]"), "report.html");
 });
 
+teste("capa (4.13): rótulo CAMPANHA editável no lugar de PROJETO PRINCIPAL, e números em ordem de leitura (número → título → etiqueta → referência)", function () {
+  var html = montar(COMPLETO).html;
+  assert.ok(/data-campo="principal\.rotulo"[^>]*>CAMPANHA</.test(html) && !/>PROJETO PRINCIPAL</.test(html), "rótulo padrão: CAMPANHA, com data-campo");
+  var outro = montar(COMPLETO.replace("[PROJETO PRINCIPAL]", "[PROJETO PRINCIPAL]\nrotulo: Porta de entrada")).html;
+  assert.ok(/data-campo="principal\.rotulo"[^>]*>PORTA DE ENTRADA</.test(outro), "rótulo do arquivo de dados, em maiúsculas");
+  assert.strictEqual(M.importarDados("[PROJETO PRINCIPAL]\nrotulo: Campanha do mês\n").campos["principal.rotulo"].texto, "CAMPANHA DO MÊS", "importação do rótulo");
+  /* leitura em ordem: valor → título → etiqueta → referência (detalhe); sem espaço reservado */
+  var hr = montar(COMPLETO.replace("[RESULTADO 1]", "[RESULTADO 1]\nvariacao: +10%").replace("[LANCAMENTO 1]", "[RESULTADO 2]\nvalor: 2\ntitulo: Dois\ndetalhe: base 1\n[LANCAMENTO 1]")).html;
+  function ordem(h, k) { var a = h.indexOf('data-item="' + k + '"'), b = h.indexOf("</td>", a), t = h.slice(a, b), r = []; t.replace(/data-campo="[a-z0-9-]+\.(valor|titulo|variacao|detalhe)"/g, function (m, c) { r.push(c); }); return r.join(">"); }
+  assert.strictEqual(ordem(html, "numero-1"), "valor>titulo>variacao>detalhe", "capa");
+  assert.strictEqual(ordem(hr, "resultado-1"), "valor>titulo>variacao>detalhe", "resultado com etiqueta");
+  assert.strictEqual(ordem(hr, "resultado-2"), "valor>titulo>detalhe", "resultado sem etiqueta: a referência logo abaixo do título");
+  assert.ok(!/var-vazia/.test(html + hr), "sem espaço reservado");
+  /* e-mail-resumo: a etiqueta do cartão da campanha é o rótulo, nunca "Projeto principal" */
+  var r = M.emailResumo(html, { link: "https://empresa.sharepoint.com/r", destaques: [{ origem: "principal" }, { origem: "numero-1" }] });
+  var c = r.candidatos.filter(function (x) { return x.origem === "principal"; })[0];
+  assert.ok(c && c.secao === "Campanha" && c.grupo === "Campanha" && c.capa && !/Projeto principal|PROJETO PRINCIPAL/.test(r.html.replace(/<style[\s\S]*?<\/style>/g, "")), "e-mail: CAMPANHA no lugar de PROJETO PRINCIPAL");
+  assert.deepStrictEqual(r.sugestao.map(function (x) { return x.origem; }).slice(0, 1), ["numero-1"], "a sugestão continua sendo os números da capa");
+});
+
+teste("importarDados: [SECOES] tira ou mostra seções pelo nome (4.13), sem virar campo nem aviso", function () {
+  var r = M.importarDados("[SECOES]\ntirar: O que aprendemos, Também vem aí; Tópico: Testes\nmostrar: Creative X\n");
+  assert.deepStrictEqual(r.secoes, { tirar: ["O que aprendemos", "Também vem aí", "Tópico: Testes"], mostrar: ["Creative X"] });
+  assert.deepStrictEqual(M.importarDados("[SEÇÕES]\ntirar: Agenda\n").secoes, { tirar: ["Agenda"], mostrar: [] }, "com acento também");
+  assert.deepStrictEqual(Object.keys(r.campos), []); assert.deepStrictEqual(r.problemas, []);
+  assert.deepStrictEqual(M.importarDados("[PROJETO PRINCIPAL]\nresumo: Texto.\n").secoes, { tirar: [], mostrar: [] });
+});
+
 teste("importarDados: todos os blocos da biblioteca de prompts (docs/PROMPTS_COPILOT.md) são aceitos", function () {
   var doc = ler("docs/PROMPTS_COPILOT.md"), ref = /### Formato de blocos[\s\S]*?```text\n([\s\S]*?)```/.exec(doc)[1];
   var blocos = ref.split("\n").filter(Boolean).map(function (l) {
@@ -728,8 +867,11 @@ teste("importarDados: todos os blocos da biblioteca de prompts (docs/PROMPTS_COP
   assert.deepStrictEqual(r.problemas, [], JSON.stringify(r.problemas));
   /* Todo campo importável tem lugar no modelo em branco do emulador (tools/coringa.js). */
   var janela = {}; new Function("window", fs.readFileSync(path.join(RAIZ, "tools/coringa.js"), "utf8"))(janela);
-  var faltam = Object.keys(r.campos).filter(function (k) { return janela.CORINGA_HTML.indexOf('data-campo="' + k + '"') < 0; });
+  /* exceção (4.13): o "O que aprendemos" da campanha (principal, destaque, lancamento-n) só existe com texto; quando falta,
+     a importação do emulador cria o bloco no lugar dele (tests/aprendizado.e2e.js) */
+  var faltam = Object.keys(r.campos).filter(function (k) { return janela.CORINGA_HTML.indexOf('data-campo="' + k + '"') < 0 && !/^(principal|destaque|lancamento-\d+)\.aprendizado$/.test(k); });
   assert.deepStrictEqual(faltam, [], "campos sem lugar no modelo em branco");
+  assert.ok(["principal.aprendizado", "destaque.aprendizado", "lancamento-1.aprendizado"].every(function (k) { return k in r.campos; }), "a biblioteca de prompts traz o aprendizado das campanhas");
 });
 
 teste("normalizarLink (links dos itens): aceita qualquer link válido sem aviso (https, http, arquivo, mailto/tel/msteams, sem https://, relativo, link dentro de um texto); só recusa o que executa código", function () {
@@ -765,13 +907,13 @@ teste("e-mail-resumo sem repetição: nome do projeto (não \"Projeto principal\
   var base = MINIMO.replace("nome: Projeto", "nome: Alfa").replace("valor: 10%\ntitulo: CTR\ndetalhe: era 5%", "valor: 12\ntitulo: Contas abertas\ndetalhe: 12 contas abertas no Alfa") +
     "\n[NUMERO 2]\nvalor: R$ 1,20\ntitulo: Custo por conta\ndetalhe: Referência: R$ 1,50";
   var r = montar(base), res = M.emailResumo(r.html, { link: "https://example.com/r" }), txt = res.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-  assert.ok(/PRINCIPAIS RESULTADOS Alfa 12 Contas abertas/.test(txt) && !/Projeto principal/.test(txt), "o nome do projeto, sem \"Projeto principal:\" · " + txt.slice(txt.indexOf("PRINCIPAIS"), txt.indexOf("PRINCIPAIS") + 90));
+  assert.ok(/DESTAQUES DO MÊS · ALFA 12 Contas abertas ▲ \+100%/.test(txt) && (txt.match(/ALFA/g) || []).length === 1 && !/Projeto principal/i.test(txt), "o nome do projeto uma vez só, no título da seção (todos os cartões são dele), sem \"Projeto principal:\"; número → título → etiqueta (4.13) · " + txt.slice(txt.indexOf("DESTAQUES"), txt.indexOf("DESTAQUES") + 90));
   assert.ok(!/12 contas abertas no Alfa/.test(txt) && /Referência: R\$ 1,50/.test(txt), "o detalhe que repete o número sai; o que acrescenta fica");
   var r2 = montar(base.replace("frase: Um mês", "frase: Alfa: 12 contas abertas")), res2 = M.emailResumo(r2.html, { link: "https://example.com/r" }), t2 = res2.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   assert.deepStrictEqual(res2.indicadores, ["numero-2"], "o número da frase não vem marcado");
-  assert.ok(res2.candidatos.filter(function (x) { return x.chave === "numero-1"; })[0].na_frase, "o candidato fica marcado como \"já está na frase\"");
+  assert.ok(res2.candidatos.filter(function (x) { return x.origem === "numero-1"; })[0].na_frase, "o candidato fica marcado como \"já está na frase\"");
   var corpo2 = t2.slice(t2.indexOf("REPORT MENSAL"));
-  assert.ok(!/PRINCIPAIS RESULTADOS Alfa/.test(corpo2) && (corpo2.match(/12 contas abertas/gi) || []).length === 1 && !/ 12 Contas abertas/.test(corpo2), "nem o número nem o nome do projeto se repetem · " + corpo2.slice(0, 220));
+  assert.ok(!/DESTAQUES DO MÊS ALFA/.test(corpo2) && (corpo2.match(/12 contas abertas/gi) || []).length === 1 && !/ 12 Contas abertas/.test(corpo2), "nem o número nem o nome do projeto se repetem · " + corpo2.slice(0, 220));
   var r3 = M.emailResumo(r2.html, { link: "https://example.com/r", indicadores: ["numero-1"] });
   assert.deepStrictEqual(r3.indicadores, ["numero-1"], "se a pessoa escolhe, vale a escolha (o emulador avisa)");
 });
@@ -810,16 +952,16 @@ teste("vários tópicos novos ([TOPICO], [TOPICO B], [TOPICO C], [TOPICO D]), ca
   assert.ok(/data-campo="topicoc.rotulo">EVENTOS</.test(h) && /data-campo="topicod.rotulo">MÍDIA</.test(h));
   assert.ok(/PESQUISAS: O que ouvimos/.test(r.texto) && /1,2 mi · Alcance/.test(r.texto), "versão em texto");
   assert.deepStrictEqual(M.secoesDoHtml(h).filter(function (x) { return /^topico/.test(x.id); }).map(function (x) { return x.nome; }), ["Tópico: TESTES", "Tópico: PESQUISAS", "Tópico: EVENTOS", "Tópico: MÍDIA"]);
-  /* e-mail-resumo: cada tópico com rótulo, título e itens; os números viram indicadores que dá para escolher */
+  /* e-mail-resumo (4.13): os itens dos tópicos são destaques que dá para escolher (números e textos); a chamada cita os tópicos */
   var res = M.emailResumo(h, { link: "https://empresa.sharepoint.com/r" });
-  ["TESTES", "PESQUISAS", "EVENTOS", "MÍDIA"].forEach(function (x) { assert.ok(res.html.indexOf(">" + x + "</p>") > 0, x); });
-  assert.ok(/<b>Teste de chamada<\/b><span[^>]*>&nbsp;·&nbsp;Em teste</.test(res.html) && /E mais 0|E mais/.test(res.html) === false, "itens, sem \"E mais\" quando cabe");
-  assert.ok(/>1,2 mi<\/b>&nbsp;·&nbsp;<b>Alcance</.test(res.html));
   assert.ok(/Testes, pesquisas, eventos e mídia, com as peças/.test(res.html), "a chamada cita os tópicos");
-  var c = res.candidatos.filter(function (x) { return x.grupo === "Mídia"; });
-  assert.deepStrictEqual(c.map(function (x) { return x.chave + "|" + x.valor; }), ["topicod-1|1,2 mi", "topicod-2|3%"]);
-  var res2 = M.emailResumo(h, { link: "https://empresa.sharepoint.com/r", indicadores: ["topicod-1"] });
-  assert.ok(/>1,2 mi<\/p>/.test(res2.html) && /Números de mídia/.test(res2.html), "número do tópico escolhido como indicador");
+  assert.ok(!/Teste de chamada/.test(res.html), "sem escolher, nenhum tópico entra (a sugestão são os números do projeto principal)");
+  var c = res.candidatos.filter(function (x) { return x.secao === "Mídia"; });
+  assert.deepStrictEqual(c.map(function (x) { return x.origem + "|" + x.valor + "|" + x.tipo; }), ["topicod-1|1,2 mi|indicador", "topicod-2|3%|indicador"]);
+  assert.ok(res.candidatos.some(function (x) { return x.origem === "topico-1" && x.titulo === "Teste de chamada" && x.etiqueta === "Em teste"; }), "item de texto do tópico, com o status");
+  var res2 = M.emailResumo(h, { link: "https://empresa.sharepoint.com/r", destaques: [{ origem: "topicod-1" }, { origem: "topico-1" }] });
+  assert.ok(/>1,2 mi<\/p>/.test(res2.html) && /NÚMEROS DE MÍDIA/.test(res2.html), "número do tópico escolhido como destaque");
+  assert.ok(/>Teste de chamada<\/p>/.test(res2.html) && />Em teste<\/td>/.test(res2.html), "item de texto do tópico, com a etiqueta");
   /* importar do Copilot: [TOPICO C 2] e o rótulo em maiúsculas */
   var im = M.importarDados("[TOPICO C]\nrotulo: Eventos\n[TOPICO D 1]\nvalor: -5%");
   assert.strictEqual(im.campos["topicoc.rotulo"].texto, "EVENTOS"); assert.strictEqual(im.campos["topicod-1.valor"].texto, "−5%");

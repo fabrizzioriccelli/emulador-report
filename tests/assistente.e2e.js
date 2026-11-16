@@ -158,8 +158,8 @@ function salvarComo() {
   await noQuadro(p, function (d) { d.querySelector('[data-item="numero-1"]').scrollIntoView({ block: "center" }); });
   await p.mouse.move(2, 2); await f.hover('[data-item="numero-1"]', { position: { x: 30, y: 60 } }); await p.waitForTimeout(200);
   var bm = await noQuadro(p, function (d) { return Array.prototype.map.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent; }); });
-  confere(bm.indexOf("Depois →") >= 0 && bm.indexOf("← Antes") < 0, "barra do 1º indicador: Depois → (sem ← Antes) · " + bm.join(","));
-  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Depois →"; })[0].click(); });
+  confere(bm.indexOf("Mover →") >= 0 && bm.indexOf("← Mover") < 0, "barra do 1º indicador: Mover → (sem ← Mover) · " + bm.join(","));
+  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Mover →"; })[0].click(); });
   var n1 = await textos(p, "numero"), cor = await noQuadro(p, function (d) { return [d.querySelector('[data-campo="numero-1.valor"]').style.color, d.querySelector('[data-campo="numero-2.valor"]').style.color]; });
   confere(n1[0].split("=")[1] === n0[1].split("=")[1] && n1[1].split("=")[1] === n0[0].split("=")[1] && /236, 0, 0|#EC0000/i.test(cor[0]) && !/236, 0, 0|#EC0000/i.test(cor[1]), "Depois →: troca com o vizinho; o 1º continua em vermelho (grade refeita) · " + n1.slice(0, 2).join(" | "));
   await p.click("#bDesfazer"); await p.waitForTimeout(150);
@@ -167,18 +167,17 @@ function salvarComo() {
   var l0 = await textos(p, "lancamento");
   await noQuadro(p, function (d) { d.querySelector('[data-item="lancamento-3"]').scrollIntoView({ block: "center" }); });
   await p.mouse.move(2, 2); await f.hover('[data-item="lancamento-3"] [data-campo="lancamento-3.nome"]', { position: { x: 3, y: 3 } }); await p.waitForTimeout(200);
-  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Depois →"; })[0].click(); });
+  await noQuadro(p, function (d) { Array.prototype.filter.call(d.querySelectorAll("#ed-barra button"), function (b) { return b.textContent === "Mover →"; })[0].click(); });
   var l1 = await textos(p, "lancamento"), linhas = await noQuadro(p, function (d) { return Array.prototype.map.call(d.querySelectorAll('[data-item^="lancamento-"]'), function (x) { return x.parentNode.rowIndex + ":" + x.getAttribute("width"); }); });
   confere(l1[3].split("=")[1] === l0[2].split("=")[1] && linhas.every(function (x) { return /:184$/.test(x); }), "lançamento muda de linha (3º → 4º): cartões de 184 px, 3 por linha · " + linhas.join(" "));
 
   /* ================= 3. ordem das seções ================= */
   fase = "seções";
-  await p.click("#secEditar details summary");
   var o0 = await ordem(p), linhasPainel = await p.$$eval(".secaoRep", function (l) { return l.map(function (x) { return x.getAttribute("data-id"); }); });
-  confere(linhasPainel.indexOf("capa") < 0 && linhasPainel.indexOf("rodape") < 0 && linhasPainel[0] === "lancamos", "painel: só as seções que mudam de lugar (capa e encerramento fixos) · " + linhasPainel.join(","));
+  confere(linhasPainel.indexOf("capa") < 0 && linhasPainel.indexOf("rodape") < 0 && linhasPainel[0] === "visao", "painel: só as seções que mudam de lugar (capa e encerramento fixos) · " + linhasPainel.join(","));
   await p.click('.secaoRep[data-id="lancamos"] button[data-a="desce"]'); await p.waitForTimeout(200);
   var o1 = await ordem(p), pl = await pilulas(p);
-  confere(/capa,cx,lancamos,/.test(o1) && /^02 CREATIVE X/.test(pl[1]) && /^03 O QUE LANÇAMOS/.test(pl[2]), "↓ no painel: O que lançamos desce; os números das seções são refeitos · " + pl.slice(1, 3).join(" | "));
+  confere(/capa,visao,resultados,cx,lancamos,/.test(o1) && /^03 CREATIVE X/.test(pl[2]) && /^04 O QUE LANÇAMOS/.test(pl[3]), "↓ no painel: O que lançamos desce; os números das seções são refeitos · " + pl.slice(2, 4).join(" | "));
   confere(await p.evaluate(function () { return document.activeElement && document.activeElement.getAttribute("data-a") === "desce" && document.activeElement.closest(".secaoRep").getAttribute("data-id") === "lancamos"; }), "teclado: depois de mover, o foco segue no mesmo botão da seção");
   await p.click("#bDesfazer"); await p.waitForTimeout(150);
   confere(await ordem(p) === o0, "Desfazer: a ordem das seções volta");
@@ -240,6 +239,15 @@ function salvarComo() {
   await alca("foco");
   await noQuadro(p, function (d) { d.querySelector('#ed-secao button[data-a="sobe"]').click(); }); await p.waitForTimeout(200);
   confere(/,foco,aprendizados,/.test(await ordem(p)), "↑ na alça: Foco sobe uma posição · " + await ordem(p));
+  /* "Tirar seção" na alça (4.13): a seção sai (e fica desmarcada em Seções do report); o Desfazer devolve */
+  function agendaOculta(d) { var w = d.createTreeWalker(d.body, NodeFilter.SHOW_COMMENT), n; while ((n = w.nextNode())) if (n.nodeValue.trim() === "secao:agenda") { var e = n.nextSibling; while (e.nodeType !== 1) e = e.nextSibling; return e.hasAttribute("data-ed-oculta"); } return null; }
+  var aT = await alca("agenda");
+  var temTira = await noQuadro(p, function (d) { var b = d.querySelector('#ed-secao button[data-a="tira"]'); return !!b && b.textContent; });
+  await noQuadro(p, function (d) { d.querySelector('#ed-secao button[data-a="tira"]').click(); }); await p.waitForTimeout(250);
+  var ocT = await noQuadro(p, agendaOculta), mkT = await p.$eval('#secoesRep input[value="agenda"]', function (e) { return e.checked; });
+  confere(aT && temTira === "Tirar seção" && ocT === true && !mkT, "\"Tirar seção\" na alça: Também vem aí sai da página e fica desmarcada em Seções do report");
+  await p.click("#bDesfazer"); await p.waitForTimeout(200);
+  confere(await noQuadro(p, agendaOculta) === false && await p.$eval('#secoesRep input[value="agenda"]', function (e) { return e.checked; }), "Desfazer: a seção tirada volta");
 
   /* ================= 4. salvar, reabrir, e-mail e celular ================= */
   fase = "salvar";

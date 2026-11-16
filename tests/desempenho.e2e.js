@@ -4,7 +4,7 @@
  * modesto): abrir o report, editar um texto e salvar. "Tarefa longa" = a página parada, sem responder.
  * Falha se voltar a travar: maior tarefa longa acima de 1 s, status depois de uma edição acima de 3 s, ou edição com travamento.
  * Confere também: o aviso de andamento aparece e some; vídeo e PDF voltam idênticos no arquivo salvo; a imagem trocada e
- * desfeita sai da memória (a original continua).
+ * desfeita fica guardada para o Refazer e sai da memória com a mudança seguinte (a original continua).
  * GIGANTE=1 acrescenta um report de ~600 MB (acima do limite de texto do navegador): abre, edita e salva sem travar.
  *   Requer Node.js + Playwright e ffmpeg:  node tests/desempenho.e2e.js [pasta-de-saida]
  *   Versão avulsa:  EMULADOR=kit/emulador-report.html node tests/desempenho.e2e.js
@@ -82,7 +82,11 @@ function confere(ok, msg) { console.log((ok ? "  ok   " : "  FALHA ") + msg); if
   await p.click("#bDesfazer"); await p.waitForTimeout(6500);
   var abre = function (u) { return p.evaluate(function (x) { return fetch(x).then(function () { return true; }, function () { return false; }); }, u); };
   var volta = (await todas())[ix];
-  confere(volta === original && await abre(original) && !(await abre(nova)), "trocar e desfazer: a original volta e a imagem nova sai da memória");
+  /* 5.5: depois de Desfazer, a nova fica guardada para o Refazer; uma mudança nova apaga o Refazer e a nova sai da memória */
+  confere(volta === original && await abre(original) && await abre(nova), "trocar e desfazer: a original volta e a nova fica guardada para o Refazer");
+  await f.locator('[data-campo="frase"][data-ed-campo]').first().click({ position: { x: 4, y: 6 } });
+  await p.keyboard.type("!"); await p.keyboard.press("Enter"); await p.waitForTimeout(6500);
+  confere(await p.evaluate(function () { return document.querySelector("#bRefazer").disabled; }) && await abre(original) && !(await abre(nova)), "uma mudança nova apaga o Refazer: a imagem nova sai da memória (a original continua)");
 
   if (process.env.GIGANTE) {
     /* acima do limite de texto do navegador (~512 MB): antes, dava "não parece um report" */
